@@ -1,0 +1,73 @@
+/find_all_scriptures.py
+build/
+
+#django static files
+static/
+
+# misc directories
+bin/
+tmp/*
+/src/
+lib64
+# python compiled
+*.pyc
+*.pyo
+
+# log files
+*.log
+logs/*
+
+# SVN dirs
+.svn
+
+# working files 
+*.swp
+*.swo
+
+# backup
+*.bk
+*.bkup
+
+# dirs with gitignore
+!.gitignore
+
+# tmp files
+*.orig
+*.backup
+
+# old dirs
+*.old/
+
+# ignore local_settings.py
+local_settings.py
+
+*sublime-project*
+*.sublime-workspace
+docs/_build
+
+# Eclipse project file
+.pydevproject
+.project
+.classpath
+.settings
+/lib/
+include/
+bin/activate
+bin/activate.csh
+bin/activate.fish
+bin/activate_this.py
+bin/django-admin.py
+bin/easy_install
+bin/easy_install-2.6
+bin/pip
+bin/pip-2.6
+bin/python
+bin/virtualenv
+.coverage
+local
+/lib/
+
+java/habakkuk-core/classes/
+java/habakkuk-core/target/
+java/habakkuk-core/lib/
+*.jar
