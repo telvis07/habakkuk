@@ -1,0 +1,6 @@
+table habakkuk_verse_count
+insert "John 3:16" 20120101 "" 1
+insert "John 3:16" 20120101 "" 1
+insert "John 3:16" 20120101 "" 1
+insert "Mark 1:2" 20120101  "" 1
+insert "Mark 1:2" 20120102  "" 1

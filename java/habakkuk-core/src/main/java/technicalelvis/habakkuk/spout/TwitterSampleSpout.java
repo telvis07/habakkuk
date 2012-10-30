@@ -1,8 +1,11 @@
 package technicalelvis.habakkuk.spout;
 
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.HashMap;
+
+import org.apache.log4j.Logger;
 
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
@@ -22,6 +25,7 @@ import backtype.storm.utils.Utils;
 
 // TODO: twitter4j with API keys
 public class TwitterSampleSpout extends BaseRichSpout {
+	static Logger LOG = Logger.getLogger(TwitterSampleSpout.class);
     SpoutOutputCollector _collector;
     LinkedBlockingQueue<Status> queue = null;
     TwitterStream _twitterStream;
@@ -67,11 +71,10 @@ public class TwitterSampleSpout extends BaseRichSpout {
         cb.setUser(_username)
         .setPassword(_pwd)
         .setJSONStoreEnabled(true);
-        // TwitterStreamFactory fact = new TwitterStreamFactory(new ConfigurationBuilder().setUser(_username).setPassword(_pwd).build());
         TwitterStreamFactory fact = new TwitterStreamFactory(cb.build());
         _twitterStream = fact.getInstance();
         _twitterStream.addListener(listener);
-        _twitterStream.sample();
+        _twitterStream.sample();    
     }
 
     @Override
@@ -80,12 +83,21 @@ public class TwitterSampleSpout extends BaseRichSpout {
         if(ret==null) {
             Utils.sleep(50);
         } else {
-            //_collector.emit(new Values(ret));
-        	//String rawJSON = DataObjectFactory.getRawJSON(ret);
-        	//_collector.emit(new Values(rawJSON));
+        	String rawJSON = DataObjectFactory.getRawJSON(ret);
+        	if (rawJSON != null){
+        		LOG.info(String.format("raw json: '%s'",rawJSON));
+        	}
         	Map<String, String> data = new HashMap<String, String>();
         	data.put("username", ret.getUser().getName());
+        	data.put("screenname", ret.getUser().getScreenName());
         	data.put("text", ret.getText());
+        	data.put("tweetid",Long.toString(ret.getId()));    	    
+    	    data.put("created_at", ret.getCreatedAt().toString());
+    	    
+    	    SimpleDateFormat _format = new SimpleDateFormat("yyyy-MM-dd");
+    	    StringBuilder _datestr = new StringBuilder(_format.format(ret.getCreatedAt()));
+    	    data.put("created_at_date", _datestr.toString());
+    	    data.put("created_at", Long.toString(ret.getCreatedAt().getTime()));
         	_collector.emit(new Values(data));        	
         }
     }

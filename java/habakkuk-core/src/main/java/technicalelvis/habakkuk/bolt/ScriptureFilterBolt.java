@@ -18,7 +18,7 @@ public class ScriptureFilterBolt extends ShellBolt implements IRichBolt{
     }
 	
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("book"));
+        declarer.declare(new Fields("result"));
     }
 
     public Map<String, Object> getComponentConfiguration() {
