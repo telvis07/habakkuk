@@ -1,0 +1,17 @@
+habakkuk.topologyname=habakkuk
+habakkuk.localmode=true
+habakkuk.usetestspout=false
+habakkuk.numWorkers=1
+habakkuk.numBibleFilterBolts=1
+habakkuk.numAccumulotBolts=1
+habakkuk.numESBolts=1
+twitter4j.username=twitteruser
+twitter4j.password=twitterpassword
+# accumulo.instance=instancename
+# accumulo.zookeeper=127.0.0.1
+# accumulo.user=user
+# accumulo.password=password
+elasticsearch.host=localhost
+elasticsearch.port=9300
+elasticsearch.cluster=clustername
+elasticsearch.indexname=indexname
