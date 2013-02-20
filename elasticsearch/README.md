@@ -5,7 +5,7 @@ To get the data for Valentines day 2013,  I execute the following
 
     $ python bible_facet.py -s 2013-02-14 -e 2013-02-15
 
-Which produces the following output. It shows the raw query json for the 
+It shows the raw query json for the 
 [Elasticsearch Query DSL](http://www.elasticsearch.org/guide/reference/query-dsl/index.html). 
 Below that it shows the top 10 bible references. Its basically just a faceted search on the 
 bibleverse field.
