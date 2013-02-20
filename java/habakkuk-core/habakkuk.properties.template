@@ -9,8 +9,11 @@ habakkuk.localmode=true
 # to twitter
 habakkuk.usetestspout=false
 
-# The following set storm parallelism. View the storm docs for details.
+# The following sets storm parallelism. View the storm docs for details.
+# numWorkers set the number of processes in the topology
 habakkuk.numWorkers=1
+# num*Bolts sets the number of bolt threads distributed
+# among the worker processes
 habakkuk.numBibleFilterBolts=1
 habakkuk.numAccumulotBolts=1
 habakkuk.numESBolts=1

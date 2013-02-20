@@ -12,7 +12,7 @@ This project uses [django](https://www.djangoproject.com/) for project organizat
 This project uses a [storm](http://storm-project.net/) topology to analyze tweets from the [twitter sample stream](https://dev.twitter.com/docs/streaming-apis/streams/public).
 The entry point is a storm spout that uses [twitter4j](http://twitter4j.org/en/index.html) to access the stream with a username and password. 
 Tweets are then passed to a storm shell bolt implemented in Python that applies a regular expression 
-for detecting Christian bible references. Finally, a bolt receives the tuple with a bible reference tag and stored it to 
+for detecting Christian bible references. Finally, a bolt receives the tuple with a bible reference tag and stores it to 
 elasticsearch.
 
 For more information refence the [storm concepts wiki](https://github.com/nathanmarz/storm/wiki/Concepts). 
@@ -25,8 +25,9 @@ This project uses [ElasticSearch](http://www.elasticsearch.org/) as backend stor
 I experimented with using [Apache Accumulo](http://accumulo.apache.org/). The code has been disabled but the Bolt is
 still there is anyone wants to try it. It works fine but I found Elasticsearch worked better for this project.
 
-# Directories
+# Sub-Directories
 * java - [Storm Application](http://storm-project.net/)
 * bible_verse_matching - Tools to build and test the bible reference regular expressions.
 * elasticsearch - Index templates and tools to query elasticsearch
 * accumulo - Table initialization scripts
+* config - Configuration files for setting up storm with [supervisord](http://supervisord.org/)

@@ -1,7 +1,7 @@
 This directory contains convenience scripts to perform an faceted search queries against ES.
 
 ## Example
-To get the data for Valentines day I execute the following
+To get the data for Valentines day 2013,  I execute the following
 
     $ python bible_facet.py -s 2013-02-14 -e 2013-02-15
 
@@ -56,8 +56,8 @@ bibleverse field.
 * dump_data_for_date.py - I use this to dump data each day to prevent data loss - lucene indexes can be fickle. Basically,
 I execute the following every day. 
 
-    $  python dump_data_for_date.py -s `date +"%F" --date "yesterday"` -o /opt/habakkuk_data/
+    $  python dump_data_for_date.py -s `date +"%F" --date "yesterday"` -o /path/to/backup/habakkuk_data/
 * habakkuk-template.json and set-template.sh are to set the index template for habakkuk data stored in ES. Just execute the following
-to set it up.
+to set it up.    
 
-    sh set-template.sh habakkuk-template.json
+    $ sh set-template.sh habakkuk-template.json
