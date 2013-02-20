@@ -1,16 +1,31 @@
-habakkuk.topologyname=habakkuk
+# storm topology name
+habakkuk.topologyname=topologyname
+
+# Set to 'true' if you want to run storm in 'local' mode
+# i.e. without nimbus and friends
 habakkuk.localmode=true
+
+# Will generate test tweets instead of connecting
+# to twitter
 habakkuk.usetestspout=false
+
+# The following set storm parallelism. View the storm docs for details.
 habakkuk.numWorkers=1
 habakkuk.numBibleFilterBolts=1
 habakkuk.numAccumulotBolts=1
 habakkuk.numESBolts=1
+
+# Twitter username and password
 twitter4j.username=twitteruser
 twitter4j.password=twitterpassword
+
+# Apache Accumulo config. Not used anymore
 # accumulo.instance=instancename
 # accumulo.zookeeper=127.0.0.1
 # accumulo.user=user
 # accumulo.password=password
+
+# Elasticsearch configuration
 elasticsearch.host=localhost
 elasticsearch.port=9300
 elasticsearch.cluster=clustername
