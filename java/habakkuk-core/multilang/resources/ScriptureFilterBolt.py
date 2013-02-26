@@ -11,7 +11,7 @@ class ScriptureParserBolt(storm.BasicBolt):
         matches = find_all_scriptures(txt)
         for ma in matches:
             ret = filtergroupdict(ma)
-            matext = ma.string[ma.start():ma.end()].replace('\r\n',' ') #actual matched string
+            res['matext'] = ma.string[ma.start():ma.end()].replace('\r\n',' ') #actual matched string
             res['book'] = ret['book']
             res['bibleverse'] = " ".join((ret['book'],ret['verse']))
             # storm.log("python (out) =%s"%res)

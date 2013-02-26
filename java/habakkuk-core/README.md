@@ -13,3 +13,8 @@ This is the storm application for real-time analysis of religious tweets.
 
 # Configuration:
 Please reference habakkuk.properties.template for example configurations and details.
+
+
+# Sub-Directories
+* src - java source
+* multilang/resources - python bolt source
