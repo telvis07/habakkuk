@@ -1,6 +1,10 @@
 /find_all_scriptures.py
 *.properties
 build/
+analysis/output
+*~
+*.class
+
 
 #django static files
 static/
@@ -68,7 +72,7 @@ bin/virtualenv
 local
 /lib/
 
-java/habakkuk-core/classes/
-java/habakkuk-core/target/
-java/habakkuk-core/lib/
+java/*/classes/
+java/*/target/
+java/*/lib/
 *.jar

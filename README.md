@@ -25,9 +25,13 @@ This project uses [ElasticSearch](http://www.elasticsearch.org/) as backend stor
 I experimented with using [Apache Accumulo](http://accumulo.apache.org/). The code has been disabled but the Bolt is
 still there is anyone wants to try it. It works fine but I found Elasticsearch worked better for this project.
 
+## Hadoop
+Scripts in analysis/ depend on [Cloudera Hadoop CDH3](https://ccp.cloudera.com/display/CDHDOC/CDH3+Documentation).
+
 # Sub-Directories
 * java - [Storm Application](http://storm-project.net/)
-* bible_verse_matching - Tools to build and test the bible reference regular expressions.
+* bible_verse_matching - Tools to build and test the bible reference regular expressions. Also dictionary files for pig and mahout.
 * elasticsearch - Index templates and tools to query elasticsearch
 * accumulo - Table initialization scripts
 * config - Configuration files for setting up storm with [supervisord](http://supervisord.org/)
+* analysis - pig scripts for data analysis
