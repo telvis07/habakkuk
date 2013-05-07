@@ -2,6 +2,7 @@ package technicalelvis.habakkuk.spout;
 
 import java.text.SimpleDateFormat;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.HashMap;
 
@@ -13,7 +14,9 @@ import twitter4j.StatusListener;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.json.DataObjectFactory;
+import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
+import twitter4j.StallWarning;
 import backtype.storm.Config;
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
@@ -31,11 +34,17 @@ public class TwitterSampleSpout extends BaseRichSpout {
     TwitterStream _twitterStream;
     String _username;
     String _pwd;
-    
-    
-    public TwitterSampleSpout(String username, String pwd) {
-        _username = username;
-        _pwd = pwd; 
+    String consumer_key;
+    String consumer_secret;
+    String access_token;
+    String token_secret;
+     
+    /* Used for Oauth */
+    public TwitterSampleSpout(Properties props) {
+        consumer_key = props.getProperty("twitter4j.consumer_key");
+        consumer_secret = props.getProperty("twitter4j.consumer_secret");
+        access_token = props.getProperty("twitter4j.access_token");
+        token_secret = props.getProperty("twitter4j.token_secret");
     }
     
     @Override
@@ -65,14 +74,17 @@ public class TwitterSampleSpout extends BaseRichSpout {
             public void onException(Exception e) {
             }
             
+            @Override
+            public void onStallWarning(StallWarning warning){                
+            }
+            
         };
         
         ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setUser(_username)
-        .setPassword(_pwd)
-        .setJSONStoreEnabled(true);
-        TwitterStreamFactory fact = new TwitterStreamFactory(cb.build());
+        TwitterStreamFactory fact = new TwitterStreamFactory();
         _twitterStream = fact.getInstance();
+        _twitterStream.setOAuthConsumer(consumer_key, consumer_secret);
+        _twitterStream.setOAuthAccessToken(new AccessToken(access_token, token_secret));
         _twitterStream.addListener(listener);
         _twitterStream.sample();    
     }
@@ -83,22 +95,31 @@ public class TwitterSampleSpout extends BaseRichSpout {
         if(ret==null) {
             Utils.sleep(50);
         } else {
-        	String rawJSON = DataObjectFactory.getRawJSON(ret);
-        	if (rawJSON != null){
-        		LOG.info(String.format("raw json: '%s'",rawJSON));
-        	}
         	Map<String, String> data = new HashMap<String, String>();
+        	
+        	// user info
         	data.put("username", ret.getUser().getName());
         	data.put("screenname", ret.getUser().getScreenName());
+        	data.put("follower_count", Integer.toString(ret.getUser().getFollowersCount()));
+        	data.put("friends_count", Integer.toString(ret.getUser().getFriendsCount()));
+        	data.put("location",ret.getUser().getLocation());
+        	data.put("lang", ret.getUser().getLang());
+        	data.put("user_url", ret.getUser().getURL());
+        	
+        	// tweet info
         	data.put("text", ret.getText());
-        	data.put("tweetid",Long.toString(ret.getId()));    	    
-    	    data.put("created_at", ret.getCreatedAt().toString());
-    	    
+        	data.put("tweetid",Long.toString(ret.getId()));
+        	data.put("retweet_count",Long.toString(ret.getRetweetCount()));
+        	
+    	    // format created_at as YYYY-MM-dd
+        	data.put("created_at", ret.getCreatedAt().toString());  	    
     	    SimpleDateFormat _format = new SimpleDateFormat("yyyy-MM-dd");
     	    StringBuilder _datestr = new StringBuilder(_format.format(ret.getCreatedAt()));
     	    data.put("created_at_date", _datestr.toString());
     	    data.put("created_at", Long.toString(ret.getCreatedAt().getTime()));
-        	_collector.emit(new Values(data));        	
+        	
+    	    // emit tuple to next bolt
+    	    _collector.emit(new Values(data));
         }
     }
 

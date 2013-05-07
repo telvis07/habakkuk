@@ -23,12 +23,13 @@
 			<id>clojars.org</id>
 			<url>http://clojars.org/repo</url>
 		</repository>
-		<!-- 
 		<repository>
 			<id>twitter4j</id>
 			<url>http://twitter4j.org/maven2</url>
+            <releases>
+              <enabled>true</enabled>
+            </releases>
 		</repository>
-		-->
 		<repository>
 		  <id>central</id>
 		  <name>Maven Repository Switchboard</name>
@@ -66,13 +67,14 @@
 		<dependency>
 			<groupId>org.twitter4j</groupId>
 			<artifactId>twitter4j-core</artifactId>
-			<version>2.2.5</version>
+			<version>3.0.3</version>
 		</dependency>
-		<dependency>
+        <dependency>
 			<groupId>org.twitter4j</groupId>
 			<artifactId>twitter4j-stream</artifactId>
-			<version>2.2.5</version>
+			<version>3.0.3</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.clojure</groupId>
 			<artifactId>clojure</artifactId>

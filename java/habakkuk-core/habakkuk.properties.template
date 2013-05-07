@@ -15,12 +15,16 @@ habakkuk.numWorkers=1
 # num*Bolts sets the number of bolt threads distributed
 # among the worker processes
 habakkuk.numBibleFilterBolts=1
-habakkuk.numAccumulotBolts=1
-habakkuk.numESBolts=1
+#habakkuk.numAccumulotBolts=1
+#habakkuk.numESBolts=1
 
 # Twitter username and password
 twitter4j.username=twitteruser
 twitter4j.password=twitterpassword
+twitter4j.consumer_key=
+twitter4j.consumer_secret=
+twitter4j.access_token=
+twitter4j.token_secret=
 
 # Apache Accumulo config. Not used anymore
 # accumulo.instance=instancename
@@ -29,7 +33,7 @@ twitter4j.password=twitterpassword
 # accumulo.password=password
 
 # Elasticsearch configuration
-elasticsearch.host=localhost
-elasticsearch.port=9300
-elasticsearch.cluster=clustername
-elasticsearch.indexname=indexname
+#elasticsearch.host=localhost
+#elasticsearch.port=9300
+#elasticsearch.cluster=clustername
+#elasticsearch.indexname=indexname
