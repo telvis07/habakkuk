@@ -14,9 +14,9 @@ Each entry in the vector corresponds to a bible book (e.g. 1 is genesis, 2 is ex
 Copy input data to hdfs
 
     hadoop fs -mkdir input
-    hadoop fs -put input/test_habakkuk_data.json input
-    hadoop fs mkdir join_data
-    hadoop put join_data/book_id.csv join_data
+    hadoop fs -copyFromLocal input/test_habakkuk_data.json input
+    hadoop fs -mkdir join_data
+    hadoop fs -copyFromLocal join_data/book_id.csv join_data/
 
 Remove output from prior run
 

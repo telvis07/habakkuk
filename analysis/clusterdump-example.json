@@ -1,0 +1,68 @@
+{
+  "cluster_id": 0,
+  "points": [
+    {
+      "vector_name": "P(0)",
+      "weight": "1.0",
+      "point": "P(0) = [brown:2.099, dogs:1.916, fox:2.609, jumped:2.099, lazy:2.099, over:2.099, quick:2.099, red:1.916]"
+    },
+    {
+      "vector_name": "P(1)",
+      "weight": "1.0",
+      "point": "P(1) = [brown:2.099, dogs:1.916, fox:2.609, jumped:2.099, lazy:2.099, over:2.099, quick:2.099, red:1.916]"
+    },
+    {
+      "vector_name": "P(2)",
+      "weight": "1.0",
+      "point": "P(2) = [brown:2.099, cat:2.609, dogs:1.916, jumped:2.099, lazy:2.099, over:2.099, quick:2.099, red:1.916]"
+    },
+    {
+      "vector_name": "P(3)",
+      "weight": "1.0",
+      "point": "P(3) = [brown:2.099, cat:2.609, dogs:1.916, jumped:2.099, lazy:2.099, over:2.099, quick:2.099, red:1.916]"
+    }
+  ],
+  "top_terms": [
+    {
+      "term": "red",
+      "weight": 1.9162907600402832
+    },
+    {
+      "term": "brown",
+      "weight": 1.6788898468017579
+    },
+    {
+      "term": "jumped",
+      "weight": 1.6788898468017579
+    },
+    {
+      "term": "lazy",
+      "weight": 1.6788898468017579
+    },
+    {
+      "term": "over",
+      "weight": 1.6788898468017579
+    },
+    {
+      "term": "quick",
+      "weight": 1.6788898468017579
+    },
+    {
+      "term": "dogs",
+      "weight": 1.5330326080322265
+    },
+    {
+      "term": "cat",
+      "weight": 1.0437751770019532
+    },
+    {
+      "term": "fox",
+      "weight": 1.0437751770019532
+    },
+    {
+      "term": "baseball",
+      "weight": 0.46435117721557617
+    }
+  ],
+  "cluster": "C-0{n=5 c=[baseball:0.464, brown:1.679, cap:0.464, cat:1.044, dogs:1.533, fleece:0.326, fox:1.044, jacket:0.464, jumped:1.679, lazy:1.679, over:1.679, quick:1.679, red:1.916, robber:0.464, wore:0.464] r=[baseball:0.929, brown:0.839, cap:0.929, cat:1.278, dogs:0.767, fleece:0.651, fox:1.278, jacket:0.929, jumped:0.839, lazy:0.839, over:0.839, quick:0.839, robber:0.929, wore:0.929]}"
+}

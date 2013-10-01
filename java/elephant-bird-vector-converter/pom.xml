@@ -9,11 +9,6 @@
   <url>http://maven.apache.org</url>
   <repositories>
     <repository>
-      <id>cdh.releases.repo</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
-      <name>CDH Releases Repository</name>
-    </repository>
-    <repository>
       <id>central</id>
       <name>Maven Repository Switchboard</name>
       <layout>default</layout>
@@ -53,7 +48,7 @@
       <dependency>
         <groupId>org.apache.mahout</groupId>
         <artifactId>mahout-core</artifactId>
-        <version>0.5-cdh3u5</version>
+        <version>0.7</version>
       </dependency>
       <dependency>
         <groupId>log4j</groupId>
@@ -61,6 +56,4 @@
         <version>1.2.17</version>
       </dependency>
   </dependencies>
-
-
 </project>

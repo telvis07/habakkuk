@@ -2,11 +2,14 @@
 -- pig -x local book_vectors.pig
 
 -- deps
-register '/usr/lib/pig/3rd-party/elephant-bird-2.2.3.jar';
-register '/usr/lib/pig/contrib/piggybank/java/lib/json-simple-1.1.jar';
-register '/usr/lib/pig/3rd-party/guava-11.0.1.jar';
-register '/usr/lib/mahout/mahout-examples-0.5-cdh3u5-job.jar'; 
-register '/usr/lib/pig/contrib/piggybank/java/piggybank.jar'
+register '/var/hadoop/elephant-bird/elephant-bird-core-4.1-SNAPSHOT.jar';
+register '/var/hadoop/elephant-bird/elephant-bird-pig-4.1-SNAPSHOT.jar';
+register '/var/hadoop/elephant-bird/elephant-bird-mahout-4.1-SNAPSHOT.jar';
+register '/var/hadoop/elephant-bird/elephant-bird-hadoop-compat-4.1-SNAPSHOT.jar';
+register '/var/hadoop/mahout-distribution-0.7/lib/json-simple-1.1.jar';
+register '/var/hadoop/mahout-distribution-0.7/lib/guava-r09.jar';
+register '/var/hadoop/mahout/mahout-examples-0.7-job.jar'; 
+register '/var/hadoop/pig/contrib/piggybank/java/piggybank.jar';
 
 -- elephant-bird seqfile constants
 %declare SEQFILE_LOADER 'com.twitter.elephantbird.pig.load.SequenceFileLoader';
