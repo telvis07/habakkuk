@@ -3,6 +3,7 @@ from datetime import date, timedelta
 import os
 
 def config():
+    # TODO: add fabricrc
     vars = {
         'hk.data':env.get('hk.data','/opt/habakkuk_data/'),
         'hk.input':env.get('hk.input','input'),
@@ -15,8 +16,8 @@ def config():
         'hk.mahout.metric':env.get('hk.mahout.metric','org.apache.mahout.common.distance.CosineDistanceMeasure'),
         'hk.mahout.converge':env.get('hk.mahout.converge','0.1'),
         'hk.mahout.dump.terms':env.get('hk.mahout.dump.terms','10'),
-        'hk.mahout.dump.json':env.get('hk.mahout.dump.json','clusterdump.json'),
-        'hk.mahout.dump.text':env.get('hk.mahout.dump.text','clusterdump.txt'),
+        'hk.mahout.dump.json':env.get('hk.mahout.dump.json','/tmp/clusterdump.json'),
+        'hk.mahout.dump.text':env.get('hk.mahout.dump.text','/tmp/clusterdump.txt'),
     }
     return vars
 
@@ -88,8 +89,8 @@ def clusterdump_text():
           "-dt text -i clusters/clusters-*-final -p clusters/clusteredPoints "\
           "-n %(hk.mahout.dump.terms)s -o %(hk.mahout.dump.text)s -of TEXT"%vars)
 
-def run():
-    prepare_data('7')
+def run(days='7'):
+    prepare_data(days)
     run_pig_job()
     named_vectors()
     run_mahout_job()
