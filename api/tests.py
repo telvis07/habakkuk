@@ -14,7 +14,7 @@ class QueryTest(TestCase):
     def tearDown(self):
         ClusterData.objects.all().delete()
         
-    def test_model(self):
+    def test_dendogram(self):
         cl = ClusterData()
         cl.date = date(2013,10,01)
         cl.range = 1
@@ -25,7 +25,7 @@ class QueryTest(TestCase):
         cl = ClusterData.objects.get(pk=1)
         logger.info("dendogramogram json: '%s'"%cl.d3_dendogram_json)
         got = json.loads(cl.d3_dendogram_json)
-        expected = expected_cluster_data()
+        expected = expected_cluster_dendogram()
         self.assertEquals(expected, got)
 
 def raw_cluster_data():
@@ -105,7 +105,7 @@ def raw_cluster_data():
 
 
     
-def expected_cluster_data():
+def expected_cluster_dendogram():
     return \
         {
           "name": "2013-10-01, 1 day range", 
