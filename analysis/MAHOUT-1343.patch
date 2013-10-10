@@ -1,5 +1,5 @@
 diff --git a/integration/src/main/java/org/apache/mahout/utils/clustering/ClusterDumper.java b/integration/src/main/java/org/apache/mahout/utils/clustering/ClusterDumper.java
-index 3940315..f22208a 100644
+index 3940315..22f9172 100644
 --- a/integration/src/main/java/org/apache/mahout/utils/clustering/ClusterDumper.java
 +++ b/integration/src/main/java/org/apache/mahout/utils/clustering/ClusterDumper.java
 @@ -63,6 +63,7 @@ public final class ClusterDumper extends AbstractJob {
@@ -24,8 +24,8 @@ index 3940315..f22208a 100644
          result = new GraphMLClusterWriter(writer, clusterIdToPoints, measure, numTopFeatures, dictionary, subString);
          break;
 +      case JSON:
-+        result = new JsonClusterWriter(writer, clusterIdToPoints, measure, numTopFeatures, dictionary, subString);
-+        break;          
++        result = new JsonClusterWriter(writer, clusterIdToPoints, measure, numTopFeatures, dictionary);
++        break;
        default:
          throw new IllegalStateException("Unknown outputformat: " + outputFormat);
      }
@@ -33,10 +33,10 @@ index 3940315..f22208a 100644
      }
      return result;
    }
-+  
++
 +  /**
 +   * Convenience func to set the output format during testing
-+   * 
++   *
 +   */
 +  public void setOutputFormat(OUTPUT_FORMAT of){
 +    outputFormat = of;
@@ -44,10 +44,10 @@ index 3940315..f22208a 100644
  }
 diff --git a/integration/src/main/java/org/apache/mahout/utils/clustering/JsonClusterWriter.java b/integration/src/main/java/org/apache/mahout/utils/clustering/JsonClusterWriter.java
 new file mode 100644
-index 0000000..5abcc6e
+index 0000000..8dfe407
 --- /dev/null
 +++ b/integration/src/main/java/org/apache/mahout/utils/clustering/JsonClusterWriter.java
-@@ -0,0 +1,180 @@
+@@ -0,0 +1,179 @@
 +/**
 + * Licensed to the Apache Software Foundation (ASF) under one or more
 + * contributor license agreements.  See the NOTICE file distributed with
@@ -91,7 +91,7 @@ index 0000000..5abcc6e
 +/**
 + * Dump cluster info to json formatted lines. Heavily inspired by
 + * ClusterDumperWriter.java and CSVClusterWriter.java
-+ * 
++ *
 + */
 +public class JsonClusterWriter extends AbstractClusterWriter {
 +  private final String[] dictionary;
@@ -104,8 +104,7 @@ index 0000000..5abcc6e
 +
 +  public JsonClusterWriter(Writer writer,
 +      Map<Integer, List<WeightedVectorWritable>> clusterIdToPoints,
-+      DistanceMeasure measure, int numTopFeatures, String[] dictionary,
-+      int subString) {
++      DistanceMeasure measure, int numTopFeatures, String[] dictionary) {
 +    super(writer, clusterIdToPoints, measure);
 +    this.numTopFeatures = numTopFeatures;
 +    this.dictionary = dictionary;
@@ -115,7 +114,7 @@ index 0000000..5abcc6e
 +  /**
 +   * Generate HashMap with cluster info and write as a single json formatted
 +   * line
-+   * 
++   *
 +   * @return nothing
 +   */
 +  @Override
@@ -144,7 +143,7 @@ index 0000000..5abcc6e
 +
 +  /**
 +   * Create a List of HashMaps containing top terms information
-+   * 
++   *
 +   * @return List<Object>
 +   */
 +  public List<Object> getTopFeaturesList(Vector vector, String[] dictionary,
@@ -184,7 +183,7 @@ index 0000000..5abcc6e
 +
 +  /**
 +   * Create a List of HashMaps containing Vector point information
-+   * 
++   *
 +   * @return List<Object>
 +   */
 +  public List<Object> getPoints(Cluster cluster, String[] dictionary) {
@@ -215,7 +214,7 @@ index 0000000..5abcc6e
 +
 +  /**
 +   * Convenience class for sorting terms
-+   * 
++   *
 +   */
 +  private static class TermIndexWeight {
 +    private final int index;
