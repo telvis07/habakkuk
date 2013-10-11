@@ -1,5 +1,5 @@
 from django.test import TestCase
-from api.models import ClusterData
+from web.models import ClusterData
 from datetime import date, datetime
 from django.test.client import Client
 import json
@@ -7,6 +7,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 # TODO: timezone
+# TODO: make test for empty cluster 
+# {"top_terms":[],"cluster_id":1648,"cluster":"CL-1648{n=1 c=[] r=[]}","points":[]} 
+
 class QueryTest(TestCase):
     def setUp(self):
         pass

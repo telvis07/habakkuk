@@ -32,6 +32,10 @@ def make_d3_data(sender, instance, *args, **kwargs):
 
     # child for every cluster
     for cluster in clusters:
+        if not len(cluster.get('top_terms')):
+            logger.error("found an empty cluster")
+            continue
+
         d3_cluster = {}
         d3_cluster["size"] = 2 # users and bibleverses
         d3_cluster["name"] = cluster["top_terms"][0]["term"]
@@ -55,6 +59,6 @@ def make_d3_data(sender, instance, *args, **kwargs):
             facets[t]+=1
 
     instance.d3_dendogram_json = json.dumps(d3_data, indent=2)
-    instance.num_clusters = len(clusters)
+    instance.num_clusters = len(d3_data["children"])
 
 pre_save.connect(make_d3_data, sender=ClusterData)

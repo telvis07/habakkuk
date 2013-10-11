@@ -4,6 +4,7 @@ build/
 analysis/output
 *~
 *.class
+env/
 
 
 #django static files
