@@ -1,9 +1,13 @@
 from fabric.api import local, settings, env
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 import os
 from fabric.contrib import django
-# django.project('habakkuk')
+import json
+django.project('habakkuk')
 from api.models import ClusterData
+from api.cluster_topics import find_topics
+import logging
+logger = logging.getLogger(__name__)
 
 def config():
     # TODO: add fabricrc
@@ -100,6 +104,20 @@ def run(days='7'):
     clusterdump_json()
     # TODO: store JSON in a django model
 
+def save_cluster_data(date_str, range, fn):
+    cl = ClusterData()
+    cl.date = datetime.strptime(date_str, "%Y-%m-%d")
+    cl.range = int(range)
+    cl.created_at = datetime.now()
+    clusters = []
+    for line in file(fn):
+        data = json.loads(line)
+        data['hk_topics'] = find_topics(data)
+        clusters.append(data)
+    cl.ml_json = json.dumps(clusters, indent=2)
+    cl.save()
+
 def print_clusters():
+    print("Found %d clusters"%len(ClusterData.objects.all()))
     for cl in ClusterData.objects.all():
         print cl

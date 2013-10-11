@@ -23,7 +23,7 @@ class QueryTest(TestCase):
         cl.save()
 
         cl = ClusterData.objects.get(pk=1)
-        logger.info("dendogramogram json: '%s'"%cl.d3_dendogram_json)
+        logger.info("dendogram json: '%s'"%cl.d3_dendogram_json)
         got = json.loads(cl.d3_dendogram_json)
         expected = expected_cluster_dendogram()
         self.assertEquals(expected, got)

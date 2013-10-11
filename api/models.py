@@ -11,13 +11,16 @@ class ClusterData(models.Model):
     range = models.PositiveIntegerField()
     created_at = models.DateTimeField()
     ml_json = models.TextField()
+    # set in pre-save
     d3_dendogram_json = models.TextField()
     num_clusters = models.PositiveIntegerField()
 
     def __unicode__(self):
         return "<date(%s) range(%s) numclusters(%s)>"%(self.date, self.range, self.num_clusters)
 
-@receiver(pre_save)
+    class Meta:
+        unique_together = ('date', 'range')
+
 def make_d3_data(sender, instance, *args, **kwargs):
     if instance.d3_dendogram_json:
         return
@@ -53,3 +56,5 @@ def make_d3_data(sender, instance, *args, **kwargs):
 
     instance.d3_dendogram_json = json.dumps(d3_data, indent=2)
     instance.num_clusters = len(clusters)
+
+pre_save.connect(make_d3_data, sender=ClusterData)
