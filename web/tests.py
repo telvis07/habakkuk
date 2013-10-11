@@ -112,10 +112,16 @@ def expected_cluster_dendogram():
     return \
         {
           "name": "2013-10-01, 1 day range", 
-          "facets": {
-                "romans": 2, 
-                "proverbs": 2
-          }, 
+          "facets": [
+            {
+              "term": "romans",
+              "count": 2
+            }, 
+            {
+              "term": "proverbs",
+              "count": 2
+            }
+          ],
           "children": [
             {
               "name": "proverbs", 

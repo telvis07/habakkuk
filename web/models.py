@@ -28,7 +28,7 @@ def make_d3_data(sender, instance, *args, **kwargs):
     d3_data = {"name":"%s, %d day range"%(instance.date, instance.range)}
     d3_data['children'] = []
     clusters = json.loads(instance.ml_json)
-    d3_data['facets'] = facets = {}
+    facets = {}
 
     # child for every cluster
     for cluster in clusters:
@@ -57,7 +57,8 @@ def make_d3_data(sender, instance, *args, **kwargs):
             t = t['term']
             facets[t] = facets.get(t,0)
             facets[t]+=1
-
+    facets = [{'term':key, 'count':facets[key]} for key in facets]
+    d3_data['facets'] = sorted(facets, key=lambda x: x.values()[0])
     instance.d3_dendogram_json = json.dumps(d3_data, indent=2)
     instance.num_clusters = len(d3_data["children"])
 

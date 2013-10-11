@@ -173,7 +173,7 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
-        'api': {
+        'web': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
