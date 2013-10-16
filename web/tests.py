@@ -38,7 +38,7 @@ class QueryTest(TestCase):
             res = json.loads(response.content)
             self.assertFalse(res.get('trace'),res.get('trace'))
         except:
-            self.fail("Failed to parse reponse from /api/query/")
+            self.fail("Failed to parse reponse from /web/query/")
 
         self.assertEquals(2, res['num_clusters'])
         logger.debug("dendogram json: '%s'"%res['clusters'])
@@ -52,7 +52,7 @@ class QueryTest(TestCase):
             res = json.loads(response.content)
             self.assertFalse(res.get('trace'),res.get('trace'))
         except:
-            self.fail("Failed to parse reponse from /api/query/")
+            self.fail("Failed to parse reponse from /web/query/")
 
         self.assertEquals(2, res['num_clusters'])
 
@@ -65,7 +65,7 @@ class QueryTest(TestCase):
             res = json.loads(response.content)
             self.assertFalse(res.get('trace'),res.get('trace'))
         except:
-            self.fail("Failed to parse reponse from /api/query/")
+            self.fail("Failed to parse reponse from /web/query/")
 
         # just verify it returned clusters
         self.assertEquals(2, res['num_clusters'])
@@ -79,7 +79,7 @@ class QueryTest(TestCase):
             res = json.loads(response.content)
             self.assertFalse(res.get('trace'),res.get('trace'))
         except:
-            self.fail("Failed to parse reponse from /api/query/")
+            self.fail("Failed to parse reponse from /web/query/")
 
         # just verify it returned clusters
         self.assertEquals(0, res['num_clusters'])
