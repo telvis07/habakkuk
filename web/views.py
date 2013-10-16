@@ -1,16 +1,19 @@
 from django.conf import settings
 from django.http import HttpResponse
 from datetime import datetime, timedelta, date
+from django.utils.timezone import now
 import jsonlib2 as json
 import traceback
 import logging
 import sys
+from web.models import ClusterData
 
+DEFAULT_RANGE=1
 # init logging
 logger = logging.getLogger(__name__)
 query_logger = logging.getLogger('query_logger')
 
-def query(request, datestr=None):
+def query(request, datestr=None, range=None):
     response = {}
     try:
         if datestr:
@@ -18,14 +21,26 @@ def query(request, datestr=None):
             dt = datetime.strptime(datestr, "%Y%m%d")
         else:
             logger.debug("using today")
-            dt = datetime.today()
-            dt = datetime(year=dt.year, month=dt.month, day=dt.day)
-        facets = None
-        clusters = None
-        response = {
-            'facets':facets,
-            'clusters':clusters
-        }
+            dt = now().date()
+
+        if not range:
+            range=DEFAULT_RANGE
+        else:
+            range=int(range)
+            
+        logger.info("Looking for clusters dt=%s, range=%d"%(dt, range))
+        ret = ClusterData.objects.filter(date=dt, range=range)
+        if ret:
+            ret = ret[0]
+            response = {
+                'clusters':json.loads(ret.d3_dendogram_json),
+                'num_clusters':ret.num_clusters,
+            }
+        else:
+            response = {
+                'clusters':'{}',
+                'num_clusters':0,
+            }
     except Exception, ex:
         msg = " ".join(traceback.format_exception(*sys.exc_info()))
         response = {

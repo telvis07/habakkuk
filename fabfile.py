@@ -7,6 +7,7 @@ django.project('habakkuk')
 from web.models import ClusterData
 from web.cluster_topics import find_topics
 import logging
+from django.utils.timezone import now
 logger = logging.getLogger(__name__)
 
 def config():
@@ -122,7 +123,7 @@ def save_cluster_data(date_str, range, fn):
 
     cl.date = dt
     cl.range = range
-    cl.created_at = datetime.now()
+    cl.created_at = now()
     clusters = []
     for line in file(fn):
         data = json.loads(line)

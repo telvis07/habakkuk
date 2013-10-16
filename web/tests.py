@@ -4,32 +4,86 @@ from datetime import date, datetime
 from django.test.client import Client
 import json
 import logging
+from django.utils.timezone import now
 logger = logging.getLogger(__name__)
 
-# TODO: timezone
 # TODO: make test for empty cluster 
 # {"top_terms":[],"cluster_id":1648,"cluster":"CL-1648{n=1 c=[] r=[]}","points":[]} 
 
 class QueryTest(TestCase):
     def setUp(self):
-        pass
+        for dt in [date(2013,10,01), now().date()]:
+            cl = ClusterData()
+            cl.date = dt
+            cl.range = 1
+            cl.created_at = now()
+            cl.ml_json = json.dumps(raw_cluster_data(), indent=2)
+            cl.save()
         
     def tearDown(self):
         ClusterData.objects.all().delete()
         
     def test_dendogram(self):
-        cl = ClusterData()
-        cl.date = date(2013,10,01)
-        cl.range = 1
-        cl.created_at = datetime.now()
-        cl.ml_json = json.dumps(raw_cluster_data(), indent=2)
-        cl.save()
-
         cl = ClusterData.objects.get(pk=1)
-        logger.info("dendogram json: '%s'"%cl.d3_dendogram_json)
+        logger.debug("dendogram json: '%s'"%cl.d3_dendogram_json)
         got = json.loads(cl.d3_dendogram_json)
         expected = expected_cluster_dendogram()
         self.assertEquals(expected, got)
+
+    def test_with_date(self):
+        client = Client()
+        response = client.get("/web/query/%s"%date(2013,10,01).strftime("%Y%m%d"))
+        self.assertEquals(200, response.status_code)
+        try:
+            res = json.loads(response.content)
+            self.assertFalse(res.get('trace'),res.get('trace'))
+        except:
+            self.fail("Failed to parse reponse from /api/query/")
+
+        self.assertEquals(2, res['num_clusters'])
+        logger.debug("dendogram json: '%s'"%res['clusters'])
+        expected = expected_cluster_dendogram()
+        self.assertEquals(expected,res['clusters'])
+
+        # test with range value in path
+        response = client.get("/web/query/%s/1"%date(2013,10,01).strftime("%Y%m%d"))
+        self.assertEquals(200, response.status_code)
+        try:
+            res = json.loads(response.content)
+            self.assertFalse(res.get('trace'),res.get('trace'))
+        except:
+            self.fail("Failed to parse reponse from /api/query/")
+
+        self.assertEquals(2, res['num_clusters'])
+
+
+    def test_no_date(self):
+        client = Client()
+        response = client.get("/web/query/")
+        self.assertEquals(200, response.status_code)
+        try:
+            res = json.loads(response.content)
+            self.assertFalse(res.get('trace'),res.get('trace'))
+        except:
+            self.fail("Failed to parse reponse from /api/query/")
+
+        # just verify it returned clusters
+        self.assertEquals(2, res['num_clusters'])
+        logger.debug("dendogram json: '%s'"%res['clusters'])
+
+    def test_no_results(self):
+        client = Client()
+        response = client.get("/web/query/%s"%date(2013,10,02).strftime("%Y%m%d"))
+        self.assertEquals(200, response.status_code)
+        try:
+            res = json.loads(response.content)
+            self.assertFalse(res.get('trace'),res.get('trace'))
+        except:
+            self.fail("Failed to parse reponse from /api/query/")
+
+        # just verify it returned clusters
+        self.assertEquals(0, res['num_clusters'])
+        logger.debug("dendogram json: '%s'"%res['clusters'])
 
 def raw_cluster_data():
     return  \
@@ -106,8 +160,6 @@ def raw_cluster_data():
     }
     ]
 
-
-    
 def expected_cluster_dendogram():
     return \
         {
