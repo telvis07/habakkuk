@@ -58,8 +58,9 @@ def make_d3_data(sender, instance, *args, **kwargs):
             facets[t] = facets.get(t,0)
             facets[t]+=1
     facets = [{'term':key, 'count':facets[key]} for key in facets]
-    d3_data['facets'] = sorted(facets, key=lambda x: x.values()[0])
+    d3_data['facets'] = sorted(facets, key=lambda x: x.values()[0], reverse=True)
     instance.d3_dendogram_json = json.dumps(d3_data, indent=2)
     instance.num_clusters = len(d3_data["children"])
 
+# TODO: Does this fire on update?
 pre_save.connect(make_d3_data, sender=ClusterData)
