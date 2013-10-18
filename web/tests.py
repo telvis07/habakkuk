@@ -30,6 +30,13 @@ class QueryTest(TestCase):
         expected = expected_cluster_dendogram()
         self.assertEquals(expected, got)
 
+    def test_view(self):
+        client = Client()
+        response = client.get("/")
+        self.assertEquals(200, response.status_code)
+        print response.context['facets']
+        self.assertTrue(response.context['facets'])
+
     def test_with_date(self):
         client = Client()
         response = client.get("/api/query/%s"%date(2013,10,01).strftime("%Y%m%d"))

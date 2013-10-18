@@ -9,10 +9,11 @@ clusterModule.controller('ClusterCtrl',
 
      // TODO: move to service
      var get_facets = function(){
-         return [
-            {value:'john 3:16', count:'10', selected: false},
-            {value:'genesis 2:24', count:'8', selected: false},
-         ];
+//         return [
+//            {value:'john 3:16', count:'10', selected: false},
+//            {value:'genesis 2:24', count:'8', selected: false},
+//         ];
+         return HK.facets;
      };
 
      $scope.selectFacet = function(index){

@@ -15,7 +15,14 @@ logger = logging.getLogger(__name__)
 query_logger = logging.getLogger('query_logger')
 
 def home(request, template='clustering.html'):
-    return render(request, template, {})
+    context = {}
+    context['facets'] = json.dumps([
+            {'value':'john 3:16', 'count':'10', 'selected': False},
+            {'value':'genesis 2:24', 'count':'8', 'selected': False},
+         ])
+    context['clusters'] = json.dumps([])
+
+    return render(request, template, context)
 
 def query(request, datestr=None, range=None):
     response = {}

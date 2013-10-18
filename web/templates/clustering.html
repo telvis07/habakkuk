@@ -12,6 +12,13 @@
     <script src="{{STATIC_URL}}vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="{{STATIC_URL}}vendor/angular/angular.min.js"></script>
     <script src="{{STATIC_URL}}vendor/d3/d3.v3.js"></script>
+
+
+    <script type="text/javascript">
+        var HK = {};
+        HK.clusters = {{ clusters }};
+        HK.facets = {{ facets }};
+    </script>
     <script src="{{STATIC_URL}}clustering/clustering.js"></script>
 {% endblock %}
 
