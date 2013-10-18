@@ -10,9 +10,6 @@ env/
 # apache pig logs
 pig_*.log
 
-# django static files
-static/
-
 # eclipse
 .project
 .classpath

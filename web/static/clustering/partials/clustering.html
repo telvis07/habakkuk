@@ -1,0 +1,25 @@
+<div ng-controller='ClusterCtrl'>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span2">
+        <h2>Facet Counts</h2>
+        <table class="table table-hover table-bordered table-condensed" >
+          <thead>
+            <tr>
+              <th>Bible Reference</th>
+              <th>Tweet Count</th>
+            </tr>
+          </thead>
+          <tr ng-repeat='facet in facets',  ng-click="selectFacet($index)", class="{{facet.class}}">
+            <td>{{facet.value}}</td><td>{{facet.count}}</td>
+          </tr>
+        </table>
+      </div> <!-- span2 -->
+
+      <div class="span10">
+        <h2>Clusters visualization</h2>
+        <hkuk-clusters-viz clusters='clusters'></hkuk-clusters-viz>
+      </div>
+    </div>
+  </div>
+</div>
