@@ -14,7 +14,7 @@ DEFAULT_RANGE=1
 logger = logging.getLogger(__name__)
 query_logger = logging.getLogger('query_logger')
 
-def home(request, template='base.html'):
+def home(request, template='clustering.html'):
     return render(request, template, {})
 
 def query(request, datestr=None, range=None):
