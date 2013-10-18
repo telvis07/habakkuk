@@ -2,78 +2,23 @@
 *.properties
 build/
 analysis/output
-*~
 *.class
+*.pyc
+*.swp
 env/
 
+# apache pig logs
+pig_*.log
 
-#django static files
+# django static files
 static/
 
-# misc directories
-bin/
-tmp/*
-/src/
-lib64
-# python compiled
-*.pyc
-*.pyo
-
-# log files
-*.log
-logs/*
-
-# SVN dirs
-.svn
-
-# working files 
-*.swp
-*.swo
-
-# backup
-*.bk
-*.bkup
-
-# dirs with gitignore
-!.gitignore
-
-# tmp files
-*.orig
-*.backup
-
-# old dirs
-*.old/
-
-# ignore local_settings.py
-local_settings.py
-
-*sublime-project*
-*.sublime-workspace
-docs/_build
-
-# Eclipse project file
-.pydevproject
+# eclipse
 .project
 .classpath
 .settings
-/lib/
-include/
-bin/activate
-bin/activate.csh
-bin/activate.fish
-bin/activate_this.py
-bin/django-admin.py
-bin/easy_install
-bin/easy_install-2.6
-bin/pip
-bin/pip-2.6
-bin/python
-bin/virtualenv
-.coverage
-local
-/lib/
+target/
+analysis
 
-java/*/classes/
-java/*/target/
-java/*/lib/
-*.jar
+# jetbrains pycharm
+.idea

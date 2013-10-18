@@ -1,4 +1,5 @@
-from django.conf import settings
+# from django.conf import settings
+from django.shortcuts import render
 from django.http import HttpResponse
 from datetime import datetime, timedelta, date
 from django.utils.timezone import now
@@ -12,6 +13,9 @@ DEFAULT_RANGE=1
 # init logging
 logger = logging.getLogger(__name__)
 query_logger = logging.getLogger('query_logger')
+
+def home(request, template='base.html'):
+    return render(request, template, {})
 
 def query(request, datestr=None, range=None):
     response = {}

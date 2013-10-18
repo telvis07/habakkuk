@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{%endblock%} </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- CSS -->
+    <link href="{{STATIC_URL}}vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}clustering/clustering.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <script src="{{STATIC_URL}}vendor/jquery/jquery-1.9.1.min.js"></script>
+    <script src="{{STATIC_URL}}vendor/datatables/jquery.dataTables.js"></script>
+    <script src="{{STATIC_URL}}vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{STATIC_URL}}vendor/angular/angular.min.js"></script>
+    <script src="{{STATIC_URL}}vendor/d3/d3.v3.js"></script>
+    <script src="{{STATIC_URL}}clustering/clustering.js"></script>
+  </head>
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/">Habakkuk</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="http://technicalelvis.com/blog">Telvis' Blog</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+   <div ng-app='clusterApp'>
+       <ng-include
+               src="'{{STATIC_URL}}clustering/partials/clustering.html'">
+       </ng-include>
+   </div>
+   {% block content %}
+   {% endblock content %}
+   {% block endofbody %}
+   {% endblock endofbody %}
+  </body>
+</html>
+

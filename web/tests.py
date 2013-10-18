@@ -32,13 +32,13 @@ class QueryTest(TestCase):
 
     def test_with_date(self):
         client = Client()
-        response = client.get("/web/query/%s"%date(2013,10,01).strftime("%Y%m%d"))
+        response = client.get("/api/query/%s"%date(2013,10,01).strftime("%Y%m%d"))
         self.assertEquals(200, response.status_code)
         try:
             res = json.loads(response.content)
             self.assertFalse(res.get('trace'),res.get('trace'))
         except:
-            self.fail("Failed to parse reponse from /web/query/")
+            self.fail("Failed to parse response from /api/query/")
 
         self.assertEquals(2, res['num_clusters'])
         logger.debug("dendogram json: '%s'"%res['clusters'])
@@ -46,26 +46,26 @@ class QueryTest(TestCase):
         self.assertEquals(expected,res['clusters'])
 
         # test with range value in path
-        response = client.get("/web/query/%s/1"%date(2013,10,01).strftime("%Y%m%d"))
+        response = client.get("/api/query/%s/1"%date(2013,10,01).strftime("%Y%m%d"))
         self.assertEquals(200, response.status_code)
         try:
             res = json.loads(response.content)
             self.assertFalse(res.get('trace'),res.get('trace'))
         except:
-            self.fail("Failed to parse reponse from /web/query/")
+            self.fail("Failed to parse reponse from /api/query/")
 
         self.assertEquals(2, res['num_clusters'])
 
 
     def test_no_date(self):
         client = Client()
-        response = client.get("/web/query/")
+        response = client.get("/api/query/")
         self.assertEquals(200, response.status_code)
         try:
             res = json.loads(response.content)
             self.assertFalse(res.get('trace'),res.get('trace'))
         except:
-            self.fail("Failed to parse reponse from /web/query/")
+            self.fail("Failed to parse reponse from /api/query/")
 
         # just verify it returned clusters
         self.assertEquals(2, res['num_clusters'])
@@ -73,13 +73,13 @@ class QueryTest(TestCase):
 
     def test_no_results(self):
         client = Client()
-        response = client.get("/web/query/%s"%date(2013,10,02).strftime("%Y%m%d"))
+        response = client.get("/api/query/%s"%date(2013,10,02).strftime("%Y%m%d"))
         self.assertEquals(200, response.status_code)
         try:
             res = json.loads(response.content)
             self.assertFalse(res.get('trace'),res.get('trace'))
         except:
-            self.fail("Failed to parse reponse from /web/query/")
+            self.fail("Failed to parse reponse from /api/query/")
 
         # just verify it returned clusters
         self.assertEquals(0, res['num_clusters'])
