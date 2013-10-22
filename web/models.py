@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from django.db.models import Max
 import json
 import logging
 logger = logging.getLogger(__name__)

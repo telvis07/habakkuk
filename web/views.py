@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from datetime import datetime, timedelta, date
 from django.utils.timezone import now
+from django.db.models import Max
 import jsonlib2 as json
 import traceback
 import logging
@@ -16,31 +17,23 @@ query_logger = logging.getLogger('query_logger')
 
 def home(request, template='clustering.html'):
     context = {}
-    context['facets'] = json.dumps([
-            {'value':'john 3:16', 'count':'10', 'selected': False},
-            {'value':'genesis 2:24', 'count':'8', 'selected': False},
-         ])
-    context['clusters'] = json.dumps([])
+    ret = _get_newest_or_for_date(None, None)
+
+    if ret:
+        ret = ret[0]
+        cluster = json.loads(ret.d3_dendogram_json)
+        context['clusters'] = cluster
+        context['facets'] = cluster.get('facets', [])
+    else:
+        context['clusters'] = []
+        context['facets'] = []
 
     return render(request, template, context)
 
 def query(request, datestr=None, range=None):
     response = {}
     try:
-        if datestr:
-            logger.debug("got a datestr "+datestr)
-            dt = datetime.strptime(datestr, "%Y%m%d")
-        else:
-            logger.debug("using today")
-            dt = now().date()
-
-        if not range:
-            range=DEFAULT_RANGE
-        else:
-            range=int(range)
-            
-        logger.info("Looking for clusters dt=%s, range=%d"%(dt, range))
-        ret = ClusterData.objects.filter(date=dt, range=range)
+        ret = _get_newest_or_for_date(datestr, range)
         if ret:
             ret = ret[0]
             response = {
@@ -62,3 +55,20 @@ def query(request, datestr=None, range=None):
 
     query_logger.info("query|%s|%s"%(request.user.id, request.path))
     return HttpResponse(json.dumps(response), content_type="application/json")
+
+def _get_newest_or_for_date(datestr=None, range=None):
+    if datestr:
+        logger.debug("got a datestr "+datestr)
+        dt = datetime.strptime(datestr, "%Y%m%d")
+    else:
+        logger.debug("using today")
+        # dt = now().date()
+        dt = ClusterData.objects.all().aggregate(Max('date'))['date__max']
+
+    if not range:
+        range=DEFAULT_RANGE
+    else:
+        range=int(range)
+
+    logger.info("Looking for clusters dt=%s, range=%d"%(dt, range))
+    return ClusterData.objects.filter(date=dt, range=range)

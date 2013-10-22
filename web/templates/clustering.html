@@ -17,8 +17,8 @@
 
     <script type="text/javascript">
         var HK = {};
-        HK.clusters = JSON.parse({{ clusters | jsonify }});
-        HK.facets = JSON.parse({{ facets | jsonify }});
+        HK.clusters = {{ clusters | jsonify }};
+        HK.facets = {{ facets | jsonify }};
     </script>
     <script src="{{STATIC_URL}}clustering/clustering.js"></script>
 {% endblock %}
