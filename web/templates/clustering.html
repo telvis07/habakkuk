@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load jsonify %}
 {% block head %}
     <title>{% block title %}{%endblock%} </title>
     <link href="{{STATIC_URL}}clustering/clustering.css" rel="stylesheet">
@@ -16,8 +17,8 @@
 
     <script type="text/javascript">
         var HK = {};
-        HK.clusters = {{ clusters }};
-        HK.facets = {{ facets }};
+        HK.clusters = JSON.parse({{ clusters | jsonify }});
+        HK.facets = JSON.parse({{ facets | jsonify }});
     </script>
     <script src="{{STATIC_URL}}clustering/clustering.js"></script>
 {% endblock %}

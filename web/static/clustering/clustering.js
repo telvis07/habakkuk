@@ -3,7 +3,7 @@
 var clusterModule = angular.module("clusterApp",[]);
 
 clusterModule.controller('ClusterCtrl',
-   function ($scope, $log, clusterData){
+   function ($window, $scope, $log, clusterData){
      // clusters for queries
      $scope.clusters = clusterData.query(null);
 
@@ -13,7 +13,7 @@ clusterModule.controller('ClusterCtrl',
 //            {value:'john 3:16', count:'10', selected: false},
 //            {value:'genesis 2:24', count:'8', selected: false},
 //         ];
-         return HK.facets;
+         return $window.HK.facets;
      };
 
      $scope.selectFacet = function(index){
