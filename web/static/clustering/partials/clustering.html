@@ -10,8 +10,8 @@
               <th>Tweet Count</th>
             </tr>
           </thead>
-          <tr ng-repeat='facet in facets',  ng-click="selectFacet($index)", class="{{facet.class}}">
-            <td>{{facet.value}}</td><td>{{facet.count}}</td>
+          <tr ng-repeat='facet in facets',  ng-click="clickedFacet($index)", class="{{facet.class}}">
+            <td>{{facet.term}}</td><td>{{facet.count}}</td>
           </tr>
         </table>
       </div> <!-- span2 -->

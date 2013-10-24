@@ -3,103 +3,52 @@
 var clusterModule = angular.module("clusterApp",[]);
 
 clusterModule.controller('ClusterCtrl',
-   function ($window, $scope, $log, clusterData){
+   function ($window, $scope, $log){
      // clusters for queries
-     $scope.clusters = clusterData.query(null);
+     $scope.facets = $window.HK.facets;
+     $scope.unfiltered_clusters = $window.HK.clusters;
+     $log.info("Got "+$scope.facets.length + " facets");
 
-     // TODO: move to service
-     var get_facets = function(){
-//         return [
-//            {value:'john 3:16', count:'10', selected: false},
-//            {value:'genesis 2:24', count:'8', selected: false},
-//         ];
-         return $window.HK.facets;
-     };
+     $scope.clickedFacet = function(index){
+         /* fires when ever a term is clicked in the facet counts panel */
+         var selected_term = null;
 
-     $scope.selectFacet = function(index){
-         // update row color for selection
+         // toggle selected flag
          var selected = !$scope.facets[index].selected;
-         var bv = null;
-         var selected_list = [];
          $scope.facets[index].selected = selected;
+
+         // get selected term
          if (selected){
            $log.info("selected "+index+" from facets table");
            $scope.facets[index].class = "success";
-           bv = $scope.facets[index].value;
-           // TODO: support multiple selections
+           selected_term = $scope.facets[index].term;
          }else {
            $log.info("de-selected "+index+" from facets table");
            $scope.facets[index].class = "";
          }
-          for (var i=0; i<$scope.facets.length; i++){
-            var facet = $scope.facets[i];
-            if (facet.selected===true){
-              selected_list.push($scope.facets[i].value);
-            }
-         }
-         // $scope.clusters = clusterData.query(bv);
-         $scope.clusters = clusterData.query(bv);
-    };
+         $scope.clusters = filterClusters(selected_term);
+     };
 
-     $scope.facets = get_facets();
-     console.log($scope.facets);
-});
+     var filterClusters = function(term) {
+        /* Remove cluster entries that do not contain 'term' */
+        var data = $scope.unfiltered_clusters;
+        var clusters = data.children;
 
-// service for clustering data
-clusterModule.factory('clusterData', function() {
-    // creating an object of type 'clusterData'
-    var clusters = {};
-    clusters.query = function(filter_bibleverse) {
-        // TODO: query from django
-        data =  {
-          "name": "root", 
-          "children": [
-            {
-              "size": 2, 
-              "name": "john 3:16", 
-              "bibleverses":[{verse:'john 3:16', weight:1.0},
-                             {verse:'galatians 1:1', weight:0.001}],
-              "children": [
-                {
-                  "name": "user1 ", 
-                  "children": []
-                }, 
-                {
-                  "name": "user2", 
-                  "children": []
-                }, 
-              ]
-            },
-            {
-              "size": 2, 
-              "name": "genesis 2:24", 
-              "bibleverses":[{verse:'genesis 2:24', weight:1.0},
-                             {verse:'habakkuk 1:1', weight:0.001}],
-              "children": [
-                {
-                  "name": "user3 ", 
-                  "children": []
-                }, 
-                {
-                  "name": "user4", 
-                  "children": []
-                }, 
-              ]      
-            },
-          ]
-        };
-
-        // filter
-        if (filter_bibleverse === null){
-            return data;
+        if (term === null){
+            // No filters so return unfiltered list
+            return $scope.unfiltered_clusters;
         }else{
             // TODO: iterate of selected_list and filter based on multiple-selections
             var _filtered = {name:"root", children:[]};
-            for (var i=0; i<data.children.length; i++){
-                var cluster = data.children[i];
-                for (var j=0; j<cluster.bibleverses.length; j++){
-                    var bv = cluster.bibleverses[j].verse;
-                    if (bv == filter_bibleverse){
+            // iterate over all clusters
+            for (var i=0; i<clusters.length; i++){
+                var cluster = clusters[i];
+                var topics = cluster[0],
+                    bibleverses = cluster[1];
+                // iterate over all bibleverses in the cluster
+                for (var j=0; j<bibleverses.length; j++){
+                     var bv = bibleverses[j].name;
+                    if (bv == term){
                         _filtered.children.push(cluster);
                         break;
                     }
@@ -107,9 +56,38 @@ clusterModule.factory('clusterData', function() {
             }
             return _filtered;
         }
-    };
-    return clusters;
-});
+     };
+
+     $scope.clusters = filterClusters(null);
+  });
+
+//// service for clustering data
+//clusterModule.factory('clusterData', function() {
+//    // creating an object of type 'clusterData'
+//    var clusters = {};
+//    clusters.query = function(filter_bibleverse) {
+//
+//        // filter
+//        if (filter_bibleverse === null){
+//            return data;
+//        }else{
+//            // TODO: iterate of selected_list and filter based on multiple-selections
+//            var _filtered = {name:"root", children:[]};
+//            for (var i=0; i<data.children.length; i++){
+//                var cluster = data.children[i];
+//                for (var j=0; j<cluster.bibleverses.length; j++){
+//                    var bv = cluster.bibleverses[j].verse;
+//                    if (bv == filter_bibleverse){
+//                        _filtered.children.push(cluster);
+//                        break;
+//                    }
+//                }
+//            }
+//            return _filtered;
+//        }
+//    };
+//    return clusters;
+//});
 
 
 clusterModule.directive('hkukClustersViz', function($log, $window) {
