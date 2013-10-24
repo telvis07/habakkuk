@@ -13,12 +13,22 @@ clusterModule.controller('ClusterCtrl',
          /* fires when ever a term is clicked in the facet counts panel */
          var selected_term = null;
 
+         // TODO: de-select other terms
+         // until I can support multi-select
+         for(var i=0; i<$scope.facets.length; i++){
+             if(i==index){
+                 continue;
+             }
+             $scope.facets[i].selected = false;
+             $scope.facets[i].class = "";
+         }
+
          // toggle selected flag
          var selected = !$scope.facets[index].selected;
          $scope.facets[index].selected = selected;
 
-         // get selected term
          if (selected){
+           // highlight the row by changing 'class'
            $log.info("selected "+index+" from facets table");
            $scope.facets[index].class = "success";
            selected_term = $scope.facets[index].term;
@@ -38,16 +48,15 @@ clusterModule.controller('ClusterCtrl',
             // No filters so return unfiltered list
             return $scope.unfiltered_clusters;
         }else{
-            // TODO: iterate of selected_list and filter based on multiple-selections
             var _filtered = {name:"root", children:[]};
             // iterate over all clusters
             for (var i=0; i<clusters.length; i++){
                 var cluster = clusters[i];
-                var topics = cluster[0],
-                    bibleverses = cluster[1];
+                var topics = cluster.children[0],
+                    bibleverses = cluster.children[1];
                 // iterate over all bibleverses in the cluster
-                for (var j=0; j<bibleverses.length; j++){
-                     var bv = bibleverses[j].name;
+                for (var j=0; j<bibleverses.children.length; j++){
+                    var bv = bibleverses.children[j].name;
                     if (bv == term){
                         _filtered.children.push(cluster);
                         break;
@@ -60,35 +69,6 @@ clusterModule.controller('ClusterCtrl',
 
      $scope.clusters = filterClusters(null);
   });
-
-//// service for clustering data
-//clusterModule.factory('clusterData', function() {
-//    // creating an object of type 'clusterData'
-//    var clusters = {};
-//    clusters.query = function(filter_bibleverse) {
-//
-//        // filter
-//        if (filter_bibleverse === null){
-//            return data;
-//        }else{
-//            // TODO: iterate of selected_list and filter based on multiple-selections
-//            var _filtered = {name:"root", children:[]};
-//            for (var i=0; i<data.children.length; i++){
-//                var cluster = data.children[i];
-//                for (var j=0; j<cluster.bibleverses.length; j++){
-//                    var bv = cluster.bibleverses[j].verse;
-//                    if (bv == filter_bibleverse){
-//                        _filtered.children.push(cluster);
-//                        break;
-//                    }
-//                }
-//            }
-//            return _filtered;
-//        }
-//    };
-//    return clusters;
-//});
-
 
 clusterModule.directive('hkukClustersViz', function($log, $window) {
     var width = $(window).width() * 0.66;
@@ -113,8 +93,7 @@ clusterModule.directive('hkukClustersViz', function($log, $window) {
 
             scope.$watch('clusters', function(newVal, oldVal){
               if (newVal){
-                $log.info("in watch "+newVal);
-                $log.info(newVal);
+                $log.info("redrawing clusters")
 
                 // remove so we can redraw
                 svg.selectAll('*').remove();
