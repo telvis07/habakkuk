@@ -8,13 +8,15 @@ clusterModule.controller('ClusterCtrl',
      $scope.facets = $window.HK.facets;
      $scope.unfiltered_clusters = $window.HK.clusters;
      $log.info("Got "+$scope.facets.length + " facets");
+     $scope.clusters = filterClusters(null);
+     $scope.clickedFacet =  clickedFacet;
 
-     $scope.clickedFacet = function(index){
+     function clickedFacet(index){
          /* fires when ever a term is clicked in the facet counts panel */
          var selected_term = null;
 
-         // TODO: de-select other terms
-         // until I can support multi-select
+         // de-select other terms
+         // TODO: support multi-select
          for(var i=0; i<$scope.facets.length; i++){
              if(i==index){
                  continue;
@@ -39,7 +41,7 @@ clusterModule.controller('ClusterCtrl',
          $scope.clusters = filterClusters(selected_term);
      };
 
-     var filterClusters = function(term) {
+     function filterClusters(term) {
         /* Remove cluster entries that do not contain 'term' */
         var data = $scope.unfiltered_clusters;
         var clusters = data.children;
@@ -66,8 +68,6 @@ clusterModule.controller('ClusterCtrl',
             return _filtered;
         }
      };
-
-     $scope.clusters = filterClusters(null);
   });
 
 clusterModule.directive('hkukClustersViz', function($log, $window) {
