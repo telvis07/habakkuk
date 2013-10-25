@@ -1,9 +1,7 @@
-// angular app to browse habakkuk clusters and facet results
+/* angular app to browse habakkuk clusters and facet results */
 
-var clusterModule = angular.module("clusterApp",[]);
-
-clusterModule.controller('ClusterCtrl',
-   function ($window, $scope, $log){
+/* Controller for clustering visualization */
+function HkClusterCtrl($window, $scope, $log){
      // clusters for queries
      $scope.facets = $window.HK.facets;
      $scope.unfiltered_clusters = $window.HK.clusters;
@@ -68,12 +66,15 @@ clusterModule.controller('ClusterCtrl',
             return _filtered;
         }
      };
-  });
+  }
 
-clusterModule.directive('hkukClustersViz', function($log, $window) {
+/* Directive to draw D3 cluster dengogram
+ * See: http://bl.ocks.org/mbostock/4063570
+ */
+function HkDendogramDirective($log, $window) {
     var width = $(window).width() * 0.66;
          height = $(window).height();
-    
+
       return {
         restrict: 'E',
         scope: {clusters:"="},
@@ -132,4 +133,8 @@ clusterModule.directive('hkukClustersViz', function($log, $window) {
             }); // watch
         }
     };
-});
+}
+
+var clusterModule = angular.module("clusterApp",[]);
+clusterModule.controller('ClusterCtrl', HkClusterCtrl);
+clusterModule.directive('hkukClustersViz', HkDendogramDirective);
