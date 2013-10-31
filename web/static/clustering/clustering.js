@@ -9,8 +9,8 @@ function HkClusterCtrl($window, $scope, $log){
      $scope.clusters = filterClusters(null);
      $scope.clickedFacet =  clickedFacet;
 
+     /* fires when ever a term is clicked in the facet counts table */
      function clickedFacet(index){
-         /* fires when ever a term is clicked in the facet counts panel */
          var selected_term = null;
 
          // de-select other terms
@@ -39,8 +39,8 @@ function HkClusterCtrl($window, $scope, $log){
          $scope.clusters = filterClusters(selected_term);
      };
 
+     /* Remove cluster entries that do not contain 'term' */
      function filterClusters(term) {
-        /* Remove cluster entries that do not contain 'term' */
         var data = $scope.unfiltered_clusters;
         var clusters = data.children;
 
@@ -135,6 +135,7 @@ function HkDendogramDirective($log, $window) {
     };
 }
 
-var clusterModule = angular.module("clusterApp",[]);
+/* angular declarations */
+var clusterModule = angular.module("clusterApp",['ui.bootstrap']);
 clusterModule.controller('ClusterCtrl', HkClusterCtrl);
 clusterModule.directive('hkukClustersViz', HkDendogramDirective);
