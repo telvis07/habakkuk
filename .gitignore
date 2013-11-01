@@ -1,3 +1,4 @@
+local_settings.py
 /find_all_scriptures.py
 *.properties
 build/
