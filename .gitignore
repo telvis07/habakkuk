@@ -7,6 +7,7 @@ analysis/output
 *.pyc
 *.swp
 env/
+static/
 
 # apache pig logs
 pig_*.log
