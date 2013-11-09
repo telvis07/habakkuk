@@ -21,6 +21,7 @@ if 'test' in sys.argv or 'test_coverage' in sys.argv: #Covers regular testing an
     }
 elif dj_database_url.config():
     # heroku
+    DATABASES = {}
     DATABASES['default'] =  dj_database_url.config()
 
     # Honor the 'X-Forwarded-Proto' header for request.is_secure()
