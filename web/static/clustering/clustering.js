@@ -48,7 +48,7 @@ function HkClusterCtrl($window, $scope, $log){
             // No filters so return unfiltered list
             return $scope.unfiltered_clusters;
         }else{
-            var _filtered = {name:"root", children:[]};
+            var _filtered = {name:"filtered for "+term, children:[]};
             // iterate over all clusters
             for (var i=0; i<clusters.length; i++){
                 var cluster = clusters[i];
