@@ -10,7 +10,7 @@ import logging
 import sys
 from web.models import ClusterData
 
-DEFAULT_RANGE=1
+DEFAULT_RANGE=7
 # init logging
 logger = logging.getLogger(__name__)
 query_logger = logging.getLogger('query_logger')

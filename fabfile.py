@@ -102,7 +102,7 @@ def clusterdump_text():
               "-dt text -i clusters/clusters-*-final -p clusters/clusteredPoints "\
               "-n %(hk.mahout.dump.terms)s -o %(hk.mahout.dump.text)s -of TEXT"%vars)
 
-def run_clustering(date_str=None, range='1'):
+def run_clustering(date_str=None, range='7'):
     vars = config()
     if not date_str:
         dt = date.today() - timedelta(days=1)

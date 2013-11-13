@@ -41,7 +41,6 @@ else:
         }
     }
 
-
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1

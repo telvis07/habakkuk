@@ -1,5 +1,7 @@
 from django.test import TestCase
+from django.conf import settings
 from web.models import ClusterData
+from web.views import DEFAULT_RANGE
 from datetime import date, datetime
 from django.test.client import Client
 import json
@@ -12,17 +14,18 @@ logger = logging.getLogger(__name__)
 
 class QueryTest(TestCase):
     def setUp(self):
+        ClusterData.objects.all().delete()
         for dt in [date(2013,10,01), now().date()]:
             cl = ClusterData()
             cl.date = dt
-            cl.range = 1
+            cl.range = DEFAULT_RANGE
             cl.created_at = now()
             cl.ml_json = json.dumps(raw_cluster_data(), indent=2)
             cl.save()
-        
+
     def tearDown(self):
         ClusterData.objects.all().delete()
-        
+
     def test_dendogram(self):
         cl = ClusterData.objects.get(pk=1)
         logger.debug("dendogram json: '%s'"%cl.d3_dendogram_json)
@@ -53,7 +56,7 @@ class QueryTest(TestCase):
         self.assertEquals(expected,res['clusters'])
 
         # test with range value in path
-        response = client.get("/api/query/%s/1"%date(2013,10,01).strftime("%Y%m%d"))
+        response = client.get("/api/query/%s/%s"%(date(2013,10,01).strftime("%Y%m%d"),DEFAULT_RANGE))
         self.assertEquals(200, response.status_code)
         try:
             res = json.loads(response.content)
@@ -170,7 +173,7 @@ def raw_cluster_data():
 def expected_cluster_dendogram():
     return \
         {
-          "name": "2013-10-01, 1 day range", 
+          "name": "2013-10-01, %s day range"%DEFAULT_RANGE, 
           "facets": [
             {
               "term": "romans",
