@@ -15,9 +15,10 @@ def config():
     vars = {
         'hk.data':env.get('hk.data','/opt/habakkuk_data/'),
         'hk.input':env.get('hk.input','input'),
-        'hk.book_vectors':env.get('hk.book_vectors','book_vectors'),
-        'hk.named_vectors':env.get('hk.named_vectors','book_vectors-nv'),
-        'hk.pig_script':env.get('hk.pig_script', 'book_vectors.pig'),
+        'hk.vectors':env.get('hk.vectors','vectors'),
+        'hk.named_vectors':env.get('hk.named_vectors','vectors-nv'),
+        'hk.pig_script':env.get('hk.pig_script', 'verse_vectors.pig'),
+        'hk.pig.join_data':env.get('hk.pig.join_data','join_data'),
         'hk.mahout.num_clusters':env.get('hk.mahout.num_clusters','10'),
         'hk.mahout.num_iterations':env.get('hk.mahout.num_iterations','5'),
         'hk.mahout.output':env.get('hk.mahout.output','clusters'),
@@ -26,6 +27,7 @@ def config():
         'hk.mahout.dump.terms':env.get('hk.mahout.dump.terms','10'),
         'hk.mahout.dump.json':env.get('hk.mahout.dump.json','/tmp/clusterdump.json'),
         'hk.mahout.dump.text':env.get('hk.mahout.dump.text','/tmp/clusterdump.txt'),
+        'hk.mahout.dictionary':env.get('hk.mahout.dictionary','./join_data/verse.dictionary'),
     }
     return vars
 
@@ -42,9 +44,13 @@ def make_dirs():
     local('hadoop fs -mkdir %(hk.input)s'%vars)
 
     with settings(warn_only=True):
-        local('hadoop fs -rmr %(hk.book_vectors)s'%vars)
+        local('hadoop fs -rmr %(hk.vectors)s'%vars)
         local('hadoop fs -rmr %(hk.named_vectors)s'%vars)
+        local('hadoop fs -rmr %(hk.pig.join_data)s'%vars)
     local('hadoop fs -mkdir %(hk.named_vectors)s'%vars)
+
+    with lcd('analysis'):
+        local('hadoop fs -copyFromLocal %(hk.pig.join_data)s %(hk.pig.join_data)s'%vars)
 
 def prepare_data(date_str, range):
     vars = config()
@@ -64,13 +70,13 @@ def prepare_data(date_str, range):
 def run_pig_job():
     vars = config()
     with lcd('analysis'):
-        local('pig -p data=%(hk.input)s -p output=%(hk.book_vectors)s %(hk.pig_script)s'%vars)
+        local('pig -p data=%(hk.input)s -p output=%(hk.vectors)s %(hk.pig_script)s'%vars)
 
 def named_vectors():
     vars = config()
     local("hadoop jar " \
           "./java/elephant-bird-vector-converter/target/elephant-bird-vector-converter-0.1-SNAPSHOT-job.jar " \
-          "technicalelvis.elephantBirdVectorConverter.App %(hk.book_vectors)s/ %(hk.named_vectors)s/"%vars)
+          "technicalelvis.elephantBirdVectorConverter.App %(hk.vectors)s/ %(hk.named_vectors)s/"%vars)
 
 def run_mahout_job():
     vars = config()
@@ -84,16 +90,17 @@ def clusterdump_json():
     vars = config()
     # mahout patched with https://issues.apache.org/jira/browse/MAHOUT-1343
     with lcd('analysis'):
-        local("/var/hadoop/mahout-patched-0.8/bin/mahout clusterdump -d ./join_data/book.dictionary "\
+        local("/var/hadoop/mahout-patched-0.8/bin/mahout clusterdump -d %(hk.mahout.dictionary)s "\
               "-dt text -i clusters/clusters-*-final -p clusters/clusteredPoints "\
               "-n %(hk.mahout.dump.terms)s -o %(hk.mahout.dump.json)s -of JSON"%vars)
 
 def clusterdump_text():
     vars = config()
     # mahout patched with https://issues.apache.org/jira/browse/MAHOUT-1343
-    local("/var/hadoop/mahout-patched-0.8/bin/mahout clusterdump -d ./join_data/book.dictionary "\
-          "-dt text -i clusters/clusters-*-final -p clusters/clusteredPoints "\
-          "-n %(hk.mahout.dump.terms)s -o %(hk.mahout.dump.text)s -of TEXT"%vars)
+    with lcd('analysis'):
+        local("/var/hadoop/mahout-patched-0.8/bin/mahout clusterdump -d %(hk.mahout.dictionary)s "\
+              "-dt text -i clusters/clusters-*-final -p clusters/clusteredPoints "\
+              "-n %(hk.mahout.dump.terms)s -o %(hk.mahout.dump.text)s -of TEXT"%vars)
 
 def run_clustering(date_str=None, range='1'):
     vars = config()

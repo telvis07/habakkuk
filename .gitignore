@@ -3,6 +3,7 @@ local_settings.py
 *.properties
 build/
 analysis/output
+analysis/verse_vectors
 *.class
 *.pyc
 *.swp
@@ -17,7 +18,6 @@ pig_*.log
 .classpath
 .settings
 target/
-analysis
 
 # jetbrains pycharm
 .idea
