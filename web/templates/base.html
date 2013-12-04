@@ -1,39 +1,56 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
     <!-- CSS -->
-    <link href="{{STATIC_URL}}vendor/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="{{ STATIC_URL }}css/base.css" rel="stylesheet"/>
+    <link href="{{ STATIC_URL }}vendor/bootstrap/css/bootstrap.css" rel="stylesheet"/>
     <!-- JS -->
-    <script src="{{STATIC_URL}}vendor/bootstrap/js/bootstrap.min.js"></script>
-    {% block head %}{% endblock %}
-  </head>
+    <script src="{{ STATIC_URL }}vendor/bootstrap/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+    {% block head %}{% endblock head %}
+</head>
 
-  <body>
-      <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
         <div class="container-fluid">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="/">Habakkuk [ALPHA] </a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="active"><a href="http://technicalelvis.com/blog">Telvis' Blog</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
+            <a class="brand" href="/">Data Driven Bible Study [Alpha]</a>
+
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="http://technicalelvis.com/blog">About</a></li>
+                    <li class="active"><a href="mailto:me@technicalelvis.com?Subject=User%20feedback" target="_top">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
         </div>
-      </div>
     </div>
-   {% block content %}
-   {% endblock content %}
-   {% block endofbody %}
-   {% endblock endofbody %}
-  </body>
+</div>
+<!-- templates -->
+
+{% block instructions %}{% endblock instructions %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span2">
+                {% block sidebar_content %} {% endblock sidebar_content %}
+            </div>
+            <!-- span2 -->
+
+            <div class="span10">
+                {% block body_content %}{% endblock body_content %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block endofbody %}{% endblock endofbody %}
+</body>
 </html>
 

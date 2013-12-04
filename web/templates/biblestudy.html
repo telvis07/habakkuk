@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load jsonify %}
-{% block title %}Cluster Dendogram view{%endblock%}
-
+{% block title %}Bible Study{%endblock%}
 {% block head %}
+
     <link href="{{STATIC_URL}}clustering/clustering.css" rel="stylesheet">
     <style>
-        body {
-            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-        }
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
     </style>
     <script src="{{ STATIC_URL }}vendor/jquery/jquery-1.9.1.min.js"></script>
     <script src="{{ STATIC_URL }}vendor/datatables/jquery.dataTables.js"></script>
@@ -25,27 +25,9 @@
 {% endblock %}
 
 {% block content %}
-    <div ng-app='clusterApp'>
-        <div ng-controller="ClusterCtrl">
-            {{ block.super }}
-        </div>
-    </div>
-{% endblock content %}
-
-{% block instructions %}
-    Select a scripture from the table to filter the cluster dendogram for clusters containing that scripture
-{% endblock instructions %}
-
-{%  block sidebar_content %}
-    <ng-include
-            src="'{{STATIC_URL}}clustering/partials/clustering-select-table.html'">
-    </ng-include>
-{%  endblock sidebar_content %}
-{%  block body_content %}
-    <ng-include
-            src="'{{STATIC_URL}}clustering/partials/clustering-dendogram.html'">
-    </ng-include>
-{%  endblock body_content %}
-
-
-
+   <div ng-app='clusterApp'>
+       <ng-include
+               src="'{{STATIC_URL}}clustering/partials/clustering.html'">
+       </ng-include>
+   </div>
+{% endblock %}
