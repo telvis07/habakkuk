@@ -1,14 +1,13 @@
 # from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse
-from datetime import datetime, timedelta, date
-from django.utils.timezone import now
+from datetime import datetime
 from django.db.models import Max
 import jsonlib2 as json
 import traceback
 import logging
 import sys
-from web.models import ClusterData
+from web.models import ClusterData, make_d3_data
 
 DEFAULT_RANGE=7
 # init logging
@@ -21,7 +20,8 @@ def home(request, template='clustering.html'):
 
     if ret:
         ret = ret[0]
-        cluster = json.loads(ret.d3_dendogram_json)
+        cluster = make_d3_data(ret)
+        print cluster
         context['clusters'] = cluster
         context['facets'] = cluster.get('facets', [])
     else:

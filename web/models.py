@@ -22,11 +22,11 @@ class ClusterData(models.Model):
     class Meta:
         unique_together = ('date', 'range')
 
-def make_d3_data(sender, instance, *args, **kwargs):
-    if instance.d3_dendogram_json:
-        return
+def make_d3_data(instance):
+    d3_data = {"name": "",
+               "date":instance.date.strftime("%Y-%m-%d"),
+               "range":instance.range}
 
-    d3_data = {"name":"%s, %d day range"%(instance.date, instance.range)}
     d3_data['children'] = []
     clusters = json.loads(instance.ml_json)
     facets = {}
@@ -37,21 +37,15 @@ def make_d3_data(sender, instance, *args, **kwargs):
             logger.error("found an empty cluster")
             continue
 
-        d3_cluster = {}
-        d3_cluster["size"] = 2 # users and bibleverses
-        d3_cluster["name"] = cluster["top_terms"][0]["term"]
-        
-        topics = {"size":1,
-                  "name":"'%s' topics"%d3_cluster["name"],
-                  "children":[{"name":t['term'], "children":[]} for t in cluster["hk_topics"]]}
 
         # child for "bibleverses"
         num = len(cluster["top_terms"])
-        bibleverses = {"size":num,
-                       "name":"bibleverses (%s)"%num,
-                       "children":[{"name":t['term'], "children":[]} for t in cluster["top_terms"]]}
+        d3_cluster = {"size":num,
+                      "bibleverse": cluster["top_terms"][0]["term"],
+                      "name": cluster["top_terms"][0]["term"],
+                      "children":[{"name":t['term'], "bibleverse": t["term"], "children":[]} for t in cluster["top_terms"]]}
+
                   
-        d3_cluster["children"] = [topics, bibleverses]
         d3_data["children"].append(d3_cluster)
 
         for t in cluster["top_terms"]:
@@ -60,8 +54,16 @@ def make_d3_data(sender, instance, *args, **kwargs):
             facets[t]+=1
     facets = [{'term':key, 'count':facets[key]} for key in facets]
     d3_data['facets'] = sorted(facets, key=lambda x: x.values()[0], reverse=True)
+
+    return d3_data
+
+def pre_save_d3_data(sender, instance, *args, **kwargs):
+    if instance.d3_dendogram_json:
+        return instance.d3_dendogram_json
+
+    d3_data = make_d3_data(instance)
     instance.d3_dendogram_json = json.dumps(d3_data, indent=2)
     instance.num_clusters = len(d3_data["children"])
 
 # TODO: Does this fire on update?
-pre_save.connect(make_d3_data, sender=ClusterData)
+pre_save.connect(pre_save_d3_data, sender=ClusterData)

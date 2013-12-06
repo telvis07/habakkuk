@@ -48,16 +48,19 @@ function HkClusterCtrl($window, $scope, $log){
             // No filters so return unfiltered list
             return $scope.unfiltered_clusters;
         }else{
-            var _filtered = {name:"filtered for "+term, children:[]};
+            var _filtered = {name:"",
+                             date:data.date,
+                             range: data.range,
+                             title:"filtered for "+term,
+                             children:[]};
             // iterate over all clusters
             for (var i=0; i<clusters.length; i++){
                 var cluster = clusters[i];
-                var topics = cluster.children[0],
-                    bibleverses = cluster.children[1];
                 // iterate over all bibleverses in the cluster
-                for (var j=0; j<bibleverses.children.length; j++){
-                    var bv = bibleverses.children[j].name;
+                for (var j=0; j<cluster.children.length; j++){
+                    var bv = cluster.children[j].bibleverse;
                     if (bv == term){
+                        cluster.children[j].name = bv;
                         _filtered.children.push(cluster);
                         break;
                     }
@@ -72,7 +75,7 @@ function HkClusterCtrl($window, $scope, $log){
  * See: http://bl.ocks.org/mbostock/4063570
  */
 function HkDendogramDirective($log, $window) {
-    var width = $(window).width() * 0.66;
+    var width = $(window).width() * 0.50;
          height = $(window).height();
 
       return {
@@ -125,10 +128,10 @@ function HkDendogramDirective($log, $window) {
 
                 // add text per node
                 node.append("text")
-                  .attr("dx", function(d) { return d.children ? -8 : 8; })
-                  .attr("dy", 3)
-                  .attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
-                  .text(function(d) { return d.name; });
+                    .attr("dx", function(d) { return d.children ? -8 : 8; })
+                    .attr("dy", 3)
+                    .attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
+                    .text(function(d) { return d.name; });
               } // if (data)
             }); // watch
         }

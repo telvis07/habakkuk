@@ -32,18 +32,19 @@
     </div>
 {% endblock content %}
 
-{% block instructions %}
-    Select a scripture from the table to filter the cluster dendogram for clusters containing that scripture
-{% endblock instructions %}
+{% block help %}
+    <em>This view shows a D3 cluster dendogram of popular Bible verses and their related verses based on Twitter usage.
+        Select a Bible verse from the table to filter the clusters.</em>
+{% endblock help %}
 
 {%  block sidebar_content %}
     <ng-include
-            src="'{{STATIC_URL}}clustering/partials/clustering-select-table.html'">
+            src="'{{STATIC_URL}}clustering/partials/clustering-sidebar.html'">
     </ng-include>
 {%  endblock sidebar_content %}
 {%  block body_content %}
     <ng-include
-            src="'{{STATIC_URL}}clustering/partials/clustering-dendogram.html'">
+            src="'{{STATIC_URL}}clustering/partials/clustering-content.html'">
     </ng-include>
 {%  endblock body_content %}
 

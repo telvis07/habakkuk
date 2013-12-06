@@ -31,20 +31,23 @@
         </div>
     </div>
 </div>
-<!-- templates -->
 
-{% block instructions %}{% endblock instructions %}
-
+<!-- Content -->
 {% block content %}
     <div class="container-fluid">
         <div class="row-fluid">
-            <div class="span2">
-                {% block sidebar_content %} {% endblock sidebar_content %}
-            </div>
-            <!-- span2 -->
+            <div class="span12">
+                <p class="muted">{% block help %} {% endblock help %}</p>
+                <div class="row-fluid">
+                    <div class="span2">
+                        {% block sidebar_content %} {% endblock sidebar_content %}
+                    </div>
+                    <!-- span2 -->
 
-            <div class="span10">
-                {% block body_content %}{% endblock body_content %}
+                    <div class="span10">
+                        {% block body_content %}{% endblock body_content %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

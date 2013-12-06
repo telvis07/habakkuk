@@ -166,94 +166,61 @@ def raw_cluster_data():
           "term": "TODO AGAIN",
         }
       ],
-
     }
     ]
 
 def expected_cluster_dendogram():
     return \
+    {
+      "date": "2013-10-01",
+      "range": 7,
+      "facets": [
         {
-          "name": "2013-10-01, %s day range"%DEFAULT_RANGE, 
-          "facets": [
-            {
-              "term": "romans",
-              "count": 2
-            }, 
-            {
-              "term": "proverbs",
-              "count": 2
-            }
-          ],
+          "count": 2,
+          "term": "romans"
+        },
+        {
+          "count": 2,
+          "term": "proverbs"
+        }
+      ],
+      "name": "",
+      "children": [
+        {
+          "bibleverse": "proverbs",
           "children": [
             {
-              "name": "proverbs", 
-              "size": 2,
-              "children": [
-                {
-                  "name": "'proverbs' topics", 
-                  "size": 1,
-                  "children": [
-                    {
-                      "name": "TODO", 
-                      "children": []
-                    },
-                    {
-                      "name": "TODO AGAIN", 
-                      "children": []
-                    }
-                  ], 
-                }, 
-                {
-                  "name": "bibleverses (2)", 
-                  "size": 2,
-                  "children": [
-                    {
-                      "name": "proverbs", 
-                      "children": []
-                    }, 
-                    {
-                      "name": "romans", 
-                      "children": []
-                    }
-                  ], 
-                }
-              ], 
-            }, 
+              "children": [],
+              "name": "proverbs",
+              "bibleverse": "proverbs"
+            },
             {
-              "name": "romans", 
-              "size": 2,
-              "children": [
-                {
-                  "name": "'romans' topics", 
-                  "size": 1,
-                  "children": [
-                    {
-                      "name": "TODO", 
-                      "children": []
-                    },
-                    {
-                      "name": "TODO AGAIN", 
-                      "children": []
-                    }
-                  ], 
-                }, 
-                {
-                  "name": "bibleverses (2)", 
-                  "size": 2,
-                  "children": [
-                    {
-                      "name": "romans", 
-                      "children": []
-                    }, 
-                    {
-                      "name": "proverbs", 
-                      "children": []
-                    }
-                  ], 
-                }
-              ], 
+              "children": [],
+              "name": "romans",
+              "bibleverse": "romans"
             }
-          ]
+          ],
+          "name": "proverbs",
+          "size": 2
+        },
+        {
+          "bibleverse": "romans",
+          "children": [
+            {
+              "children": [],
+              "name": "romans",
+              "bibleverse": "romans"
+            },
+            {
+              "children": [],
+              "name": "proverbs",
+              "bibleverse": "proverbs"
+            }
+          ],
+          "name": "romans",
+          "size": 2
         }
+      ]
+    }
 
 
