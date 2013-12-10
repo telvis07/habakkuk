@@ -1,0 +1,9 @@
+@-ms-viewport{
+    width: extend-to-zoom;
+    zoom: 1.0;
+}
+
+.help {
+    text-align: left;
+    text-indent:50px;
+}

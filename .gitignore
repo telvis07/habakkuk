@@ -8,7 +8,7 @@ analysis/verse_vectors
 *.pyc
 *.swp
 env/
-static/
+/static/
 
 # apache pig logs
 pig_*.log
