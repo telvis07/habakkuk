@@ -6,9 +6,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^$', 'web.views.home', name='home'),
-    url(r'^api/', include('web.urls')),
+    url(r'^api/', include('web.api_urls')),
     url(r'^admin/', include(admin.site.urls)),
 )
 
