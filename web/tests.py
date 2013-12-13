@@ -33,22 +33,38 @@ class QueryTest(TestCase):
         expected = expected_cluster_dendogram()
         self.assertEquals(expected, got)
 
-    def test_view(self):
+    def test_clusters_view(self):
+        client = Client()
+        response = client.get("/clusters/")
+        self.assertEquals(200, response.status_code)
+        logger.debug("Facets: %s"%response.context['facets'])
+        logger.debug("Clusters: %s"%response.context['clusters'])
+        self.assertTrue(response.context['facets'])
+        self.assertTrue(response.context['clusters'])
+
+    def test_default_redirect(self):
+        """ should redirect to clusters """
         client = Client()
         response = client.get("/")
-        self.assertEquals(200, response.status_code)
-        print response.context['facets']
-        self.assertTrue(response.context['facets'])
+        self.assertEquals(301, response.status_code)
 
-    def test_with_date(self):
+        # verify I still get data after the redirect
+        response = client.get("/", follow=True)
+        self.assertEquals(200, response.status_code)
+        logger.debug("Facets: %s"%response.context['facets'])
+        logger.debug("Clusters: %s"%response.context['clusters'])
+        self.assertTrue(response.context['facets'])
+        self.assertTrue(response.context['clusters'])
+
+    def test_data_with_date(self):
         client = Client()
-        response = client.get("/api/query/%s"%date(2013,10,01).strftime("%Y%m%d"))
+        response = client.get("/api/clusters/%s"%date(2013,10,01).strftime("%Y%m%d"))
         self.assertEquals(200, response.status_code)
         try:
             res = json.loads(response.content)
             self.assertFalse(res.get('trace'),res.get('trace'))
         except:
-            self.fail("Failed to parse response from /api/query/")
+            self.fail("Failed to parse response from /api/clusters/")
 
         self.assertEquals(2, res['num_clusters'])
         logger.debug("dendogram json: '%s'"%res['clusters'])
@@ -56,40 +72,40 @@ class QueryTest(TestCase):
         self.assertEquals(expected,res['clusters'])
 
         # test with range value in path
-        response = client.get("/api/query/%s/%s"%(date(2013,10,01).strftime("%Y%m%d"),DEFAULT_RANGE))
+        response = client.get("/api/clusters/%s/%s"%(date(2013,10,01).strftime("%Y%m%d"),DEFAULT_RANGE))
         self.assertEquals(200, response.status_code)
         try:
             res = json.loads(response.content)
             self.assertFalse(res.get('trace'),res.get('trace'))
         except:
-            self.fail("Failed to parse reponse from /api/query/")
+            self.fail("Failed to parse reponse from /api/clusters/")
 
         self.assertEquals(2, res['num_clusters'])
 
 
-    def test_no_date(self):
+    def test_data_no_date(self):
         client = Client()
-        response = client.get("/api/query/")
+        response = client.get("/api/clusters/")
         self.assertEquals(200, response.status_code)
         try:
             res = json.loads(response.content)
             self.assertFalse(res.get('trace'),res.get('trace'))
         except:
-            self.fail("Failed to parse reponse from /api/query/")
+            self.fail("Failed to parse reponse from /api/clusters/")
 
         # just verify it returned clusters
         self.assertEquals(2, res['num_clusters'])
         logger.debug("dendogram json: '%s'"%res['clusters'])
 
-    def test_no_results(self):
+    def test_data_no_results(self):
         client = Client()
-        response = client.get("/api/query/%s"%date(2013,10,02).strftime("%Y%m%d"))
+        response = client.get("/api/clusters/%s"%date(2013,10,02).strftime("%Y%m%d"))
         self.assertEquals(200, response.status_code)
         try:
             res = json.loads(response.content)
             self.assertFalse(res.get('trace'),res.get('trace'))
         except:
-            self.fail("Failed to parse reponse from /api/query/")
+            self.fail("Failed to parse reponse from /api/clusters/")
 
         # just verify it returned clusters
         self.assertEquals(0, res['num_clusters'])

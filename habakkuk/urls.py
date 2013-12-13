@@ -2,13 +2,16 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.generic import RedirectView
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', 'web.views.home', name='home'),
+
+    url(r'^clusters/', include('web.urls'), name="clusters"),
     url(r'^api/', include('web.api_urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', RedirectView.as_view(url='/clusters/', permanent=True), name='index'),
 )
 
 if settings.DEBUG:

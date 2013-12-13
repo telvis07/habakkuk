@@ -14,7 +14,7 @@ DEFAULT_RANGE=7
 logger = logging.getLogger(__name__)
 query_logger = logging.getLogger('query_logger')
 
-def home(request, template='clustering.html'):
+def clusters(request, template='clustering.html'):
     context = {}
     ret = _get_newest_or_for_date(None, None)
 
@@ -30,7 +30,7 @@ def home(request, template='clustering.html'):
 
     return render(request, template, context)
 
-def query(request, datestr=None, range=None):
+def clusters_data(request, datestr=None, range=None):
     response = {}
     try:
         ret = _get_newest_or_for_date(datestr, range)
