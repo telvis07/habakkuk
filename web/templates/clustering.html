@@ -16,7 +16,6 @@
     <script src="{{ STATIC_URL }}vendor/ui-bootstrap/ui-bootstrap-tpls-0.6.0.min.js"></script>
 
     <script type="text/javascript">
-        <!-- bootstrapped data from django -->
         var HK = {};
         HK.clusters = {{ clusters | jsonify }};
         HK.facets = {{ facets | jsonify }};

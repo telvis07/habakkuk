@@ -14,6 +14,10 @@ DEFAULT_RANGE=7
 logger = logging.getLogger(__name__)
 query_logger = logging.getLogger('query_logger')
 
+def biblestudy(request, template="biblestudy.html"):
+    context = {}
+    return render(request, template, context)
+
 def clusters(request, template='clustering.html'):
     context = {}
     ret = _get_newest_or_for_date(None, None)

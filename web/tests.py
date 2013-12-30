@@ -42,6 +42,11 @@ class QueryTest(TestCase):
         self.assertTrue(response.context['facets'])
         self.assertTrue(response.context['clusters'])
 
+    def test_bible_study_view(self):
+        client = Client()
+        response = client.get("/biblestudy/")
+        self.assertEquals(200, response.status_code)
+
     def test_default_redirect(self):
         """ should redirect to clusters """
         client = Client()
