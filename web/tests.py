@@ -34,6 +34,7 @@ class QueryTest(TestCase):
         self.assertEquals(expected, got)
 
     def test_clusters_view(self):
+        """ test the clusters view """
         client = Client()
         response = client.get("/clusters/")
         self.assertEquals(200, response.status_code)
@@ -43,6 +44,7 @@ class QueryTest(TestCase):
         self.assertTrue(response.context['clusters'])
 
     def test_bible_study_view(self):
+        """ test the bible study view """
         client = Client()
         response = client.get("/biblestudy/")
         self.assertEquals(200, response.status_code)

@@ -139,6 +139,6 @@ function HkDendogramDirective($log, $window) {
 }
 
 /* angular declarations */
-var clusterModule = angular.module("clusterApp",['ui.bootstrap']);
+var clusterModule = angular.module("clusterApp",[]);
 clusterModule.controller('ClusterCtrl', HkClusterCtrl);
 clusterModule.directive('hkukClustersViz', HkDendogramDirective);
