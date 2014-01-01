@@ -26,5 +26,7 @@
 
 <!-- pagination -->
 <ul class="pagination">
-    <li ng-repeat="page_num in num_pages">{{ page_num }}</li>
+    <li class="{{ pagination.start_enabled }}"><a href="#">&laquo;</a></li>
+    <li ng-repeat="page_num in num_search_result_pages"><a href="#">{{ page_num }}</a></li>
+    <li class="{{ pagination.end_enabled }}"><a href="#" >&raquo;</a></li>
 </ul>

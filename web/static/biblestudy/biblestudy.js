@@ -10,6 +10,9 @@ function BibleStudyCtrl($window, $scope, $log){
     $scope.habakkuk_message = null;
     $scope.search_results = {};
     $scope.show_habakkuk_message = true;
+    $scope.pagination = {"start_enabled":"disabled",
+                         "end_enabled":"disabled"}
+    $scope.num_search_result_pages = _.range(1,2);
 
     // Testing...
     $scope.popular_list = $window.HK.popular_list;
@@ -17,7 +20,7 @@ function BibleStudyCtrl($window, $scope, $log){
     $scope.search_results_count = $scope.search_results.length;
     $scope.total_search_results_count = $scope.search_results.length;
     $scope.habakkuk_message = $window.HK.habakkuk_message;
-    $scope.num_pages = 1;
+
     $scope.gridOptions = {
         data: 'popular_list',
         columnDefs: [{field:'term', displayName:'Bible Reference'},
