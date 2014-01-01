@@ -11,17 +11,12 @@
 
 <!-- search results -->
 <div class="list-group">
-    <div class="list-group-item" ng-repeat="result in search_results">
+    <a href="#" class="list-group-item" ng-repeat="result in search_results">
         <h4 class="list-group-item-heading">{{ result.bibleverse }}</h4>
         <p class="list-group-item-text">
         {{ result.text }}
         </p>
-        <small>Twitter users who like {{ result.bibleverse }} also like
-            <a ng-repeat="r in result.recommendations", href="#">
-                {{ r }}
-            </a>
-        </small>
-    </div>
+    </a>
 </div>
 
 <!-- pagination -->

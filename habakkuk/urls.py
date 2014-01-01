@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'clusters/$', 'web.views.clusters'),
     url(r'biblestudy/$', 'web.views.biblestudy'),
-    url(r'^$', RedirectView.as_view(url='/clusters/', permanent=True), name='index'),
+    url(r'^$', RedirectView.as_view(url='/biblestudy/', permanent=True), name='index'),
 )
 
 if settings.DEBUG:
