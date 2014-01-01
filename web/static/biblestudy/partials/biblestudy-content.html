@@ -1,20 +1,14 @@
 <p>Showing 10 of 100 Popular Bible verses on Twitter for <a href="#">February 14, 2013</a></p>
-
 <div class="list-group">
-  <div class="list-group-item">
-    <h4 class="list-group-item-heading">John 3:16</h4>
-    <p class="list-group-item-text">
-        For God so loved the world that he gave his one and only Son,
-        that whoever believes in him shall not perish but have eternal life.
-    </p>
-    <small>Twitter users who like John 3:16 also like <a href="#">Book 1:1</a></small>
-  </div>
-
-  <div class="list-group-item">
-    <h4 class="list-group-item-heading">1 John 4:19</h4>
-    <p class="list-group-item-text">
-        We love because he first loved us.
-    </p>
-    <small>Twitter users who like 1 John 4:19 also like <a href="#">Book 1:1</a></small>
-  </div>
+    <div class="list-group-item" ng-repeat="result in search_results">
+        <h4 class="list-group-item-heading">{{ result.bibleverse }}</h4>
+        <p class="list-group-item-text">
+        {{ result.text }}
+        </p>
+        <small>Twitter users who like {{ result.bibleverse }} also like
+            <a ng-repeat="r in result.recommendations", href="#">
+                {{ r }}
+            </a>
+        </small>
+    </div>
 </div>

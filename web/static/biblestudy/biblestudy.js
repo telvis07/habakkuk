@@ -12,6 +12,7 @@ function BibleStudyCtrl($window, $scope, $log){
 
     // Testing...
     $scope.popular_list = $window.HK.popular_list;
+    $scope.search_results = $window.HK.search_results;
     $scope.gridOptions = {
         data: 'popular_list',
         columnDefs: [{field:'term', displayName:'Bible Reference'},

@@ -9,7 +9,6 @@
             padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
         }
     </style>
-    <script src="{{ STATIC_URL }}vendor/jquery/jquery-1.9.1.min.js"></script>
     <script src="{{ STATIC_URL }}vendor/angular/angular.min.js"></script>
     <script src="{{ STATIC_URL }}vendor/d3/d3.v3.js"></script>
     <script type="text/javascript">
@@ -30,7 +29,7 @@
 
 {% block help %}
     <em>This view shows a D3 cluster dendogram of popular Bible verses and their related verses based on Twitter usage.
-        Select a Bible verse from the table to filter the clusters.</em>
+        </em>
 {% endblock help %}
 
 {%  block sidebar_content %}
