@@ -1,4 +1,15 @@
-<p>Showing 10 of 100 Popular Bible verses on Twitter for <a href="#">February 14, 2013</a></p>
+<p>Showing {{ search_results_count }} of {{ total_search_results_count }} Popular Bible verses on Twitter for <a href="#">February 14, 2013</a></p>
+<!-- Special Message or "Clicked" verse -->
+<div class="list-group">
+    <div class="list-group-item" ng-if="show_habakkuk_message">
+        <h4 class="list-group-item-heading">Message from Habakkuk Team</h4>
+        <p class="list-group-item-text">
+        {{ habakkuk_message }}
+        </p>
+    </div>
+</div>
+
+<!-- search results -->
 <div class="list-group">
     <div class="list-group-item" ng-repeat="result in search_results">
         <h4 class="list-group-item-heading">{{ result.bibleverse }}</h4>
@@ -12,3 +23,8 @@
         </small>
     </div>
 </div>
+
+<!-- pagination -->
+<ul class="pagination">
+    <li ng-repeat="page_num in num_pages">{{ page_num }}</li>
+</ul>

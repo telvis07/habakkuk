@@ -9,10 +9,15 @@ function BibleStudyCtrl($window, $scope, $log){
     $scope.popular_list_selected_item = null;
     $scope.habakkuk_message = null;
     $scope.search_results = {};
+    $scope.show_habakkuk_message = true;
 
     // Testing...
     $scope.popular_list = $window.HK.popular_list;
     $scope.search_results = $window.HK.search_results;
+    $scope.search_results_count = $scope.search_results.length;
+    $scope.total_search_results_count = $scope.search_results.length;
+    $scope.habakkuk_message = $window.HK.habakkuk_message;
+    $scope.num_pages = 1;
     $scope.gridOptions = {
         data: 'popular_list',
         columnDefs: [{field:'term', displayName:'Bible Reference'},
