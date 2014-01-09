@@ -1,10 +1,15 @@
 # Habakkuk
 Habakkuk is an application for filtering tweets containing Christian bible references. The goal is to capture the book name, chapter number, verse number and tweet text for further analysis.
 
-##
+## Dependencies
 This project requires postgresql
 
     sudo apt-get install postgresql-8.4 postgresql-client-8.4 postgresql-server-dev-8.4
+    sudo apt-get install build-essential python-devel
+    sudo add-apt-repository ppa:chris-lea/node.js
+    sudo apt-get update
+    sudo apt-get install nodejs
+    sudo npm install -g karma
 
 ## Django
 This project uses [django](https://www.djangoproject.com/) for project organization purposes. Perform the following to set up the virtual environment.
@@ -12,6 +17,12 @@ This project uses [django](https://www.djangoproject.com/) for project organizat
     $ virtualenv .
     $ . ./bin/activate
     $ pip install -r requirements.txt
+
+## Angular
+This project uses [angularJS](http://angularjs.org/) and [karma](https://github.com/vojtajina/karma/) for JS unit testing. To test...
+
+    # install dependencies
+    karma start
 
 ##  Storm
 This project uses a [storm](http://storm-project.net/) topology to analyze tweets from the [twitter sample stream](https://dev.twitter.com/docs/streaming-apis/streams/public).
@@ -40,3 +51,4 @@ Scripts in analysis/ depend on [Cloudera Hadoop CDH3](https://ccp.cloudera.com/d
 * accumulo - Table initialization scripts
 * config - Configuration files for setting up storm with [supervisord](http://supervisord.org/)
 * analysis - pig scripts for data analysis
+* web - web front-end

@@ -9,7 +9,7 @@ function BibleStudyCtrl($window, $scope, $log){
     $scope.popular_list = {};
     $scope.popular_list_selected_item = null;
     $scope.habakkuk_message = null;
-    $scope.search_results = {};
+    $scope.search_results = [];
     $scope.show_habakkuk_message = true;
     $scope.pagination = {"start_enabled":"disabled",
                          "end_enabled":"disabled"}

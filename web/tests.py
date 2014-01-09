@@ -57,11 +57,8 @@ class QueryTest(TestCase):
 
         # verify I still get data after the redirect
         response = client.get("/", follow=True)
+        self.assertEquals([('http://testserver/biblestudy/', 301)], response.redirect_chain)
         self.assertEquals(200, response.status_code)
-        logger.debug("Facets: %s"%response.context['facets'])
-        logger.debug("Clusters: %s"%response.context['clusters'])
-        self.assertTrue(response.context['facets'])
-        self.assertTrue(response.context['clusters'])
 
     def test_data_with_date(self):
         client = Client()
@@ -88,7 +85,6 @@ class QueryTest(TestCase):
             self.fail("Failed to parse reponse from /api/clusters/")
 
         self.assertEquals(2, res['num_clusters'])
-
 
     def test_data_no_date(self):
         client = Client()
