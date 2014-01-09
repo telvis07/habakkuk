@@ -1,6 +1,11 @@
 # Habakkuk
 Habakkuk is an application for filtering tweets containing Christian bible references. The goal is to capture the book name, chapter number, verse number and tweet text for further analysis.
 
+##
+This project requires postgresql
+
+    sudo apt-get install postgresql-8.4 postgresql-client-8.4 postgresql-server-dev-8.4
+
 ## Django
 This project uses [django](https://www.djangoproject.com/) for project organization purposes. Perform the following to set up the virtual environment.
 

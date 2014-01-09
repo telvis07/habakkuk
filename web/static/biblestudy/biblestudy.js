@@ -1,6 +1,7 @@
 /**
  * Created by telvis on 12/30/13.
  */
+var bibleStudyModule = angular.module("bibleStudyApp", ['ngGrid']);
 
 function BibleStudyCtrl($window, $scope, $log){
     /* Controller for BibleStudy app */
@@ -31,5 +32,5 @@ function BibleStudyCtrl($window, $scope, $log){
     };
 }
 
-var bibleStudyModule = angular.module("bibleStudyApp", ['ngGrid']);
+
 bibleStudyModule.controller("BibleStudyCtrl", BibleStudyCtrl);
