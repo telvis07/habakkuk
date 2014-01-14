@@ -1,5 +1,6 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
+from web import views
 
 urlpatterns = patterns('web.views',
-    # TODO: move from habakkuk.urls
+    url(r'^$', views.biblestudy),
 )

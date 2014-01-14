@@ -8,6 +8,7 @@ import traceback
 import logging
 import sys
 from web.models import ClusterData, make_d3_data
+from web.search import get_scriptures_by_date
 
 DEFAULT_RANGE=7
 # init logging
@@ -16,7 +17,16 @@ query_logger = logging.getLogger('query_logger')
 
 def biblestudy(request, template="biblestudy.html"):
     context = {}
+    params = request.GET
+    start = params.get('s', None)
+    end = params.get('e', None)
+
+    context["search_results"] = get_scriptures_by_date(start, end)
+    context["habakkuk_message"] = get_habakkuk_message()
     return render(request, template, context)
+
+def get_habakkuk_message():
+    return "Hello World!"
 
 def clusters(request, template='clustering.html'):
     context = {}
