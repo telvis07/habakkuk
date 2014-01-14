@@ -20,8 +20,9 @@ def biblestudy(request, template="biblestudy.html"):
     params = request.GET
     start = params.get('s', None)
     end = params.get('e', None)
+    size = params.get('size', 10)
 
-    context["search_results"] = get_scriptures_by_date(start, end)
+    context["search_results"] = get_scriptures_by_date(st=start, et=end, size=size)
     context["habakkuk_message"] = get_habakkuk_message()
     return render(request, template, context)
 
