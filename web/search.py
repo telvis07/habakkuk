@@ -19,6 +19,22 @@ def bibleverse_facet(host='localhost:9200',
                      end=None,
                      _date=None,
                      size=10):
+    """
+    Perform faceted search query to find bibleverses in a date range.
+
+    :param host: elasticsearch host
+    :param index: elasticsearch index to search
+    :param facet_terms: document field to facet on (usually 'bibleverse')
+    :param doctype: elasticsearch document type to search for
+    :param ts_field: field to search for time stamp
+    :param start: starting timestamp value for range filter
+    :param end: ending timestamp value for range filter
+    :param _date: date to term filter for. assume start and end are not provided.
+    :param size: number of facet results to return
+
+    :return list of dicts: [{'bibleverse':'the-verse 1:1'}]
+    """
+
     ret = []
     conn = get_es_connection(host)
     q = MatchAllQuery()
@@ -57,12 +73,16 @@ def bibleverse_facet(host='localhost:9200',
     for facet in resultset.facets:
         logger.debug("Total '%s'"%facet,resultset.facets[facet]['total'])
         for row in resultset.facets[facet]['terms']:
-            ret.append((row['term'], row['count']))
+            ret.append({"bibleverse":row['term']})
 
     logger.info("Results: '%s'"%json.dumps(ret,indent=2))
     return ret
 
 def bibleverse_text(bibleverses):
+    """ Lookup the bibleverse text for the verses returned by bibleverse_facet
+    :param bibleverses: list of dicts [{'bibleverse':'the-verse 1:1'}]
+    :returns list of dicts: [{'bibleverse':'the-verse 1:1', 'text':'God says...'}]
+    """
     return bibleverses
 
 def bibleverse_recommendations(bibleverses):

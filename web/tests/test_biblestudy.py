@@ -24,9 +24,9 @@ class BibleStudyTest(TestCase):
     @override_settings(ES_SETTINGS=ES_SETTINGS)
     def test_get_scriptures_by_date(self):
         """ test the func that performs the ES search """
-        bv = {"bibleverse":"1 John 4:19", "count":1}
-        text = {"bibleverse":"1 John 4:19", "count":1, "text": "We love because he first loved us."}
-        recommendations = {"bibleverse":"1 John 4:19", "count":1, "text": "We love because he first loved us.",
+        bv = {"bibleverse":"1 John 4:19"}
+        text = {"bibleverse":"1 John 4:19", "text": "We love because he first loved us."}
+        recommendations = {"bibleverse":"1 John 4:19", "text": "We love because he first loved us.",
                                 "recommendations":["Book 2:1", "Book 2:2", "Book 2:3"]}
 
         with patch('web.search.bibleverse_facet',return_value=bv) as mock_facet_search:
@@ -65,7 +65,7 @@ class BibleStudyTest(TestCase):
             ret = bibleverse_facet(host=hosts, index=search_index, start=None, end=None, size=5)
         mock_get_conn.assert_called_with(['nosuchhost:9200'])
         self.assertTrue(mock_es_conn.search.called)
-        self.assertEquals([('i_john', 1)], ret)
+        self.assertEquals([{'bibleverse':'i_john'}], ret)
 
     @override_settings(ES_SETTINGS=ES_SETTINGS)
     def test_bibleverse_facet_range(self):
@@ -81,12 +81,12 @@ class BibleStudyTest(TestCase):
                            'filter': {'range': {'created_at_date': {'to': '2013-01-01', 'include_upper': True}}},
                            'query': {'match_all': {}}}}, 'facets': {
                            'bibleverse': {'terms': {'field': 'bibleverse', 'order': 'count', 'size': 10}}}, 'size': 0}),
-                          # call with only date
+                          # 3. call with only date
                           call(indices='nosuch-index-*-*', doc_types=['habakkuk'], query={'query': {
                            'filtered': {'filter': {'term': {'created_at_date': '2013-01-01'}},
                                        'query': {'match_all': {}}}}, 'facets': {
                            'bibleverse': {'terms': {'field': 'bibleverse', 'order': 'count', 'size': 10}}}, 'size': 0}),
-                          # call with start and end date
+                          # 4. call with start and end date
                           call(indices='nosuch-index-*-*', doc_types=['habakkuk'], query={'query': {'filtered': {
                            'filter': {'range': {
                            'created_at_date': {'to': '2013-01-02', 'include_upper': False, 'from': '2013-01-01'}}},
