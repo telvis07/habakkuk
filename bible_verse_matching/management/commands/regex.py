@@ -2,7 +2,7 @@
 """
 Command to control bible verse regexes
 """
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from optparse import make_option
 from bible_verse_matching.regex_generator import build_regex, test_regex
 import sys,os

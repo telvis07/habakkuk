@@ -112,7 +112,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    # 'bible_verse_matching',
+    'bible_verse_matching',
     'web',
 )
 

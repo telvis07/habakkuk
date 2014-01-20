@@ -1,7 +1,5 @@
 from django.db import models
 from django.db.models.signals import pre_save
-from django.dispatch import receiver
-from django.db.models import Max
 import json
 import logging
 logger = logging.getLogger(__name__)
@@ -21,6 +19,15 @@ class ClusterData(models.Model):
 
     class Meta:
         unique_together = ('date', 'range')
+
+class BibleText(models.Model):
+    translation = models.CharField(max_length=64, blank=False, null=False)
+    bibleverse = models.CharField(max_length=64, blank=False, null=False)
+    verse_id = models.PositiveIntegerField()
+    text = models.TextField(blank=False, null=False)
+
+    def __unicode__(self):
+        return "<bibleverse(%s) translation(%s)>"%(self.bibleverse, self.translation)
 
 def make_d3_data(instance):
     d3_data = {"name": "",

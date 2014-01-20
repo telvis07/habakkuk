@@ -4,10 +4,10 @@ Add a fake 'count' so the files can serve as dictionaries
 for mahout clusterdump"""
 from optparse import OptionParser
 import xml.etree.ElementTree as ET
-import re, sys
+import re
 import cStringIO
 
-def _normalize_book(book):
+def normalize_book_name(book):
     # old func that reads newline delimited book
     # names
     if book=='psalms':
@@ -19,12 +19,12 @@ def _normalize_book(book):
     # change spaces to underscores
     return re.sub("[ ]","_",book)
 
-def normalize_book(input):
-#    generate id[TAB]book name
-    for i, line in enumerate(file(input)):
-        book = line.strip().lower()
-        book = _normalize_book(book)
-        print "\t".join([str(i+1),book])
+def normalize_book_from_csv_file(input):
+ #    generate id[TAB]book name
+     for i, line in enumerate(file(input)):
+         book = line.strip().lower()
+         book = normalize_book_name(book)
+         print "\t".join([str(i+1),book])
 
 def normalize_book_xml(input):
     # generate dictionary for bible books
@@ -34,7 +34,7 @@ def normalize_book_xml(input):
     index = 1
     for child in books:
         book = child.attrib['name'].strip().lower()
-        book = _normalize_book(book)
+        book = normalize_book_name(book)
         # mahout dictionary expects term DocFreq Index
         # so just set DocFreq to '1'
         output.write("\t".join([book, '1', str(index)])+'\n')
@@ -50,7 +50,7 @@ def normalize_verse(input):
     index = 1
     for book_element in books:
         book = book_element.attrib['name'].strip().lower()
-        book = _normalize_book(book)
+        book = normalize_book_name(book)
         for chapter_element in book_element.getiterator('chapter'):
             chapnum = chapter_element.attrib['name']
             for verse_element in chapter_element.getiterator('verse'):
@@ -83,4 +83,4 @@ if __name__== '__main__':
         else:
             normalize_book_xml(options.infile)
     else:
-        normalize_book(options.infile)
+        normalize_book_from_csv_file(options.infile)
