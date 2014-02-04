@@ -12,7 +12,7 @@ MANAGERS = ADMINS
 import sys
 import dj_database_url
 
-if 'test' in sys.argv or 'test_coverage' in sys.argv: #Covers regular testing and django-coverage
+if 'test' in sys.argv or 'jenkins' in sys.argv:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -114,6 +114,11 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'south',
     'bible_verse_matching',
+    'web',
+    'django_jenkins'
+)
+
+PROJECT_APPS = (
     'web',
 )
 

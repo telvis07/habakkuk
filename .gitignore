@@ -18,6 +18,7 @@ pig_*.log
 .classpath
 .settings
 target/
+reports/
 
 # jetbrains pycharm
 .idea

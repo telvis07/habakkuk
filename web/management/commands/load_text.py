@@ -39,7 +39,7 @@ def load_bibletext_from_xml(infile, translation):
     books = root.getiterator('book')
     verse_id = 0
     entries = []
-    BibleText.obje  cts.filter(translation=translation).delete()
+    BibleText.objects.filter(translation=translation).delete()
 
 
     for book_element in books:
