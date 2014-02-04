@@ -3,9 +3,9 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from mock import patch, MagicMock, call
 import logging
-import json
+from web.models import BibleText
 
-from web.search import get_scriptures_by_date, bibleverse_facet
+from web.search import get_scriptures_by_date, bibleverse_facet, bibleverse_text
 logger = logging.getLogger(__name__)
 
 class BibleStudyTest(TestCase):
@@ -16,10 +16,26 @@ class BibleStudyTest(TestCase):
     }
 
     def setUp(self):
-        pass
+        self.bt_entries = [{'bibleverse':'the-verse 1:1',
+                            'bibleverse_human':'The Verse 1:1',
+                            'text':"text 1:1",
+                            'translation': 'KJV'},
+                           {'bibleverse':'the-verse 1:2',
+                            'bibleverse_human':'The Verse 1:2',
+                            'text':"text 1:2",
+                            'translation': 'KJV'}]
+        translation = 'KJV'
+        for i, bv in enumerate(self.bt_entries):
+            bibleverse = bv['bibleverse']
+            text = bv['text']
+            BibleText.objects.get_or_create(verse_id=i, translation=translation,
+                                            bibleverse_human=bv['bibleverse_human'],
+                                            defaults={'bibleverse':bibleverse,
+                                                      'text':text})
 
     def tearDown(self):
-        pass
+        for bt in BibleText.objects.all():
+            bt.delete()
 
     @override_settings(ES_SETTINGS=ES_SETTINGS)
     def test_get_scriptures_by_date(self):
@@ -123,3 +139,23 @@ class BibleStudyTest(TestCase):
             ex_name, ex_args, ex_kwargs = expected_call
             self.assertEquals(ex_kwargs['query'], kwargs['query'].serialize())
             i+=1
+
+    @override_settings(ES_SETTINGS=ES_SETTINGS)
+    def test_bibleverse_text(self):
+        """
+        test BibleText Model lookups
+        """
+
+        no_such_verse = 'no-such-verse 1:1'
+        entries = [{'bibleverse':'the-verse 1:1'},
+                   {'bibleverse':'the-verse 1:2'},
+                   {'bibleverse':no_such_verse}]
+        ret = bibleverse_text(entries)
+
+        # verify it returns the BibleText entries loaded in setUp()
+        # should contains bibleverse_human entries
+        self.assertEquals(self.bt_entries, ret)
+
+        # verify it does not return 'no-such-verse'
+        ret = filter(lambda x: x['bibleverse'] == no_such_verse, ret)
+        self.assertEquals(0, len(ret))

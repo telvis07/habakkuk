@@ -23,6 +23,7 @@ class ClusterData(models.Model):
 class BibleText(models.Model):
     translation = models.CharField(max_length=64, blank=False, null=False)
     bibleverse = models.CharField(max_length=64, blank=False, null=False)
+    bibleverse_human = models.CharField(max_length=64, blank=False, null=False)
     verse_id = models.PositiveIntegerField()
     text = models.TextField(blank=False, null=False)
 

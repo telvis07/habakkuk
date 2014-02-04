@@ -5,6 +5,7 @@ from pyes.utils import ESRange, ESRangeOp
 import jsonlib2 as json
 import logging
 from django.conf import settings
+from web.models import BibleText
 logger = logging.getLogger('search')
 
 def get_es_connection(host):
@@ -78,12 +79,26 @@ def bibleverse_facet(host='localhost:9200',
     logger.info("Results: '%s'"%json.dumps(ret,indent=2))
     return ret
 
-def bibleverse_text(bibleverses):
+def bibleverse_text(bibleverses, translation="KJV"):
     """ Lookup the bibleverse text for the verses returned by bibleverse_facet
+
     :param bibleverses: list of dicts [{'bibleverse':'the-verse 1:1'}]
     :returns list of dicts: [{'bibleverse':'the-verse 1:1', 'text':'God says...'}]
     """
-    return bibleverses
+    for bv in bibleverses:
+        try:
+            bv['translation'] = translation
+            bt = BibleText.objects.get(bibleverse=bv['bibleverse'], translation=bv['translation'])
+            bv['text'] = bt.text
+            bv['bibleverse_human'] = bt.bibleverse_human
+        except BibleText.DoesNotExist:
+            # This verse doesn't exist. probably a matching error.
+            # set the text to 'None' so it get filtered before returning
+            logger.error("The bibleverse '%(bibleverse)s' '%(translation)s' is not valid"%bv)
+            bv['text'] = None
+
+    # remove entries where text == None
+    return filter(lambda x: x['text'], bibleverses)
 
 def bibleverse_recommendations(bibleverses):
     return bibleverses
