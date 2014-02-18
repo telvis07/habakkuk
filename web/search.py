@@ -6,12 +6,12 @@ import jsonlib2 as json
 import logging
 from django.conf import settings
 from web.models import BibleText
-logger = logging.getLogger('search')
+logger = logging.getLogger(__name__)
 
 def get_es_connection(host):
     return ES(host)
 
-def bibleverse_facet(host='localhost:9200',
+def bibleverse_facet(host,
                      index='habakkuk-*',
                      facet_terms=('bibleverse',),
                      doctype='habakkuk',
@@ -19,7 +19,8 @@ def bibleverse_facet(host='localhost:9200',
                      start=None,
                      end=None,
                      _date=None,
-                     size=10):
+                     size=10,
+                     search_text=None):
     """
     Perform faceted search query to find bibleverses in a date range.
 
@@ -36,7 +37,7 @@ def bibleverse_facet(host='localhost:9200',
     :return list of dicts: [{'bibleverse':'the-verse 1:1'}]
     """
 
-    ret = []
+
     conn = get_es_connection(host)
     q = MatchAllQuery()
 
@@ -65,18 +66,28 @@ def bibleverse_facet(host='localhost:9200',
 
     # add the facet
     for term in facet_terms:
-        q.facet.add_term_facet(term, order='count', size=size)
+        if search_text:
+            facet_filter = TermFilter(field="text", value=search_text)
+        else:
+            facet_filter = None
+        q.facet.add_term_facet(term,
+                               order='count',
+                               size=size,
+                               facet_filter=facet_filter)
 
-    logger.info("Query: '%s'"%json.dumps(q.serialize(),indent=2))
-    resultset = conn.search(indices=index+'-*', doc_types=[doctype], query=q, search_type="count")
+    logger.info("[bibleverse_facet] query: '%s'"%json.dumps(q.serialize()))
+    resultset = conn.search(indices=index, doc_types=[doctype], query=q, search_type="count")
 
+    ret = []
+    debug_ret = []
     # get facet counts from the results
     for facet in resultset.facets:
-        logger.debug("Total '%s'"%facet,resultset.facets[facet]['total'])
+        logger.debug("[bibleverse_facet] Total '%s:%s'"%(facet,resultset.facets[facet]['total']))
         for row in resultset.facets[facet]['terms']:
             ret.append({"bibleverse":row['term']})
+            debug_ret.append({"bibleverse":row['term'], "count":row["count"]})
 
-    logger.info("Results: '%s'"%json.dumps(ret,indent=2))
+    logger.info("[bibleverse_facet] Results: '%s'"%json.dumps(debug_ret))
     return ret
 
 def bibleverse_text(bibleverses, translation="KJV"):
@@ -103,14 +114,20 @@ def bibleverse_text(bibleverses, translation="KJV"):
 def bibleverse_recommendations(bibleverses):
     return bibleverses
 
-def get_scriptures_by_date(_date=None, st=None, et=None, size=10):
+def get_scriptures_by_date(_date=None, st=None, et=None, size=10, search_text=None):
     ret = []
     ES_SETTINGS = settings.ES_SETTINGS
     hosts = ES_SETTINGS['hosts']
     search_index = ES_SETTINGS['search_index']
-    ret = bibleverse_facet(host=hosts, index=search_index, start=st, end=et, _date=_date, size=size)
+    ret = bibleverse_facet(host=hosts,
+                           index=search_index,
+                           start=st,
+                           end=et,
+                           _date=_date,
+                           size=size,
+                           search_text=search_text)
     ret = bibleverse_text(ret)
     ret = bibleverse_recommendations(ret)
 
-    logger.info("get_scriptures_by_date: returns '%s",json.dumps(ret))
+    logger.info("[get_scriptures_by_date] returns '%s",json.dumps(ret))
     return ret

@@ -1,5 +1,64 @@
 This directory contains convenience scripts to perform an faceted search queries against ES.
 
+## Dir Setup
+
+````
+     1017  sudo mkdir -p data0/elasticsearch-1
+ 1018  cd data0/elasticsearch-1/
+ 1019  cd
+ 1020  cd /opt/
+ 1021  sudo tar xf ~/Downloads/elasticsearch-1.0.0.RC2.tar.gz
+ 1022  sudo ln -s /opt/elasticsearch-1.0.0.RC2/ elasticsearch
+ 1023  cd elasticsearch
+ 1024  ls
+ 1025  sudo mkdir -p config data logs run work
+ 1026  ls
+ 1027  cd ../
+ 1028  rm -rf elasticsearch-1.0.0.RC2/
+ 1029  sudo rm -rf elasticsearch-1.0.0.RC2/
+ 1030  sudo tar xf ~/Downloads/elasticsearch-1.0.0.RC2.tar.gz
+ 1031  ls
+ 1032  cd elasticsearch
+ 1033  ls
+ 1034  cd /data0/
+ 1035  cd elasticsearch-1/
+ 1036  sudo mkdir -p config data logs run work
+ 1037  ls
+ 1038  cd config/
+ 1039  vim elasticsearch.yml
+ 1040  sudo vim elasticsearch.yml
+ 1041  sudo cp /opt/elasticsearch/config/logging.yml .
+ 1042  cd
+ 1043  cd /etc/supervisord.conf.d/
+ 1044  ls
+ 1045  vim elasticsearch-1.conf
+ 1046  which java
+ 1047  sudo vim elasticsearch-1.conf
+ 1048  sudo useradd -r elasticsearch
+ 1049  cd
+ 1050  cd /data0/
+ 1051  ls
+ 1052  grep elasticsearch /etc/group
+ 1053  sudo chown -R elasticsearch:elasticsearch elasticsearch-1/
+ 1054  sudo chown -R elasticsearch:elasticsearch /opt/elasticsearch-1.0.0.RC2/
+ 1055  sudo chown -R elasticsearch:elasticsearch /opt/elasticsearch
+ 1056  usermod -h
+ 1057  sudo usermod -h
+ 1058  sudo usermod -d /opt/elasticsearch elasticsearch
+ 1059  cat /etc/supervisord.conf.d/elasticsearch-1.conf
+ wget http://download.elasticsearch.org/kibana/kibana/kibana-latest.zip
+ mkdir /opt/kibana
+ sudo chown -R elasticsearch:elasticsearch /opt/kibana/
+
+
+ ````
+
+## Plugins
+
+    # FYI: Use './bin/plugin -remove' to remove old plugins
+    ./bin/plugin -install mobz/elasticsearch-head
+    ./bin/plugin -install elasticsearch/marvel/latest
+
 ## Example
 To get the data for Valentines day 2013,  I execute the following
 

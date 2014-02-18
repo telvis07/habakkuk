@@ -135,7 +135,7 @@ LOGGING = {
             'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
         },
         'simple': {
-            'format': '%(levelname)s %(name)s %(message)s'
+            'format': '%(name)s %(levelname)s %(message)s'
         },
     },
     'filters': {

@@ -15,18 +15,23 @@ DEFAULT_RANGE=7
 logger = logging.getLogger(__name__)
 query_logger = logging.getLogger('query_logger')
 
-def biblestudy(request, template="biblestudy.html", live_hack=True):
+def biblestudy(request, template="biblestudy.html", live_hack=False):
     context = {}
     params = request.GET
     start = params.get('s', None)
     end = params.get('e', None)
     _date = params.get('date', None)
     size = params.get('size', 10)
+    search_text = params.get('search')
 
     if live_hack:
         context["search_results"] = _get_scriptures_by_date()
     else:
-        context["search_results"] = get_scriptures_by_date(st=start, et=end, size=size, _date=_date)
+        context["search_results"] = get_scriptures_by_date(st=start,
+                                                           et=end,
+                                                           size=size,
+                                                           _date=_date,
+                                                           search_text=search_text)
 
     context["habakkuk_message"] = get_habakkuk_message()
     return render(request, template, context)

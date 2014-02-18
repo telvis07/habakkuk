@@ -56,7 +56,8 @@ class BibleStudyTest(TestCase):
                                              start=None,
                                              end=None,
                                              _date=None,
-                                             size=5)
+                                             size=5,
+                                             search_text=None)
         mock_text.assert_called_with(bv)
         mock_rec.assert_called_with(text)
         self.assertEquals(recommendations, ret)
