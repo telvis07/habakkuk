@@ -33,7 +33,9 @@
                 "bibleverse":{"type":"string","index": "not_analyzed"},
                 "created_at_date":{ "type" : "date", "index" : "not_analyzed" },
                 "created_at":{ "type" : "date", "index" : "not_analyzed" },
-                "tweetid":{"type":"string", "store":"no"}
+                "tweetid":{"type":"string", "store":"no"},
+                "follower_count":{"type":"long"},
+                "friends_count":{"type":"long"}
             }
         }
     }
