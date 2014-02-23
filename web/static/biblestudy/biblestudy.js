@@ -1,9 +1,12 @@
 /**
  * Created by telvis on 12/30/13.
  */
-var bibleStudyModule = angular.module("bibleStudyApp", ['ngGrid']);
 
-function BibleStudyCtrl($window, $scope, $log){
+
+function BibleStudyCtrl($window, $scope, $log, HkSearch){
+    /* methods */
+    $scope.search_action = search_action;
+
     /* Controller for BibleStudy app */
     $scope.search_text = null;
     $scope.popular_list = {};
@@ -14,6 +17,13 @@ function BibleStudyCtrl($window, $scope, $log){
     $scope.pagination = {"start_enabled":"disabled",
                          "end_enabled":"disabled"}
     $scope.num_search_result_pages = _.range(1,2);
+
+    // search
+    $scope.text_search = { placeholder : "love, christmas, chocolate",
+                           text: "",
+                           start_date: null,
+                           end_date: null,
+                           date: null}
 
     // Testing...
     $scope.popular_list = $window.HK.popular_list;
@@ -30,7 +40,23 @@ function BibleStudyCtrl($window, $scope, $log){
         multiSelect: false,
         sortInfo: { fields: ['count', 'term'], directions: ['desc','asc'] }
     };
+
+    function search_action(){
+        $log.info("[search_actino] running search_action. got text: " + $scope.text_search.text);
+        HkSearch.query($scope.text_search);
+    }
 }
 
+function HkSearch($log){
+    /* angular service that handles $http lookups to the backend */
+    var text_search_service = {};
+    text_search_service.query = function(text_search){
+        $log.info("[TextSearchService] TODO: call $http with text "+text_search.text)
+    }
+    return text_search_service;
+}
 
+/* define the 'search' service */
+var bibleStudyModule = angular.module("bibleStudyApp", ['ngGrid']);
+bibleStudyModule.factory('HkSearch', HkSearch);
 bibleStudyModule.controller("BibleStudyCtrl", BibleStudyCtrl);

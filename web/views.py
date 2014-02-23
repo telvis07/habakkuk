@@ -22,7 +22,7 @@ def biblestudy(request, template="biblestudy.html", live_hack=False):
     end = params.get('e', None)
     _date = params.get('date', None)
     size = params.get('size', 10)
-    search_text = params.get('search')
+    search_text = params.get('search', None)
 
     if live_hack:
         context["search_results"] = _get_scriptures_by_date()

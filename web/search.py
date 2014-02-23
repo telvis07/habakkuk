@@ -1,6 +1,6 @@
 from pyes import ES
-from pyes.query import MatchAllQuery, FilteredQuery
-from pyes.filters import RangeFilter, TermFilter
+from pyes.query import MatchAllQuery, FilteredQuery, BoolQuery, MatchQuery
+from pyes.filters import RangeFilter, TermFilter, QueryFilter
 from pyes.utils import ESRange, ESRangeOp
 import jsonlib2 as json
 import logging
@@ -9,6 +9,7 @@ from web.models import BibleText
 logger = logging.getLogger(__name__)
 
 def get_es_connection(host):
+    logger.debug("Connecting to '%s'"%host )
     return ES(host)
 
 def bibleverse_facet(host,
@@ -67,7 +68,7 @@ def bibleverse_facet(host,
     # add the facet
     for term in facet_terms:
         if search_text:
-            facet_filter = TermFilter(field="text", value=search_text)
+            facet_filter = QueryFilter(BoolQuery(should=MatchQuery(field="text", text=search_text)))
         else:
             facet_filter = None
         q.facet.add_term_facet(term,
@@ -75,7 +76,7 @@ def bibleverse_facet(host,
                                size=size,
                                facet_filter=facet_filter)
 
-    logger.info("[bibleverse_facet] query: '%s'"%json.dumps(q.serialize()))
+    logger.debug("[bibleverse_facet] query: '%s'"%json.dumps(q.serialize(), indent=2))
     resultset = conn.search(indices=index, doc_types=[doctype], query=q, search_type="count")
 
     ret = []

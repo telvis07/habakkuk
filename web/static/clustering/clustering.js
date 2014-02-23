@@ -29,7 +29,7 @@ function HkClusterCtrl($window, $scope, $log){
 
          if (selected){
            // highlight the row by changing 'class'
-           $log.info("selected "+index+" from facets table");
+           $log.info("selected "+index+" from facets table - foo");
            $scope.facets[index].class = "success";
            selected_term = $scope.facets[index].term;
          }else {
