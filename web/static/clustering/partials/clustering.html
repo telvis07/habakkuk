@@ -1,26 +1,25 @@
 <!-- NOTE: This partial is not used any longer. Should be removed in the future -->
-<div ng-controller='ClusterCtrl'>
-  <div class="container-fluid">
-    <div class="row-fluid">
-      <div class="span2">
-        <p>Select a specific Bible verse</p>
-        <table class="table table-hover table-bordered table-condensed" >
-          <thead>
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-4">
+        <p>Select a Bible verse from the table to filter the clusters. Click again to clear the selection</p>
+        <table class="table table-hover table-bordered table-condensed">
+            <thead>
             <tr>
-              <th>Bible Reference</th>
-              <th>Tweet Count</th>
+                <th>Bible verse</th>
+                <th>Number of Clusters</th>
             </tr>
-          </thead>
-          <tr ng-repeat='facet in facets',  ng-click="clickedFacet($index)", class="{{facet.class}}">
-            <td>{{facet.term}}</td><td>{{facet.count}}</td>
-          </tr>
+            </thead>
+            <tr ng-repeat='facet in facets'
+            , ng-click="clickedFacet($index)", class="{{ facet.class }}">
+            <td>{{ facet.term }}</td>
+            <td>{{ facet.count }}</td>
+            </tr>
         </table>
-      </div> <!-- span2 -->
-
-      <div class="span10">
-        <h4>Bibleverses grouped by usage on twitter</h4>
-        <hkuk-clusters-viz clusters='clusters'></hkuk-clusters-viz>
-      </div>
     </div>
-  </div>
+
+    <!-- Body Content -->
+    <div class="col-md-8">
+        <hkuk-clusters-viz clusters='clusters'></hkuk-clusters-viz>
+    </div>
 </div>

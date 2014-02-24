@@ -31,14 +31,9 @@
     <em>This view shows a D3 cluster dendrogram of popular Bible verses and their related verses based on Twitter usage.</em>
 {% endblock help %}
 
-{%  block sidebar_content %}
-    <ng-include
-            src="'{{STATIC_URL}}clustering/partials/clustering-sidebar.html'">
-    </ng-include>
-{%  endblock sidebar_content %}
 {%  block body_content %}
     <ng-include
-            src="'{{STATIC_URL}}clustering/partials/clustering-content.html'">
+            src="'{{STATIC_URL}}clustering/partials/clustering.html'">
     </ng-include>
 {%  endblock body_content %}
 

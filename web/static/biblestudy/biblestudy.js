@@ -58,7 +58,7 @@ function BibleStudyCtrl($window, $scope, $log, HkSearch){
     }
 }
 
-function HkSearch($log, $http, $rootScope){
+function HkSearch($log, $http){
     /* angular service that handles $http lookups to the backend */
     var text_search_service = {};
 

@@ -49,17 +49,7 @@
                 <p class="lead">{% block help %} {% endblock help %}</p>
                 <small>This app is still in development so some actions aren't implemented yet. :-)</small>
               </div>
-                <div class="row">
-                    <!-- Sidebar -->
-                    <div class="col-md-4">
-                        {% block sidebar_content %} {% endblock sidebar_content %}
-                    </div>
-
-                    <!-- Body Content -->
-                    <div class="col-md-8">
-                        {% block body_content %}{% endblock body_content %}
-                    </div>
-                </div>
+              {% block body_content %}{% endblock body_content %}
             </div>
         </div>
     </div>

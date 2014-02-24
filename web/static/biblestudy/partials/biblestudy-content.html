@@ -1,3 +1,17 @@
+<!-- search box -->
+<div class="row">
+ <div class="col-lg-12">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button ng-click="search_action()" class="btn btn-default" type="button">Search!</button>
+      </span>
+      <input type="text" class="form-control" placeholder="{{ text_search.placeholder }}" ng-model="text_search.text">
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+</div>
+<br/>
+<br/>
+
 <p>Showing {{ search_results.count }} of {{ search_results.total }} Popular Bible verses on Twitter for <a href="#"> {{ search_results.date }}</a></p>
 <!-- Special Message or "Clicked" verse -->
 <div class="list-group">
