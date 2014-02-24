@@ -11,8 +11,9 @@ describe("Controller: BibleStudyCtrl", function() {
         window = {};
         window.HK = {};
         window.HK.popular_list = [];
-        window.HK.search_results = [];
-        window.HK.habakkuk_message = "testing";
+        window.HK.search_results = {};
+        window.HK.search_results.results = [];
+        window.HK.search_results.habakkuk_message = "testing";
     }));
 
     it('creates a BibleStudyCtrl controller', function(){
@@ -23,12 +24,12 @@ describe("Controller: BibleStudyCtrl", function() {
     it('verifies default scope values', function(){
         var ctrl = controller('BibleStudyCtrl', {$window: window, $scope: scope});
         expect(scope.popular_list).toEqual([]);
-        expect(scope.search_results).toEqual([]);
-        expect(scope.search_results_count).toEqual(0);
-        expect(scope.total_search_results_count).toEqual(0);
-        expect(scope.habakkuk_message).toEqual("testing");
+        expect(scope.search_results.results).toEqual([]);
+        expect(scope.search_results.count).toEqual(0, "search_results.count is wrong");
+        expect(scope.search_results.total).toEqual(0, "search_results.total is wrong");
+        expect(scope.search_results.habakkuk_message).toEqual("testing");
         expect(scope.gridOptions).toBeDefined();
-        expect(scope.search_text).toBeDefined();
+        expect(scope.text_search).toBeDefined();
         expect(scope.popular_list_selected_item).toBeDefined();
         expect(scope.show_habakkuk_message).toBe(true);
         expect(scope.pagination).toEqual({"start_enabled":"disabled",

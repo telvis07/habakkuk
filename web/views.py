@@ -23,6 +23,13 @@ def biblestudy(request, template="biblestudy.html", live_hack=False):
     _date = params.get('date', None)
     size = params.get('size', 10)
     search_text = params.get('search', None)
+    _format = params.get("format", None)
+
+    if _format == 'json':
+        return_json = True
+    else:
+        return_json = False
+
 
     if live_hack:
         context["search_results"] = _get_scriptures_by_date()
@@ -34,7 +41,12 @@ def biblestudy(request, template="biblestudy.html", live_hack=False):
                                                            search_text=search_text)
 
     context["habakkuk_message"] = get_habakkuk_message()
-    return render(request, template, context)
+    context["search_text"] = search_text
+
+    if return_json:
+        return HttpResponse(json.dumps(context), mimetype="application/json")
+    else:
+        return render(request, template, context)
 
 def get_habakkuk_message():
     return "Hello World!"

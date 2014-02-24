@@ -13,8 +13,10 @@
     <script type="text/javascript">
         var HK = {};
         HK.popular_list = [{"count": 2, "term": "jeremiah 32:17"}, {"count": 2, "term": "acts 4:31"}, {"count": 2, "term": "john 14:1"}, {"count": 1, "term": "hebrews 11:1"}, {"count": 1, "term": "romans 5:20"}, {"count": 1, "term": "john 15:13"}, {"count": 1, "term": "john 15:10"}, {"count": 1, "term": "galatians 4:16"}, {"count": 1, "term": "matthew 19:26"}, {"count": 1, "term": "job 19:25"}, {"count": 1, "term": "matthew 6:33"}, {"count": 1, "term": "john 9:25"}, {"count": 1, "term": "philippians 4:13"}, {"count": 1, "term": "matthew 6:31"}, {"count": 1, "term": "matthew 18:11"}, {"count": 1, "term": "luke 12:6"}, {"count": 1, "term": "i_corinthians 1:24"}, {"count": 1, "term": "john 2:23"}, {"count": 1, "term": "mark 9:23"}, {"count": 1, "term": "i_thessalonians 5:2"}, {"count": 1, "term": "i_john 4:5"}, {"count": 1, "term": "ii_corinthians 5:15"}, {"count": 1, "term": "colossians 3:2"}, {"count": 1, "term": "john 14:6"}, {"count": 1, "term": "i_john 3:10"}, {"count": 1, "term": "proverbs 30:5"}, {"count": 1, "term": "matthew 12:21"}, {"count": 1, "term": "matthew 5:5"}, {"count": 1, "term": "isaiah 42:8"}, {"count": 1, "term": "ephesians 1:3"}, {"count": 1, "term": "luke 18:27"}, {"count": 1, "term": "luke 9:23"}, {"count": 1, "term": "matthew 7:14"}, {"count": 1, "term": "i_corinthians 13:4"}, {"count": 1, "term": "matthew 12:36"}, {"count": 1, "term": "proverbs 3:5"}, {"count": 1, "term": "i_peter 5:6"}, {"count": 1, "term": "i_peter 5:7"}, {"count": 1, "term": "romans 5:5"}, {"count": 1, "term": "psalm 17:4"}, {"count": 1, "term": "galatians 2:20"}, {"count": 1, "term": "ii_timothy 1:7"}];
-        HK.search_results = {{ search_results | jsonify }};
-        HK.habakkuk_message = {{ habakkuk_message | jsonify }};
+        HK.search_results = {}
+        HK.search_results.results = {{ search_results | jsonify }};
+        HK.search_results.habakkuk_message = {{ habakkuk_message | jsonify }};
+        HK.search_text = {{ search_text | jsonify }};
     </script>
     <script src="{{ STATIC_URL }}biblestudy/biblestudy.js"></script>
 

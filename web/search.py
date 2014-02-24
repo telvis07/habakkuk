@@ -1,5 +1,5 @@
 from pyes import ES
-from pyes.query import MatchAllQuery, FilteredQuery, BoolQuery, MatchQuery
+from pyes.query import MatchAllQuery, FilteredQuery, BoolQuery, MatchQuery, TextQuery
 from pyes.filters import RangeFilter, TermFilter, QueryFilter
 from pyes.utils import ESRange, ESRangeOp
 import jsonlib2 as json
@@ -68,7 +68,10 @@ def bibleverse_facet(host,
     # add the facet
     for term in facet_terms:
         if search_text:
-            facet_filter = QueryFilter(BoolQuery(should=MatchQuery(field="text", text=search_text)))
+            facet_filter = QueryFilter(BoolQuery(should=MatchQuery(field="text",
+                                                                   text=search_text,
+                                                                   operator='and',
+                                                                   fuzziness='auto')))
         else:
             facet_filter = None
         q.facet.add_term_facet(term,
