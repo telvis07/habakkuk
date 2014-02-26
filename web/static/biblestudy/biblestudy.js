@@ -34,7 +34,7 @@ function BibleStudyCtrl($window, $scope, $log, HkSearch){
     $scope.search_results.count = $scope.search_results.results.length;
     $scope.search_results.total = $scope.search_results.results.length;
     $scope.search_results.habakkuk_message = $window.HK.search_results.habakkuk_message;
-    $scope.search_results.date = "Valentine's Day - February 14, 2013";
+    $scope.search_results.date_str = $window.HK.search_results.date_str;
 
 
     $scope.gridOptions = {
@@ -62,31 +62,34 @@ function HkSearch($log, $http){
     /* angular service that handles $http lookups to the backend */
     var text_search_service = {};
 
+
     text_search_service.query = function(text_search){
         $log.info("[HkSearch.query] TODO: call $http with text "+text_search.text);
         var promise = $http.get('/biblestudy/', {params: {search : text_search.text,
                                             format : 'json'}}
-        ).then(search_success);
+        ).then(this.search_success);
         return promise;
     }
 
-    function search_success(response){
-        data = response.data;
+    var search_success = function(response){
+        var data = response.data;
         $log.info("[search_success] - success yo! " + JSON.stringify(data));
         var search_results = {};
         search_results.results = data.search_results;
         search_results.count = data.search_results.length;
         search_results.total = data.search_results.length;
-        // $scope.search_results.habakkuk_message = $window.HK.search_results.habakkuk_message;
-        search_results.date = "Not Valentine's Day - February 15, 2013";
+        search_results.habakkuk_message = "Here are search results for "+data.search_text;
+        search_results.date_str = data.search_results.date_str;
 
         return search_results;
     }
 
+    // TODO: handle error cases
     function search_failed(data, status, headers, config){
         $log.error("[search_failed] - it failed yo!!!");
     }
 
+    text_search_service.search_success = search_success;
     return text_search_service;
 }
 

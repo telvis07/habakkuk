@@ -70,8 +70,7 @@ def bibleverse_facet(host,
         if search_text:
             facet_filter = QueryFilter(BoolQuery(should=MatchQuery(field="text",
                                                                    text=search_text,
-                                                                   operator='and',
-                                                                   fuzziness='auto')))
+                                                                   operator='and')))
         else:
             facet_filter = None
         q.facet.add_term_facet(term,

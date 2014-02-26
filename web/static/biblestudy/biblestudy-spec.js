@@ -2,6 +2,7 @@
  * Created by telvis on 1/8/14.
  */
 describe("Controller: BibleStudyCtrl", function() {
+    // Load the module, which contains the controller
     beforeEach(module('bibleStudyApp'));
     var scope, window, controller;
 
@@ -25,8 +26,8 @@ describe("Controller: BibleStudyCtrl", function() {
         var ctrl = controller('BibleStudyCtrl', {$window: window, $scope: scope});
         expect(scope.popular_list).toEqual([]);
         expect(scope.search_results.results).toEqual([]);
-        expect(scope.search_results.count).toEqual(0, "search_results.count is wrong");
-        expect(scope.search_results.total).toEqual(0, "search_results.total is wrong");
+        expect(scope.search_results.count).toEqual(0);
+        expect(scope.search_results.total).toEqual(0);
         expect(scope.search_results.habakkuk_message).toEqual("testing");
         expect(scope.gridOptions).toBeDefined();
         expect(scope.text_search).toBeDefined();
@@ -36,4 +37,43 @@ describe("Controller: BibleStudyCtrl", function() {
                          "end_enabled":"disabled"});
         expect(scope.num_search_result_pages).toEqual(_.range(1,2));
     });
+});
+
+describe("Service: HkSearch", function(){
+    beforeEach(module('bibleStudyApp'));
+    var scope, service, mockBackend, expected_response;
+
+    beforeEach(inject(function($httpBackend, $rootScope, HkSearch){
+        scope = $rootScope.$new();
+        // this is a mock backend to control the
+        // requests and responses from the server
+        expected_response = {habakkuk_message: "Hello World!",
+                     search_text: "love",
+                     search_results: [
+                        {
+                            text: "Charity suffereth long, and is kind; charity envieth not; charity vaunteth not itself, is not puffed up,",
+                            translation: "KJV",
+                            bibleverse_human: "i_corinthians 13:4",
+                            bibleverse: "i_corinthians 13:4"
+                        }]
+                    };
+        mockBackend = $httpBackend;
+        service = HkSearch;
+        mockBackend.expectGET("/biblestudy/?format=json&search=love").
+            respond(expected_response);
+    }));
+
+    it('creates a HkSearch service', function(){
+        expect(service).toBeDefined();
+    });
+
+    it('it tests the http query', function(){
+        expect(service).toBeDefined();
+        spyOn(service, 'search_success').andCallThrough();
+        var text_search = {text: "love"};
+        service.query(text_search);
+        mockBackend.flush();
+        expect(service.search_success).toHaveBeenCalled();
+    });
+
 });

@@ -42,6 +42,7 @@ def biblestudy(request, template="biblestudy.html", live_hack=False):
 
     context["habakkuk_message"] = get_habakkuk_message()
     context["search_text"] = search_text
+    context["date_str"] = "all time"
 
     if return_json:
         return HttpResponse(json.dumps(context), mimetype="application/json")
