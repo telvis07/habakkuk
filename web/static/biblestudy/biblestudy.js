@@ -4,12 +4,7 @@
 
 
 function BibleStudyCtrl($window, $scope, $log, HkSearch){
-    /* methods */
-    $scope.search_action = search_action;
-
     /* Controller for BibleStudy app */
-    $scope.popular_list = {};
-    $scope.popular_list_selected_item = null;
 
     /* init search results obj */
     $scope.search_results = {};
@@ -22,11 +17,11 @@ function BibleStudyCtrl($window, $scope, $log, HkSearch){
     $scope.num_search_result_pages = _.range(1,2);
 
     /* init text search */
-    $scope.text_search = { placeholder : "love, christmas, chocolate",
-                           text: $window.HK.search_text ? $window.HK.search_text : "",
-                           start_date: null,
-                           end_date: null,
-                           date: null}
+    $scope.search_params = { placeholder : "love, christmas, chocolate",
+                             text: $window.HK.search_text ? $window.HK.search_text : "",
+                             start_date: null,
+                             end_date: null,
+                             date: null}
 
     // Init Bootstrapped Data
     $scope.popular_list = $window.HK.popular_list;
@@ -47,15 +42,24 @@ function BibleStudyCtrl($window, $scope, $log, HkSearch){
     };
 
 
-    function search_action(){
+    $scope.search_action = function (){
         /* when 'Search!' is clicked */
-        $log.info("[search_action] running search_action. got text: " + $scope.text_search.text);
-        HkSearch.query($scope.text_search).then(function(d){
+        $log.info("[search_action] running search_action. got text: " + $scope.search_params.text);
+        HkSearch.query($scope.search_params).then(function(d){
             $scope.search_results = d;
             $log.info("[search_action] running search_action. returned: " + $scope.search_results.count);
         })
+    }; // search action
 
-    }
+    $scope.recommend_action = function(bibleverse){
+        /* when a user clicks on a bibleverse in search results */
+        $log.info("[recommend_action] - clicked: " + bibleverse);
+        search_params = {'text': bibleverse};
+        HkSearch.recommend(search_params).then(function(result){
+            $scope.search_results = result;
+            $log.info("[recommend_action] returned: "+ $scope.search_results.count);
+        })
+    };
 }
 
 function HkSearch($log, $http){
@@ -63,15 +67,23 @@ function HkSearch($log, $http){
     var text_search_service = {};
 
 
-    text_search_service.query = function(text_search){
-        $log.info("[HkSearch.query] TODO: call $http with text "+text_search.text);
-        var promise = $http.get('/biblestudy/', {params: {search : text_search.text,
+    text_search_service.query = function(search_params){
+        $log.info("[HkSearch.query] Searching backend for "+search_params.text);
+        var promise = $http.get('/biblestudy/', {params: {search : search_params.text,
                                             format : 'json'}}
         ).then(this.search_success);
         return promise;
-    }
+    };
 
-    var search_success = function(response){
+    text_search_service.recommend = function(search_params){
+        $log.info("[HkSearch.recommend] Searching backend for "+search_params.text)
+        var promise = $http.get('/biblestudy/', {params: {r:search_params.text, format: 'json'}}
+        ).then(this.recommend_success)
+        return promise;
+    };
+
+    /* http search returned successfully */
+    text_search_service.search_success = function(response){
         var data = response.data;
         $log.info("[search_success] - success yo! " + JSON.stringify(data));
         var search_results = {};
@@ -84,12 +96,25 @@ function HkSearch($log, $http){
         return search_results;
     }
 
+    /* http recommendation returned successfully */
+    text_search_service.recommend_success = function(response){
+        var data = response.data;
+        $log.info("[search_success] - success yo! " + JSON.stringify(data));
+        var search_results = {};
+        search_results.results = data.search_results;
+        search_results.count = data.search_results.length;
+        search_results.total = data.search_results.length;
+        search_results.habakkuk_message = "Here are recommendations results for "+data.search_text;
+        search_results.date_str = data.search_results.date_str;
+
+        return search_results;
+    }
+
     // TODO: handle error cases
     function search_failed(data, status, headers, config){
         $log.error("[search_failed] - it failed yo!!!");
     }
 
-    text_search_service.search_success = search_success;
     return text_search_service;
 }
 

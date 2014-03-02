@@ -5,7 +5,7 @@
       <span class="input-group-btn">
         <button ng-click="search_action()" class="btn btn-default" type="button">Search!</button>
       </span>
-      <input type="text" class="form-control" placeholder="{{ text_search.placeholder }}" ng-model="text_search.text">
+      <input type="text" class="form-control" placeholder="{{ search_params.placeholder }}" ng-model="search_params.text">
     </div><!-- /input-group -->
   </div><!-- /.col-lg-6 -->
 </div>
@@ -24,14 +24,16 @@
 </div>
 
 <!-- search results -->
+
 <div class="list-group">
-    <a href="#" class="list-group-item" ng-repeat="result in search_results.results">
+    <a href="#" ng-click="recommend_action(result.bibleverse)" class="list-group-item" ng-repeat="result in search_results.results">
         <h4 class="list-group-item-heading">{{ result.bibleverse }}</h4>
         <p class="list-group-item-text">
         {{ result.text }}
         </p>
     </a>
 </div>
+
 
 <!-- pagination -->
 <ul class="pagination">
