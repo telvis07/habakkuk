@@ -1,0 +1,35 @@
+cluster.name: "bakkify"
+node.name: "bakkify-1"
+node.tag: "bakkify"
+index.number_of_shards: 1
+index.number_of_replicas: 0
+
+# dirs
+path.data: /data0/elasticsearch-1/data
+path.work: /data0/elasticsearch-1/work
+path.logs: /data0/elasticsearch-1/logs
+
+# transport
+http.enabled: true
+http.port: 9201
+transport.tcp.port: 9301
+
+# discovery
+discovery.zen.ping.multicast.enabled: false
+discovery.zen.ping.unicast.hosts: ['localhost:9301']
+
+# slowlog
+index.search.slowlog.threshold.query.warn: 10s
+index.search.slowlog.threshold.query.info: 5s
+index.search.slowlog.threshold.query.debug: 2s
+index.search.slowlog.threshold.query.trace: 500ms
+
+index.search.slowlog.threshold.fetch.warn: 1s
+index.search.slowlog.threshold.fetch.info: 800ms
+index.search.slowlog.threshold.fetch.debug: 500ms
+index.search.slowlog.threshold.fetch.trace: 200ms
+
+index.indexing.slowlog.threshold.index.warn: 10s
+index.indexing.slowlog.threshold.index.info: 5s
+index.indexing.slowlog.threshold.index.debug: 2s
+index.indexing.slowlog.threshold.index.trace: 500ms
