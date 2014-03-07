@@ -122,7 +122,6 @@ PROJECT_APPS = (
     'web',
 )
 
-DEBUG = TEMPLATE_DEBUG = True
 ES_SETTINGS = {
     'hosts':['http://162.243.207.220:6778'],
     'search_index' : 'habakkuk-all',
