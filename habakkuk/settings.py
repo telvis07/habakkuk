@@ -122,6 +122,12 @@ PROJECT_APPS = (
     'web',
 )
 
+ES_SETTINGS = {
+    'hosts':['http://162.243.207.220:6778'],
+    'search_index' : 'habakkuk-all',
+    'basic_auth' : {"username":"habakkuk-all", "password":os.environ.get("ES_PASSWORD")}
+}
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.

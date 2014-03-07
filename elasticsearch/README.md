@@ -3,7 +3,24 @@ This directory contains convenience scripts to perform an faceted search queries
 ## Dir Setup
 
 ````
-     1017  sudo mkdir -p data0/elasticsearch-1
+    6  sudo mkdir -p /data0/elasticsearch-1
+    7  cd /data0/elasticsearch-1/
+    8  mkdir -p config data logs run work
+    9  cd /opt/
+    11  yum install wget
+   12  wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.0.1.tar.gz
+   13  tar xf elasticsearch-1.0.1.tar.gz
+   14  ln -s /opt/elasticsearch-1.0.1 /opt/elasticsearch
+   15  useradd -r -s /bin/bash -d /opt/elasticsearch elasticsearch
+   [root@es-1 ~]# chown -R elasticsearch:elasticsearch /data0/elasticsearch-1/
+[root@es-1 ~]# chown -R elasticsearch:elasticsearch /opt/elasticsearch
+[root@es-1 ~]# chown -R elasticsearch:elasticsearch /opt/elasticsearch-1.0.1
+````
+
+
+
+````
+     1017  sudo mkdir -p /data0/elasticsearch-1
  1018  cd data0/elasticsearch-1/
  1019  cd
  1020  cd /opt/

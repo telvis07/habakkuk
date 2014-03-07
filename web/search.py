@@ -9,8 +9,9 @@ from web.models import BibleText
 logger = logging.getLogger(__name__)
 
 def get_es_connection(host):
+    ES_SETTINGS = settings.ES_SETTINGS
     logger.debug("Connecting to '%s'"%host )
-    return ES(host)
+    return ES(host, basic_auth=ES_SETTINGS.get('basic_auth'))
 
 def bibleverse_facet(host,
                      index='habakkuk-*',
