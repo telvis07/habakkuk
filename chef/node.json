@@ -1,3 +1,3 @@
 {
-    "run_list": [ "recipe[habakkuk::default]" ]
+    "run_list": [ "recipe[habakkuk::web]" ]
 }

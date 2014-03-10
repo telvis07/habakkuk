@@ -22,3 +22,6 @@ reports/
 
 # jetbrains pycharm
 .idea
+
+# chef
+chef-client-running.pid
