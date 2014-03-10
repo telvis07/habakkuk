@@ -1,9 +1,10 @@
 __author__ = 'telvis'
 
-from fabric.api import run, local, env, sudo, settings
+from fabric.api import run, local, env, sudo, settings, cd
 from fabric.contrib.files import append, contains, exists
 
 env.user = 'telvis'
+env.use_ssh_config=1
 
 def chef_install():
     # setup chef dir
@@ -29,6 +30,8 @@ def add_telvis():
     if ret.failed:
         append('/etc/sudoers', line)
 
+    run("chown -R telvis:telvis /home/telvis/.ssh/")
+
 def install_ruby():
     with settings(warn_only=True):
         run("source ~/.profile")
@@ -36,8 +39,9 @@ def install_ruby():
         ruby_version_failed = run("ruby -v").failed
 
     if ruby_path_failed or ruby_version_failed:
-        sudo("yum -y update")
-        sudo("yum -y install curl")
+        sudo("yum -y -q update")
+        sudo("yum -y -q install yum-utils")
+        sudo("yum -y -q install curl")
         run("curl -L get.rvm.io | bash -s stable")
         run("source ~/.profile")
         run("rvm requirements")
@@ -46,4 +50,13 @@ def install_ruby():
 
     run("source $(rvm 2.1.1 do rvm env --path)")
     run("ruby -v")
-    
+
+def deploy_web():
+    sudo("yum -y -q install git-core")
+
+    if not exists("/home/telvis/habakkuk/"):
+        run("git clone git@github.com:telvis07/habakkuk.git -b chef")
+
+    with cd("/home/telvis/habakkuk/chef"):
+        run("source ~/.profile")
+        run("rvmsudo chef-solo -c solo.rb -j node.json")
