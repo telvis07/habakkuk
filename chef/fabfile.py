@@ -51,12 +51,30 @@ def install_ruby():
     run("source $(rvm 2.1.1 do rvm env --path)")
     run("ruby -v")
 
+
+def deps():
+    sudo("yum -y -q install python-setuptools vim git-core python-devel")
+    sudo("easy_install pip")
+    sudo("sudo pip install virtualenv")
+
+def update_virtualenv():
+    with cd("/home/telvis/habakkuk"):
+        if not exists("./env"):
+            run("virtualenv env")
+            run("source ./env/bin/activate")
+        run("pip install -r requirements.txt")
+
 def deploy_web():
-    sudo("yum -y -q install git-core")
+    deps()
 
     if not exists("/home/telvis/habakkuk/"):
         run("git clone git@github.com:telvis07/habakkuk.git -b chef")
+    else:
+        with cd("/home/telvis/habakkuk"):
+            run("git pull origin chef")
 
     with cd("/home/telvis/habakkuk/chef"):
         run("source ~/.profile")
         run("rvmsudo chef-solo -c solo.rb -j node.json")
+
+    update_virtualenv()
