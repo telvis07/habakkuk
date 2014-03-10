@@ -1,3 +1,9 @@
 {
-    "run_list": [ "recipe[habakkuk::web]" ]
+    "postgresql" : {
+        "password" : {
+            "postgres": "aVOeX7H8vkuFezkS"
+        }
+    },
+    "run_list": [ "habakkuk::web", "postgresql::server" ]
 }
+
