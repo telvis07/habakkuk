@@ -91,7 +91,7 @@ def bibleverse_facet(host,
             ret.append({"bibleverse":row['term']})
             debug_ret.append({"bibleverse":row['term'], "count":row["count"]})
 
-    logger.info("[bibleverse_facet] Results: '%s'"%json.dumps(debug_ret))
+    logger.debug("[bibleverse_facet] Results: '%s'"%json.dumps(debug_ret))
     return ret
 
 def bibleverse_text(bibleverses, translation="KJV"):
@@ -133,5 +133,5 @@ def get_scriptures_by_date(_date=None, st=None, et=None, size=10, search_text=No
     ret = bibleverse_text(ret)
     ret = bibleverse_recommendations(ret)
 
-    logger.info("[get_scriptures_by_date] returns '%s",json.dumps(ret))
+    logger.debug("[get_scriptures_by_date] returns '%s",json.dumps(ret))
     return ret

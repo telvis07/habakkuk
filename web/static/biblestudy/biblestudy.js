@@ -3,7 +3,7 @@
  */
 
 
-function BibleStudyCtrl($window, $scope, $log, HkSearch){
+function BibleStudyCtrl($window, $scope, $log, $location, HkSearch){
     /* Controller for BibleStudy app */
 
     /* init search results obj */
@@ -17,7 +17,7 @@ function BibleStudyCtrl($window, $scope, $log, HkSearch){
     $scope.num_search_result_pages = _.range(1,2);
 
     /* init text search */
-    $scope.search_params = { placeholder : "love, christmas, chocolate",
+    $scope.search_params = { placeholder : "love, life, children",
                              text: $window.HK.search_text ? $window.HK.search_text : "",
                              start_date: null,
                              end_date: null,
@@ -48,6 +48,10 @@ function BibleStudyCtrl($window, $scope, $log, HkSearch){
         HkSearch.query($scope.search_params).then(function(d){
             $scope.search_results = d;
             $log.info("[search_action] running search_action. returned: " + $scope.search_results.count);
+            if (d.path){
+                $location.hash('');
+                $location.search('search', $scope.search_params.text);
+            }
         })
     }; // search action
 
@@ -92,6 +96,10 @@ function HkSearch($log, $http){
         search_results.total = data.search_results.length;
         search_results.habakkuk_message = "Here are search results for "+data.search_text;
         search_results.date_str = data.search_results.date_str;
+        if (data.path){
+            search_results.path = data.path;
+        }
+
 
         return search_results;
     }
@@ -106,6 +114,7 @@ function HkSearch($log, $http){
         search_results.total = data.search_results.length;
         search_results.habakkuk_message = "Here are recommendations results for "+data.search_text;
         search_results.date_str = data.search_results.date_str;
+
 
         return search_results;
     }
@@ -122,3 +131,6 @@ function HkSearch($log, $http){
 var bibleStudyModule = angular.module("bibleStudyApp", ['ngGrid']);
 bibleStudyModule.factory('HkSearch', HkSearch);
 bibleStudyModule.controller("BibleStudyCtrl", BibleStudyCtrl);
+bibleStudyModule.config(function($locationProvider) {
+    $locationProvider.html5Mode(true);
+});

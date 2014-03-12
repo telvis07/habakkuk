@@ -9,6 +9,7 @@ import logging
 import sys
 from web.models import ClusterData, make_d3_data
 from web.search import get_scriptures_by_date
+from urllib import urlencode
 
 DEFAULT_RANGE=7
 # init logging
@@ -27,6 +28,7 @@ def biblestudy(request, template="biblestudy.html", live_hack=False):
     recommend = params.get('r', None)
 
     logger.info("[biblestudy] - %s"%request.get_full_path())
+    context['path'] = urlencode({"search": search_text})
 
     if _format == 'json':
         return_json = True
