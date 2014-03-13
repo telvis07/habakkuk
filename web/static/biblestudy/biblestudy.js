@@ -58,7 +58,7 @@ function BibleStudyCtrl($window, $scope, $log, $location, HkSearch){
     $scope.recommend_action = function(bibleverse){
         /* when a user clicks on a bibleverse in search results */
         $log.info("[recommend_action] - clicked: " + bibleverse);
-        search_params = {'text': bibleverse};
+        search_params = {'recommend': bibleverse};
         HkSearch.recommend(search_params).then(function(result){
             $scope.search_results = result;
             $log.info("[recommend_action] returned: "+ $scope.search_results.count);
@@ -72,7 +72,7 @@ function HkSearch($log, $http){
 
 
     text_search_service.query = function(search_params){
-        $log.info("[HkSearch.query] Searching backend for "+search_params.text);
+        $log.info("[HkSearch.query] Text search for "+search_params.text);
         var promise = $http.get('/biblestudy/', {params: {search : search_params.text,
                                             format : 'json'}}
         ).then(this.search_success);
@@ -80,8 +80,8 @@ function HkSearch($log, $http){
     };
 
     text_search_service.recommend = function(search_params){
-        $log.info("[HkSearch.recommend] Searching backend for "+search_params.text)
-        var promise = $http.get('/biblestudy/', {params: {r:search_params.text, format: 'json'}}
+        $log.info("[HkSearch.recommend] Recommendation search for "+search_params.recommend)
+        var promise = $http.get('/biblestudy/', {params: {r:search_params.recommend, format: 'json'}}
         ).then(this.recommend_success)
         return promise;
     };
@@ -96,11 +96,10 @@ function HkSearch($log, $http){
         search_results.total = data.search_results.length;
         search_results.habakkuk_message = "Here are search results for "+data.search_text;
         search_results.date_str = data.search_results.date_str;
+
         if (data.path){
             search_results.path = data.path;
         }
-
-
         return search_results;
     }
 
@@ -114,6 +113,9 @@ function HkSearch($log, $http){
         search_results.total = data.search_results.length;
         search_results.habakkuk_message = "Here are recommendations results for "+data.search_text;
         search_results.date_str = data.search_results.date_str;
+
+        search_results.recommend = data.recommend;
+        $log.info("recommend: "+search_results.recommend)
 
 
         return search_results;

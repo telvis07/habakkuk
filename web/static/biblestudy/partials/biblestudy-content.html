@@ -16,7 +16,10 @@
 <br/>
 <br/>
 
-<p>Showing {{ search_results.count }} of {{ search_results.total }} Popular Bible verses on Twitter.</p>
+<p>
+    {{ search_results.count }} Bible verses that we've seen on Twitter.
+    <span ng-if="search_results.recommend"> Showing recommendations for <b>{{ search_results.recommend }}</b></span>
+</p>
 <!-- Special Message or "Clicked" verse -->
 <!--
 <div class="list-group">
@@ -31,19 +34,16 @@
 
 <!-- search results -->
 
-<div class="list-group">
-    <a href="#" ng-click="recommend_action(result.bibleverse)" class="list-group-item" ng-repeat="result in search_results.results">
+<ul class="list-group">
+    <li class="list-group-item" ng-repeat="result in search_results.results">
         <h4 class="list-group-item-heading">{{ result.bibleverse }}</h4>
         <p class="list-group-item-text">
         {{ result.text }}
         </p>
-    </a>
-</div>
+        <p>
 
-
-<!-- pagination -->
-<ul class="pagination">
-    <li class="{{ pagination.start_enabled }}"><a href="#">&laquo;</a></li>
-    <li ng-repeat="page_num in num_search_result_pages"><a href="#">{{ page_num }}</a></li>
-    <li class="{{ pagination.end_enabled }}"><a href="#" >&raquo;</a></li>
+            <!-- <a href="#" ng-click="recommend_action(result.bibleverse)"> Recommendations </a> -->
+            <a href="#"> Recommendations </a>
+        </p>
+    </li>
 </ul>
