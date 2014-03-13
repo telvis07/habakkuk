@@ -89,7 +89,7 @@ function HkSearch($log, $http){
     /* http search returned successfully */
     text_search_service.search_success = function(response){
         var data = response.data;
-        $log.info("[search_success] - success yo! " + JSON.stringify(data));
+        $log.info("[search_success] - success yo! ");
         var search_results = {};
         search_results.results = data.search_results;
         search_results.count = data.search_results.length;
@@ -107,7 +107,7 @@ function HkSearch($log, $http){
     /* http recommendation returned successfully */
     text_search_service.recommend_success = function(response){
         var data = response.data;
-        $log.info("[search_success] - success yo! " + JSON.stringify(data));
+        $log.info("[search_success] - success yo! ");
         var search_results = {};
         search_results.results = data.search_results;
         search_results.count = data.search_results.length;
@@ -127,10 +127,27 @@ function HkSearch($log, $http){
     return text_search_service;
 }
 
+/* directive to change focus from input element when the
+*  form submits
+*  See: http://johan.driessen.se/posts/Using-an-AngularJS-directive-to-hide-the-on-screen-keyboard-on-submit*/
+function handlePhoneSubmit(){
+    return {
+        link: function(scope, element, attrs, controller){
+            var textFields = element.find('input');
+            element.bind('submit', function() {
+                console.log('form was submitted');
+                textFields[0].blur();
+            });
+        } // factory obj
+    };
+}
+
 /* define the 'search' service */
 var bibleStudyModule = angular.module("bibleStudyApp", ['ngGrid']);
 bibleStudyModule.factory('HkSearch', HkSearch);
 bibleStudyModule.controller("BibleStudyCtrl", BibleStudyCtrl);
+bibleStudyModule.directive("handlePhoneSubmit",handlePhoneSubmit);
+
 bibleStudyModule.config(function($locationProvider) {
     $locationProvider.html5Mode(true);
 });
