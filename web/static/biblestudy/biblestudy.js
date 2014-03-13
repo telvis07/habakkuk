@@ -135,7 +135,6 @@ function handlePhoneSubmit(){
         link: function(scope, element, attrs, controller){
             var textFields = element.find('input');
             element.bind('submit', function() {
-                console.log('form was submitted');
                 textFields[0].blur();
             });
         } // factory obj
