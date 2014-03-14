@@ -17,8 +17,9 @@
 <br/>
 
 <p>
-    {{ search_results.count }} Bible verses that we've seen on Twitter.
+    {{ search_results.count }} Popular Bible verses that we've seen on Twitter.
     <span ng-if="search_results.recommend"> Showing recommendations for <b>{{ search_results.recommend }}</b></span>
+    <span ng-if="search_results.text"> Showing search results for: <h3>{{ search_results.text }}</h3></span>
 </p>
 <!-- Special Message or "Clicked" verse -->
 <!--
@@ -43,7 +44,6 @@
         <p>
 
             <!-- <a href="#" ng-click="recommend_action(result.bibleverse)"> Recommendations </a> -->
-            <a href="#"> Recommendations </a>
         </p>
     </li>
 </ul>

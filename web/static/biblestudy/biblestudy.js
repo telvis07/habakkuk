@@ -18,7 +18,7 @@ function BibleStudyCtrl($window, $scope, $log, $location, HkSearch){
 
     /* init text search */
     $scope.search_params = { placeholder : "love, life, children",
-                             text: $window.HK.search_text ? $window.HK.search_text : "",
+                             text: $window.HK.search_text ? $window.HK.search_text : null,
                              start_date: null,
                              end_date: null,
                              date: null}
@@ -30,6 +30,7 @@ function BibleStudyCtrl($window, $scope, $log, $location, HkSearch){
     $scope.search_results.total = $scope.search_results.results.length;
     $scope.search_results.habakkuk_message = $window.HK.search_results.habakkuk_message;
     $scope.search_results.date_str = $window.HK.search_results.date_str;
+    $scope.search_results.text = $scope.search_params.text;
 
 
     $scope.gridOptions = {
@@ -47,10 +48,13 @@ function BibleStudyCtrl($window, $scope, $log, $location, HkSearch){
         $log.info("[search_action] running search_action. got text: " + $scope.search_params.text);
         HkSearch.query($scope.search_params).then(function(d){
             $scope.search_results = d;
+            $scope.search_results.text = $scope.search_params.text
             $log.info("[search_action] running search_action. returned: " + $scope.search_results.count);
-            if (d.path){
+            if ($scope.search_params.text){
                 $location.hash('');
                 $location.search('search', $scope.search_params.text);
+            } else {
+                $location.search('');
             }
         })
     }; // search action
@@ -97,9 +101,6 @@ function HkSearch($log, $http){
         search_results.habakkuk_message = "Here are search results for "+data.search_text;
         search_results.date_str = data.search_results.date_str;
 
-        if (data.path){
-            search_results.path = data.path;
-        }
         return search_results;
     }
 

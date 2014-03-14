@@ -15,6 +15,9 @@ DEFAULT_RANGE=7
 logger = logging.getLogger(__name__)
 query_logger = logging.getLogger('query_logger')
 
+def about(request, template="about.html"):
+    return render(request, template, {})
+
 def biblestudy(request, template="biblestudy.html", live_hack=False):
     context = {}
     params = request.GET
