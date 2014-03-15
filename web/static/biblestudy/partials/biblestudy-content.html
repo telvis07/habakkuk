@@ -4,7 +4,7 @@
     <form handle-phone-submit ng-submit="search_action()"  class="navbar-form navbar-left" role="search">
     <div class="input-group">
       <span class="input-group-btn">
-        <button class="btn btn-default" type="submit">Submit</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
       </span>
       <input name="search_text" type="text" class="form-control" placeholder="{{ search_params.placeholder }}" ng-model="search_params.text">
     </div>
@@ -35,15 +35,16 @@
 
 <!-- search results -->
 
-<ul class="list-group">
-    <li class="list-group-item" ng-repeat="result in search_results.results">
-        <h4 class="list-group-item-heading">{{ result.bibleverse }}</h4>
-        <p class="list-group-item-text">
+<div class="panel panel-primary" ng-repeat="result in search_results.results">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ result.bibleverse }}</h3>
+    </div>
+    <div class="panel-body">
         {{ result.text }}
-        </p>
-        <p>
-
-            <!-- <a href="#" ng-click="recommend_action(result.bibleverse)"> Recommendations </a> -->
-        </p>
-    </li>
-</ul>
+    </div>
+    <!--
+    <div class="panel-footer">
+        <a href="#" ng-click="recommend_action(result.bibleverse)"> Recommendations </a>
+    </div>
+    -->
+</div>
