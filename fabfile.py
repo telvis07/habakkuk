@@ -146,7 +146,7 @@ def print_clusters():
 
 def sync_es(target='es-1'):
     with cd('./elasticsearch'):
-        local('/home/telvis/bin/stream2es es --source http://localhost:9200/habakkuk-all --target "http://%s:9201/habakkuk-all/"'%target)
+        local('/home/telvis/bin/stream2es es --source http://localhost:9201/habakkuk-all --target "http://%s:9201/habakkuk-all/"'%target)
 
 def install_es_plugins:
     with cd('/opt/elasticsearch')

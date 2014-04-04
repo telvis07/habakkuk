@@ -71,7 +71,7 @@ if __name__=='__main__':
     op.add_option('-H','--eshost',
                   dest='eshost',
                   help='host:port for elasticsearch',
-                  default='localhost:9200')
+                  default='localhost:9201')
     (opts,args) = op.parse_args()
     if not opts.start:
         sys.stderr.write("missing --start\n")
