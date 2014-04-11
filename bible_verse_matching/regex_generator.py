@@ -8,6 +8,7 @@ import sys
 import re
 import os
 from optparse import OptionParser
+import jsonlib2 as json
 #TODO: XXX
 #Documentation
 #Handle: eph. 6:1-3
@@ -177,11 +178,66 @@ def test_regex(fp,verbose=True):
             if verbose: print "%s,%s %s"%(line, ret['book'],ret['verse'])
             found_books.add(ret['book'])
             found = True
-            #sys.exit(0)
         if not found and answer:
-            print "Failed to match ",line
+            print "Failed to match ",line,found,answer
+            sys.exit(1)
 
     print "Found %d distinct books"%len(found_books)
+
+def fix_results(fn, outputdir='/tmp/', show_misses=True):
+    """ Assumes the caller has generated a new regex and wants to fix the
+    results captured with the old regex. Read a JSON results file containing
+    tweets captured by habakkuk and show any line does not match. """
+    from find_all_scriptures import find_all_scriptures, filtergroupdict
+    import gzip, copy, traceback
+
+    fp = None
+    found_match_cnt = 0
+    miss_match_cnt = 0
+
+    if fn.endswith('gz'):
+        fp = gzip.open(fn)
+        found_match_fp = gzip.open(os.path.join(outputdir, os.path.basename(fn)),'w')
+    else:
+        fp = open(fn)
+        found_match_fp = open(os.path.join(outputdir, os.path.basename(fn)),'w')
+
+    print "Reading",fn
+    print "Writing fixed file to",found_match_fp.name
+    print ""
+
+    try:
+        for line in fp:
+            res = json.loads(line)
+            txt = res['text'].lower()
+            matches = [ma for ma in find_all_scriptures(txt)]
+
+            if len(matches) is 0:
+                miss_match_cnt+=1
+                if show_misses:
+                    print "missed",line
+            else:
+                found_match_fp.write(line)
+                found_match_cnt+=1
+                ret = filtergroupdict(ma)
+                newres = copy.deepcopy(res)
+                newres['matext'] = ma.string[ma.start():ma.end()].replace('\r\n',' ') #actual matched string
+                newres['book'] = ret['book']
+                newres['bibleverse'] = " ".join((ret['book'],ret['verse']))
+                if newres['bibleverse'] != res['bibleverse']:
+                    print "Matched verse changed from %s to %s - text '%s'\n"%(res['bibleverse'],
+                                                                             newres['bibleverse'],
+                                                                             unicode(res['text']).encode('ascii',errors='ignore'))
+    except Exception, ex:
+        print "Failure!!!"
+        print "line",line
+        print "regex returned",ret
+        print "traceback", "".join(traceback.format_exception(*sys.exc_info()))
+    finally:
+        fp.close()
+        found_match_fp.close()
+        print "closed",fn
+        print "closed",found_match_fp.name
 
 if __name__=='__main__':
     op = OptionParser() 

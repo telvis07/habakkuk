@@ -1,4 +1,6 @@
 ## Bible Reference Regex
+**NOTE**: There are manual edits to bible_verse_matching/find_all_scripture.py. Don't overwrite without
+adding the changes to the autogen script.
 
 regex_generator.py is an app to auto-generate find_all_scriptures.py - which is used by the storm application to match scriptures.    
 
