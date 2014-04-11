@@ -44,8 +44,16 @@ class Command(BaseCommand):
         elif options['do_test']:
             test_regex(fp)
         if options['file_to_fix']:
-            fix_results(options['file_to_fix'],
-                        show_misses=options['fix_show_miss'],
-                        outputdir=options["fix_output_dir"])
+            if os.path.isdir(options['file_to_fix']):
+                files = sorted([os.path.join(options['file_to_fix'], fn) for fn in os.listdir(options['file_to_fix'])])
+            else:
+                files = [options['file_to_fix']]
+            for fn in files:
+                if os.path.isdir(fn):
+                    print "skipping directory",fn
+                    continue
+                fix_results(fn,
+                            show_misses=options['fix_show_miss'],
+                            outputdir=options["fix_output_dir"])
         else:
             print "try -h option"

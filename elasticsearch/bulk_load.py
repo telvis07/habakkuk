@@ -6,18 +6,18 @@ from pyes import ES
 from argparse import ArgumentParser
 import gzip
 import jsonlib2 as json
-import traceback, sys
+import traceback, sys, os
 
 def flush(conn, count):
     bulk_result = conn.force_bulk()
     print "Bulked %s or %s items"%(len(bulk_result['items']), count)
 
-def main(args):
+def main(fn, args):
     conn = ES(args.host, bulk_size=10*args.bulksize)
-    if args.infile.endswith(".gz"):
-        fp = gzip.open(args.infile)
+    if fn.endswith(".gz"):
+        fp = gzip.open(fn)
     else:
-        fp = open(args.infile)
+        fp = open(fn)
 
     count = 0
     total = 0
@@ -32,7 +32,8 @@ def main(args):
                 flush(conn, count)
                 count = 0
     except:
-        print "traceback", "".join(traceback.format_exception(sys.exc_info()))
+        print "traceback", "".join(traceback.format_exception(*sys.exc_info()))
+        raise
     finally:
         fp.close()
 
@@ -62,4 +63,15 @@ if __name__ == "__main__":
                         default='habakkuk',
                         help="elasticsearch type")
     args = parser.parse_args()
-    main(args)
+
+    if os.path.isdir(args.infile):
+        files = sorted([os.path.join(args.infile, fn) for fn in os.listdir(args.infile)])
+    else:
+        files = [args.infile]
+
+    for fn in files:
+        if os.path.isdir(fn):
+            print "skipping directory",fn
+            continue
+        print "Loading",fn
+        main(fn, args)
