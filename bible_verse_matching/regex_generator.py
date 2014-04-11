@@ -202,6 +202,8 @@ def fix_results(fn, outputdir='/tmp/', show_misses=True):
         fp = open(fn)
         found_match_fp = open(os.path.join(outputdir, os.path.basename(fn)),'w')
 
+    bv_set = set([line.strip() for line in open('./analysis/join_data/bibleverses.txt')])
+
     print "Reading",fn
     print "Writing fixed file to",found_match_fp.name
     print ""
@@ -212,7 +214,7 @@ def fix_results(fn, outputdir='/tmp/', show_misses=True):
             txt = res['text'].lower()
             matches = [ma for ma in find_all_scriptures(txt)]
 
-            if len(matches) is 0:
+            if len(matches) is 0 or res['bibleverse'] not in bv_set:
                 miss_match_cnt+=1
                 if show_misses:
                     print "missed",line
@@ -238,6 +240,8 @@ def fix_results(fn, outputdir='/tmp/', show_misses=True):
         found_match_fp.close()
         print "closed",fn
         print "closed",found_match_fp.name
+        print "# Misses",miss_match_cnt
+        print "# Matches",found_match_cnt
 
 if __name__=='__main__':
     op = OptionParser() 

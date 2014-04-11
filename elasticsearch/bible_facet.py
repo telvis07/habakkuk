@@ -2,7 +2,7 @@
 """
 Simple faceting on the habakkuk index for a date range
 """
-from pyes import connection, ES
+from pyes import ES
 from pyes.query import MatchAllQuery, StringQuery, TermQuery, FilteredQuery
 from pyes.filters import RangeFilter
 from pyes.utils import ESRange
