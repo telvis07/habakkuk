@@ -1,153 +1,65 @@
 from fabric.api import local, settings, env, lcd, cd
-from datetime import date, datetime, timedelta
-import os
-from fabric.contrib import django
-import json
-django.project('habakkuk')
-from web.models import ClusterData
-from web.cluster_topics import find_topics
-import logging
-from django.utils.timezone import now
-logger = logging.getLogger(__name__)
-
-def config():
-    # TODO: add fabricrc
-    vars = {
-        'hk.data':env.get('hk.data','/opt/habakkuk_data/'),
-        'hk.input':env.get('hk.input','input'),
-        'hk.vectors':env.get('hk.vectors','vectors'),
-        'hk.named_vectors':env.get('hk.named_vectors','vectors-nv'),
-        'hk.pig_script':env.get('hk.pig_script', 'verse_vectors.pig'),
-        'hk.pig.join_data':env.get('hk.pig.join_data','join_data'),
-        'hk.mahout.num_clusters':env.get('hk.mahout.num_clusters','10'),
-        'hk.mahout.num_iterations':env.get('hk.mahout.num_iterations','5'),
-        'hk.mahout.output':env.get('hk.mahout.output','clusters'),
-        'hk.mahout.metric':env.get('hk.mahout.metric','org.apache.mahout.common.distance.CosineDistanceMeasure'),
-        'hk.mahout.converge':env.get('hk.mahout.converge','0.1'),
-        'hk.mahout.dump.terms':env.get('hk.mahout.dump.terms','10'),
-        'hk.mahout.dump.json':env.get('hk.mahout.dump.json','/tmp/clusterdump.json'),
-        'hk.mahout.dump.text':env.get('hk.mahout.dump.text','/tmp/clusterdump.txt'),
-        'hk.mahout.dictionary':env.get('hk.mahout.dictionary','./join_data/verse.dictionary'),
-    }
-    return vars
-
-
-def make_dirs():
-    vars = config()
-    # input dir
-    with settings(warn_only=True):
-        ret = local('hadoop fs -test -d %(hk.input)s'%vars)
-
-    if ret.succeeded:
-        local('hadoop fs -rmr %(hk.input)s'%vars)
-
-    local('hadoop fs -mkdir %(hk.input)s'%vars)
-
-    with settings(warn_only=True):
-        local('hadoop fs -rmr %(hk.vectors)s'%vars)
-        local('hadoop fs -rmr %(hk.named_vectors)s'%vars)
-        local('hadoop fs -rmr %(hk.pig.join_data)s'%vars)
-    local('hadoop fs -mkdir %(hk.named_vectors)s'%vars)
-
-    with lcd('analysis'):
-        local('hadoop fs -copyFromLocal %(hk.pig.join_data)s %(hk.pig.join_data)s'%vars)
-
-def prepare_data(date_str, range):
-    vars = config()
-    days = int(range)
-    make_dirs()
-
-    dt = datetime.strptime(date_str, '%Y-%m-%d').date()
-    et = dt + timedelta(days=-range)
-    while dt>et:
-        _date = dt.strftime('%Y-%m-%d')
-        fn = os.path.join(vars['hk.data'], 'habakkuk-%s.json.gz'%_date)
-        local('hadoop fs -copyFromLocal %s input'%fn)
-        dt-=timedelta(days=1)
-
-    local("hadoop fs -ls %(hk.input)s"%vars)
-
-def run_pig_job():
-    vars = config()
-    with lcd('analysis'):
-        local('pig -p data=%(hk.input)s -p output=%(hk.vectors)s %(hk.pig_script)s'%vars)
-
-def named_vectors():
-    vars = config()
-    local("hadoop jar " \
-          "./java/elephant-bird-vector-converter/target/elephant-bird-vector-converter-0.1-SNAPSHOT-job.jar " \
-          "technicalelvis.elephantBirdVectorConverter.App %(hk.vectors)s/ %(hk.named_vectors)s/"%vars)
-
-def run_mahout_job():
-    vars = config()
-    local('hadoop fs -rmr %(hk.mahout.output)s'%vars)
-    local("mahout kmeans -i %(hk.named_vectors)s -c kmeans-initial-clusters "\
-          "-k %(hk.mahout.num_clusters)s -o %(hk.mahout.output)s "\
-          "-x %(hk.mahout.num_iterations)s -ow -cl -dm %(hk.mahout.metric)s "\
-          "-cd %(hk.mahout.converge)s "%vars)
-
-def clusterdump_json():
-    vars = config()
-    # mahout patched with https://issues.apache.org/jira/browse/MAHOUT-1343
-    with lcd('analysis'):
-        local("/var/hadoop/mahout-patched-0.8/bin/mahout clusterdump -d %(hk.mahout.dictionary)s "\
-              "-dt text -i clusters/clusters-*-final -p clusters/clusteredPoints "\
-              "-n %(hk.mahout.dump.terms)s -o %(hk.mahout.dump.json)s -of JSON"%vars)
-
-def clusterdump_text():
-    vars = config()
-    # mahout patched with https://issues.apache.org/jira/browse/MAHOUT-1343
-    with lcd('analysis'):
-        local("/var/hadoop/mahout-patched-0.8/bin/mahout clusterdump -d %(hk.mahout.dictionary)s "\
-              "-dt text -i clusters/clusters-*-final -p clusters/clusteredPoints "\
-              "-n %(hk.mahout.dump.terms)s -o %(hk.mahout.dump.text)s -of TEXT"%vars)
-
-def run_clustering(date_str=None, range='7'):
-    vars = config()
-    if not date_str:
-        dt = date.today() - timedelta(days=1)
-        date_str = dt.strftime('%Y-%m-%d')
-    else:
-        dt = datetime.strptime(date_str, '%Y-%m-%d')
-    range=int(range)
-
-    prepare_data(date_str, range)
-    run_pig_job()
-    named_vectors()
-    run_mahout_job()
-    clusterdump_json()
-    save_cluster_data(date_str, range, vars['hk.mahout.dump.json'])
-
-def save_cluster_data(date_str, range, fn):
-    dt = datetime.strptime(date_str, "%Y-%m-%d").date()
-    range = int(range)
-
-    if ClusterData.objects.filter(date=date_str, range=range):
-        cl = ClusterData.objects.filter(date=date_str, range=range)[0]
-        print "updating existing cluster data"
-    else:
-        cl = ClusterData()
-
-    cl.date = dt
-    cl.range = range
-    cl.created_at = now()
-    clusters = []
-    for line in file(fn):
-        data = json.loads(line)
-        data['hk_topics'] = find_topics(data)
-        clusters.append(data)
-    cl.ml_json = json.dumps(clusters, indent=2)
-    cl.save()
-
-def print_clusters():
-    print("Found %d clusters"%len(ClusterData.objects.all()))
-    for cl in ClusterData.objects.all():
-        print cl
+import requests
+import re
+import jsonlib2 as json
 
 def sync_es(target='es-1'):
     with cd('./elasticsearch'):
         local('/home/telvis/bin/stream2es es --source http://localhost:9201/habakkuk-all --target "http://%s:9201/habakkuk-all/"'%target)
 
-def install_es_plugins:
-    with cd('/opt/elasticsearch')
+
+def install_es_plugins():
+    with cd('/opt/elasticsearch'):
         run("./bin/plugin -install mobz/elasticsearch-head")
+
+
+def new_index(host="yoyoma", port='9201', alias="habakkuk-all"):
+    """
+    create a new index by incrementing the revnum and move the alias
+    """
+    update_template(host, port)
+
+
+    # get aliases. find the current revnum
+    r = requests.get("http://{ESHOST}:{ESPORT}/*/_alias/habakkuk-all".format(ESHOST=host, ESPORT=port))
+    data = r.json()
+    assert data
+    assert len(data) == 1
+
+    # create the next index name
+    current_index = data.keys()[0]
+    ma = re.match('habakkuk-revnum-(?P<revnum>\d+)', current_index)
+    assert ma
+    next = int(ma.groups("revnum")[0])+1
+    next_index = "habakkuk-revnum-{next}".format(next=next)
+
+    # create next index
+    r = requests.put("http://{ESHOST}:{ESPORT}/{INDEX}".format(ESHOST=host, ESPORT=port, INDEX=next_index))
+    print "PUT {next_index} return {response}".format(next_index=next_index, response=r.json())
+
+    # move the alias
+    alias_cmd = {
+        "actions" : [
+            { "remove" : { "index" : current_index, "alias" : alias } },
+            { "add" : { "index" : next_index, "alias" : alias } }
+        ]
+    }
+
+    r = requests.post("http://{ESHOST}:{ESPORT}/_aliases".format(ESHOST=host, ESPORT=port), data=json.dumps(alias_cmd))
+    print "PUT _alias returned {response}".format(next_index=next_index, response=r.json())
+
+
+def update_template(host="yoyoma", port='9201'):
+    template = 'elasticsearch/habakkuk-template.json'
+    r = requests.get("http://{ESHOST}:{ESPORT}/_template/template_habakkuk/".format(ESHOST=host, ESPORT=port), data=open(template).read())
+    print "PUT _template returned {code} {response}".format(response=r.json(), code=r.status_code)
+
+
+def stop_storm():
+    local("storm kill habakkuk")
+
+def start_storm():
+    with cd('./java/habakkuk-core'):
+        local("storm jar target/habakkuk-core-0.0.1-SNAPSHOT-jar-with-dependencies.jar "\
+              "technicalelvis.habakkuk.MainTopology habakkuk.properties")
+    
