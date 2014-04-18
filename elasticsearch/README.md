@@ -76,6 +76,12 @@ This directory contains convenience scripts to perform an faceted search queries
     ./bin/plugin -install mobz/elasticsearch-head
     ./bin/plugin -install elasticsearch/marvel/latest
 
+## To Bulk Load
+
+    python bulk_load.py -H yoyoma:9201 -i /tmp/habakkuk_data/habakkuk-2014-04-09.json.gz
+    # or
+    python bulk_load.py -H yoyoma:9201 -i /tmp/habakkuk_data/
+
 ## Example
 To get the data for Valentines day 2013,  I execute the following
 

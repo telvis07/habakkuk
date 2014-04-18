@@ -4,7 +4,7 @@ Command to control bible verse regexes
 """
 from django.core.management.base import BaseCommand
 from optparse import make_option
-from bible_verse_matching.regex_generator import build_regex, test_regex
+from bible_verse_matching.regex_generator import build_regex, test_regex, fix_results
 import sys,os
 
 class Command(BaseCommand):
@@ -15,6 +15,13 @@ class Command(BaseCommand):
                     help='load data/bible_book_list.txt and print regex'),
         make_option('-f','--file',dest='infile',
                     help='load data/bible_book_list.txt and print regex'),
+        make_option('--fix', dest='file_to_fix',
+                    help="File to run new regex against"),
+        make_option('--fix-show-miss', dest="fix_show_miss", action='store_true',
+                    default=False,
+                    help="when running --fix. show missed lines from original file."),
+        make_option('--fix-output-dir', dest="fix_output_dir", default='/tmp/',
+                    help="output directory to put fixed JSON files")
         )
 
 
@@ -36,5 +43,17 @@ class Command(BaseCommand):
             build_regex(fp)
         elif options['do_test']:
             test_regex(fp)
+        if options['file_to_fix']:
+            if os.path.isdir(options['file_to_fix']):
+                files = sorted([os.path.join(options['file_to_fix'], fn) for fn in os.listdir(options['file_to_fix'])])
+            else:
+                files = [options['file_to_fix']]
+            for fn in files:
+                if os.path.isdir(fn):
+                    print "skipping directory",fn
+                    continue
+                fix_results(fn,
+                            show_misses=options['fix_show_miss'],
+                            outputdir=options["fix_output_dir"])
         else:
             print "try -h option"
