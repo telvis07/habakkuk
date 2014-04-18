@@ -3,7 +3,7 @@ __author__ = 'telvis'
 Bulk load a file to elasticsearch
 """
 from pyes import ES
-from argparse import ArgumentParser
+from optparse import OptionParser
 import gzip
 import jsonlib2 as json
 import traceback, sys, os
@@ -46,23 +46,23 @@ def main(fn, args):
     print "Indexed %s docs total"%total
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument("-H", "--host", dest="host",
+    parser = OptionParser()
+    parser.add_option("-H", "--host", dest="host",
                         default="localhost:9201",
                         help="elasticsearch host"),
-    parser.add_argument("-i", "--infile", dest="infile",
-                        required=True,
+    parser.add_option("-i", "--infile", dest="infile",
+                        # required=True,
                         help="file to load to ES")
-    parser.add_argument('-b','--bulk', dest='bulksize',
+    parser.add_option('-b','--bulk', dest='bulksize',
                         default=500,
                         help="size of bulk message")
-    parser.add_argument('--index',
+    parser.add_option('--index',
                         default="habakkuk-test",
                         help="elasticsearch index")
-    parser.add_argument('--doctype',
+    parser.add_option('--doctype',
                         default='habakkuk',
                         help="elasticsearch type")
-    args = parser.parse_args()
+    (args, _) = parser.parse_args()
 
     if os.path.isdir(args.infile):
         files = sorted([os.path.join(args.infile, fn) for fn in os.listdir(args.infile)])
