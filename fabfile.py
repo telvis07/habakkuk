@@ -16,8 +16,8 @@ def sync_es(_date, target='es-1', pwd='.'):
     with lcd(os.path.join(pwd, 'elasticsearch')):
         pwd = os.path.abspath(pwd)
         _python = os.path.join(pwd, 'env/bin/python')
-        local("{python} dump_data_for_date.py -s {DATE} -o /opt/habakkuk_data/".format(python=_python, DATE=_date))
-        fn = os.path.join('/opt/habakkuk_data/', "habakkuk-{DATE}.json.gz".format(DATE=_date))
+        local("{python} dump_data_for_date.py -s {DATE} -o /tmp/".format(python=_python, DATE=_date))
+        fn = os.path.join('/tmp/', "habakkuk-{DATE}.json.gz".format(DATE=_date))
         local("{python} bulk_load.py -H {HOST}:9201 --index=habakkuk-all -i {fn}".format(python=_python, HOST=target, fn=fn))
 
 
