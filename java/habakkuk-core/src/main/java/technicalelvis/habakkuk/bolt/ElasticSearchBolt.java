@@ -31,7 +31,8 @@ public class ElasticSearchBolt extends BaseRichBolt{
 	int port;
 	String idxname;
 	boolean testing;
-	
+	String doc_type="habakkuk";
+
 	public ElasticSearchBolt(Properties props){
 		this.props = props;
 		host = props.getProperty("elasticsearch.host");
@@ -39,6 +40,7 @@ public class ElasticSearchBolt extends BaseRichBolt{
 		cluster = props.getProperty("elasticsearch.cluster");
 		idxname = props.getProperty("elasticsearch.indexname");
 		testing = Boolean.parseBoolean(props.getProperty("habakkuk.usetestspout","true"));
+
 	}
 
 	@Override
@@ -59,16 +61,17 @@ public class ElasticSearchBolt extends BaseRichBolt{
 	public void execute(Tuple tuple) {
 		try {
 			@SuppressWarnings("unchecked")
-			Map<String,Object> data = (Map<String,Object>)tuple.getValueByField("result");						
+			// See - http://www.elasticsearch.org/guide/en/elasticsearch/client/java-api/current/index_.html#index_
+			Map<String,Object> data = (Map<String,Object>)tuple.getValueByField("result");
 			LOG.info(String.format("ES:%s",data));
 			String idx;
 			if (testing){
 				idx = idxname+"-"+"test";
 			}else{
-				idx = idxname+"-"+"all";
+				idx = idxname;
 			}
-			
-		    IndexResponse response = client.prepareIndex(idx,idxname)
+
+		   IndexResponse response = client.prepareIndex(idx, doc_type)
 		    		.setSource(data)
 		    		.execute().actionGet();
 		} catch (Exception e) {
@@ -76,16 +79,16 @@ public class ElasticSearchBolt extends BaseRichBolt{
 		} finally {
 			_collector.ack(tuple);
 		}
-		
+
 	}
 	@Override
 	public void cleanup(){
-		client.close();		
+		client.close();
 	}
-	
+
 
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		// none		
+		// none
 	}
 }
