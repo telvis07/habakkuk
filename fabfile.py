@@ -84,7 +84,8 @@ def send_email(output, dryrun=False):
     import ConfigParser
 
     config = ConfigParser.RawConfigParser()
-    config.read(os.path.join(os.environ['HOME'],'conf', 'mail.cfg'))
+    # /home/telvis/conf/mail.cfg
+    config.read(os.path.join('/home/telvis', 'conf', 'mail.cfg'))
 
     """
     read email from config. An example is:
