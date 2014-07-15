@@ -22,3 +22,5 @@ reports/
 
 # jetbrains pycharm
 .idea
+
+elasticsearch/twitter_mining.cfg
