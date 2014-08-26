@@ -115,6 +115,7 @@ INSTALLED_APPS = (
     'south',
     'bible_verse_matching',
     'web',
+    'topic_analysis',
     'django_jenkins'
 )
 
