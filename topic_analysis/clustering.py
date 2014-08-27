@@ -7,8 +7,13 @@ from collections import Counter
 from collections import defaultdict
 from sklearn.cluster import KMeans
 import json
+from datetime import datetime, timedelta
 # from mpltools import style
 import numpy
+import re
+import os
+
+from web import search
 HABAKKUK_DATA_DIR = "/mnt/goflex/habakkuk/habakkuk_data/"
 
 
@@ -19,22 +24,22 @@ def print_clusters(df, clusters):
         print df.ix[clusters[label]][["count_entries", "max"]]
 
 
-def get_data_from_store(dirname=HABAKKUK_DATA_DIR, num_days=30, valid_bv_set=set()):
+def get_data_from_store(st, et, valid_bv_set=set()):
     """
     read data JSON data from disk
     """
-    for fn in sorted(glob("%s/*"%dirname), reverse=True)[:num_days]:
-        by_date_counter = Counter()
-        created_at_date = None
-        for line in gzip.open(fn):
-            data = json.loads(line)
-            if not created_at_date:
-                created_at_date = data['created_at_date']
-            if data['bibleverse'] not in valid_bv_set:
-                continue
-            by_date_counter.update([data['bibleverse']])
-        yield (created_at_date, by_date_counter)
 
+    _date = st
+    while _date <= et:
+
+        ret = search.bibleverse_facet(host="192.168.117.4:9201",
+                                      _date=_date.strftime("%Y-%m-%d"),
+                                      with_counts=True)
+        ret = filter(lambda x: x['bibleverse'] in valid_bv_set, ret)
+        by_date_counter = Counter(dict([(x['bibleverse'], x['count']) for x in ret]))
+
+        _date += timedelta(days=1)
+        yield (_date, by_date_counter)
 
 
 def get_most_common_df(data, num=3):

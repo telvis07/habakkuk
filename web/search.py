@@ -22,7 +22,8 @@ def bibleverse_facet(host,
                      end=None,
                      _date=None,
                      size=10,
-                     search_text=None):
+                     search_text=None,
+                     with_counts=False):
     """
     Perform faceted search query to find bibleverses in a date range.
 
@@ -92,6 +93,8 @@ def bibleverse_facet(host,
             debug_ret.append({"bibleverse":row['term'], "count":row["count"]})
 
     logger.debug("[bibleverse_facet] Results: '%s'"%json.dumps(debug_ret))
+    if with_counts:
+        return debug_ret
     return ret
 
 def bibleverse_text(bibleverses, translation="KJV"):
