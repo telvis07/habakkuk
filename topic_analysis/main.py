@@ -5,18 +5,13 @@ import jsonlib2 as json
 from datetime import datetime, timedelta
 # from topic_analysis.topics import *
 
-BIBLEVERSE_LIST = '/home/telvis/habakkuk/analysis/join_data/bibleverses.txt'
+BIBLEVERSE_LIST = '/Users/telvis/work/habakkuk/analysis/join_data/bibleverses.txt'
 
 
-def main():
-    top_n=3
-    n_clusters=6
-    num_days=15
+def main(et, top_n=3, n_clusters=6, num_days=15):
 
-    # st = datetime.today() - timedelta(days=num_days)
-    # et = datetime.today()
-    st = datetime(2014, 05, 15)
-    et = datetime(2014, 05, 30)
+    st = et - timedelta(days=num_days)
+
 
     valid_bv_set = set([line.strip() for line in open(BIBLEVERSE_LIST)])
     # create a dictionary[date] = counter
@@ -52,12 +47,20 @@ def main():
 
         # topic analysis
         bv_tokens, corpus = topic_extraction.build_corpus(st, et, cluster_data['clusters'][label])
-        topics = topic_extraction.topic_extraction(corpus, bv_tokens, data=data)
+        topics = topic_extraction.nmf_topic_extraction(corpus, bv_tokens, data=data)
         if topics:
             data['topics'] = topics
             print "\n"
         saved_cluster_data.append(data)
 
     #print_clusters(df, cluster_data['clusters'])
-    print json.dumps(saved_cluster_data, indent=2)
+    doc = {
+        'start_date' : st.strftime("%Y-%m-%d"),
+        'end_date' : et.strftime("%Y-%m-%d"),
+        'num_days' : num_days,
+        'n_clusters' : n_clusters,
+        'top_n' : top_n,
+        'cluster_topics' : saved_cluster_data
+    }
+    print json.dumps(doc, indent=2)
     # return df, cluster_data
