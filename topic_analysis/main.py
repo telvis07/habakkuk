@@ -62,5 +62,6 @@ def main(et, top_n=3, n_clusters=6, num_days=15):
         'top_n' : top_n,
         'cluster_topics' : saved_cluster_data
     }
+    topic_extraction.save_topic_clusters(doc)
     print json.dumps(doc, indent=2)
-    # return df, cluster_data
+    return doc

@@ -16,6 +16,8 @@ def nmf_topic_extraction(corpus, bv_stop_tokens, n_features = 5000, n_top_words 
     # ensure we don't ask for more topics than we have samples
     # this happens when we there are only a few bibleverses in a cluster
     n_topics = min(n_samples, n_topics)
+    if n_topics==2:
+        n_topics = 1
 
 
     # vectorize the tweet text using the most common word
@@ -88,3 +90,17 @@ def build_corpus(st, et, bibleverses):
         corpus.append(" ".join(ret))
         # print len(" ".join(ret))
     return (bv_tokens, corpus)
+
+
+def save_topic_clusters(doc,
+                     host='192.168.117.4:9201',
+                     index='clusters-all',
+                     doc_type="topics"):
+    bv_tokens = []
+    from pyes import ES
+
+
+    # get es conn
+    conn = ES('192.168.117.4:9201')
+    ret = conn.index(doc=doc, index=index, doc_type=doc_type)
+    print ret
