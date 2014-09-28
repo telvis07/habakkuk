@@ -90,6 +90,7 @@ def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
     sorted_topics = []
 
     for topic in topics:
+        is_spam = False
         for topic_term in topic:
             filters = []
             filters.append(
@@ -106,7 +107,6 @@ def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
             resultset = conn.search(indices=["habakkuk-all"], doc_types=["habakkuk"], query=q, size=1)
             # print json.dumps(resultset[0], indent=2)
 
-            res = list()
             for r in resultset:
                 terms = topic_term['text'].split()
                 regex = "(?P<phrase>{}.*{}[\w\s]*)".format(*terms)
@@ -123,18 +123,28 @@ def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
                 topic_term['final_score'] = topic_term['weight'] * topic_term['es_score']
                 topic_term['tweet_text'] = r.text.encode('ascii', 'ignore')
 
+                if not is_spam and has_spam_text(topic_term['es_phrase']):
+                    is_spam = True
+
+
                 #
                 # res.append({'topic_term': topic_term['text'],
                 #             'phrase_match':ma.group,
                 #             'es_score' : r._meta.score})
         # print json.dumps(topic, indent=2)
+
         sorted_topic = sorted(topic,
                               key=lambda x: x.get('final_score', 0.0),
                               reverse=True)
+        if is_spam:
+            for topic_term in topic:
+                topic_term[is_spam] = True
         sorted_topics.append(copy.deepcopy(sorted_topic))
         # print json.dumps(sorted_topic, indent=2)
     return sorted_topics
 
+def has_spam_text(text):
+    return text.find('http') != -1
 
 def build_corpus(st, et, bibleverses):
     bv_tokens = []
