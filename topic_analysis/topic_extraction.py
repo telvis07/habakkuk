@@ -138,7 +138,7 @@ def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
                               reverse=True)
         if is_spam:
             for topic_term in topic:
-                topic_term[is_spam] = True
+                topic_term['is_spam'] = True
         sorted_topics.append(copy.deepcopy(sorted_topic))
         # print json.dumps(sorted_topic, indent=2)
     return sorted_topics
