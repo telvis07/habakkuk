@@ -38,7 +38,7 @@ def nmf_topic_extraction(corpus, bv_stop_tokens, n_features = 5000, n_top_words 
                                  ngram_range=(2,2)
                                  )
     stoplist = ['retweet', 'rt', 'http', 'things', 'christ', 'lord', 'god', 'shall', 'jesus',
-                'nlt', 'kjv']
+                'nlt', 'kjv', 'prov']
 
     # print bv_tokens
     vectorizer.set_params(stop_words=set(list(ENGLISH_STOP_WORDS)+stoplist+bv_stop_tokens))
