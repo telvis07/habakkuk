@@ -109,7 +109,7 @@ def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
 
             for r in resultset:
                 terms = topic_term['text'].split()
-                regex = "(?P<phrase>{}.*{}[\w\s]*)".format(*terms)
+                regex = u"(?P<phrase>[a-z\s'\u2019]*{}.*{}[a-z\s']*)".format(*terms)
                 # print "regex",regex
                 ma = re.search(regex, r.text.lower())
                 if not ma:
@@ -118,7 +118,7 @@ def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
                 # print "topic_term '{}', phrase_match '{}', score: {}".format(topic_term['text'],
                 #                                                              ma.group('phrase'),
                 #                                                              r._meta.score)
-                topic_term['es_phrase'] = ma.group('phrase')
+                topic_term['es_phrase'] = ma.group('phrase').strip()
                 topic_term['es_score'] = r._meta.score
                 topic_term['final_score'] = topic_term['weight'] * topic_term['es_score']
                 topic_term['tweet_text'] = r.text.encode('ascii', 'ignore')
