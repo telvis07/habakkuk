@@ -14,7 +14,12 @@ import re
 import os
 
 from web import search
+from django.conf import settings
+
 HABAKKUK_DATA_DIR = "/mnt/goflex/habakkuk/habakkuk_data/"
+ES_SETTINGS = settings.ES_SETTINGS
+hosts = ES_SETTINGS['hosts']
+search_index = ES_SETTINGS['search_index']
 
 
 # get date, counter(bibleverse)
@@ -31,8 +36,7 @@ def get_data_from_store(st, et, valid_bv_set=set()):
 
     _date = st
     while _date <= et:
-
-        ret = search.bibleverse_facet(host="192.168.117.4:9201",
+        ret = search.bibleverse_facet(host=hosts,
                                       _date=_date.strftime("%Y-%m-%d"),
                                       with_counts=True)
         ret = filter(lambda x: x['bibleverse'] in valid_bv_set, ret)

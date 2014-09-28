@@ -50,7 +50,10 @@ def main(et, top_n=3, n_clusters=6, num_days=15):
         topics = topic_extraction.nmf_topic_extraction(corpus, bv_tokens, data=data)
         if topics:
             data['topics'] = topics
-            print "\n"
+            data['topics'] = topic_extraction.phrase_search(data['topics'],
+                                           data['bibleverses'],
+                                           st,
+                                           et)
         saved_cluster_data.append(data)
 
     #print_clusters(df, cluster_data['clusters'])
