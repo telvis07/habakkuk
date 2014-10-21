@@ -12,7 +12,7 @@
         "topics": { 
             "_all": { "enabled": false },
             "_source": { "compress": true },
-            "_id" : { "path" : "end_date"},
+            "_id" : { "path" : "date"},
             "dynamic_templates": [
                 {
                     "string_template" : { 
@@ -28,6 +28,7 @@
                     "index":"analyzed",
                     "term_vector":"with_positions_offsets"
                 },
+                "date":{ "type" : "date", "index" : "not_analyzed" },
                 "end_date":{ "type" : "date", "index" : "not_analyzed" },
                 "start_date":{ "type" : "date", "index" : "not_analyzed" }
             }

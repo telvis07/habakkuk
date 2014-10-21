@@ -1,5 +1,13 @@
 This directory contains convenience scripts to perform an faceted search queries against ES.
 
+## setup clusters index
+
+  vim cluster-template.json 
+  curl -XDELETE yoyoma:9201/clusters-all
+  curl -XPUT 'http://192.168.117.4:9201/_template/template_clusters/' -d @cluster-template.json 
+  curl -XPUT http://192.168.117.4:9201/clusters-all
+
+
 ## Dir Setup
 
 ````

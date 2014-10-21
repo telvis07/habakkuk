@@ -8,8 +8,12 @@ from datetime import datetime, timedelta
 BIBLEVERSE_LIST = '/Users/telvis/work/habakkuk/analysis/join_data/bibleverses.txt'
 
 
-def main(et, top_n=3, n_clusters=6, num_days=15):
+def main(_dt, top_n=3, n_clusters=6, num_days=15):
 
+    # TODO: For some reason I need to increment the date by 1 day
+    # to get all the tweets and bv counts. Probably due to UTC/GMT
+    # shenanigans.
+    et = _dt + timedelta(days=1)
     st = et - timedelta(days=num_days)
 
 
@@ -58,6 +62,7 @@ def main(et, top_n=3, n_clusters=6, num_days=15):
 
     #print_clusters(df, cluster_data['clusters'])
     doc = {
+        'date' : _dt.strftime("%Y-%m-%d"),
         'start_date' : st.strftime("%Y-%m-%d"),
         'end_date' : et.strftime("%Y-%m-%d"),
         'num_days' : num_days,

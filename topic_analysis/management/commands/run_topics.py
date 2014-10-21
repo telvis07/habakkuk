@@ -10,7 +10,7 @@ class Command(BaseCommand):
         make_option('-d', '--date',
                     dest='date',
                     help='End date to start analysis - format=YYYY-MM-DD',
-                    default='2014-05-27'),
+                    default='2014-05-26'),
         make_option('-n', '--num_days',
                     dest='num_days',
                     help='number of days prior to the end_date for analysis',
@@ -19,7 +19,6 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        # main(et=datetime(2014, 05, 30))
         main(datetime.strptime(options['date'], '%Y-%m-%d'), num_days=options['num_days'])
 
 

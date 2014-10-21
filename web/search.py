@@ -57,13 +57,13 @@ def bibleverse_facet(host,
     elif start:
         # Filter for docs with timestamp greater than 'start'
         q = FilteredQuery(q, RangeFilter(qrange=ESRangeOp(field=ts_field,
-                                                          op='gte',
-                                                          value=start)))
+                                                          op1='gte',
+                                                          value1=start)))
     elif end:
         # Filter for docs with timestamp less than 'end'
         q = FilteredQuery(q, RangeFilter(qrange=ESRangeOp(field=ts_field,
-                                                          op='lte',
-                                                          value=end)))
+                                                          op1='lte',
+                                                          value1=end)))
 
     q = q.search(size=0)
 

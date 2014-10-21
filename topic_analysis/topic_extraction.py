@@ -40,12 +40,16 @@ def nmf_topic_extraction(corpus, bv_stop_tokens, n_features = 5000, n_top_words 
     stoplist = ['retweet', 'rt', 'http', 'things', 'christ', 'lord', 'god', 'shall', 'jesus',
                 'nlt', 'kjv', 'prov']
 
-    # print bv_tokens
-    vectorizer.set_params(stop_words=set(list(ENGLISH_STOP_WORDS)+stoplist+bv_stop_tokens))
-    counts = vectorizer.fit_transform(corpus)
+    try:
+        vectorizer.set_params(stop_words=set(list(ENGLISH_STOP_WORDS)+stoplist+bv_stop_tokens))
+        counts = vectorizer.fit_transform(corpus)
 
-    tfidf = TfidfTransformer().fit_transform(counts)
-    feature_names = vectorizer.get_feature_names()
+        tfidf = TfidfTransformer().fit_transform(counts)
+        feature_names = vectorizer.get_feature_names()
+    except Exception, ex:
+        print "Tfidf analysis failed ex={}, bv={}, data={}, n_topics={}".format(ex, bv_stop_tokens, data, n_topics)
+        return []
+
     data['num_topic_features'] = len(feature_names)
     data['num_topic_samples'] = n_samples
     data['num_topics'] = n_topics
@@ -149,6 +153,10 @@ def has_spam_text(text):
 def build_corpus(st, et, bibleverses):
     bv_tokens = []
     [bv_tokens.extend(bv.replace(":"," ").split()) for bv in bibleverses]
+    for bv in bibleverses:
+        ma = re.match("i{1,3}_(?P<book>\w+)", bv)
+        if ma:
+            bv_tokens.append(ma.group('book'))
 
     conn = get_es_connection(hosts)
     corpus = []
@@ -163,7 +171,7 @@ def save_topic_clusters(doc):
     # get es conn
     conn = get_es_connection(hosts)
     for cluster in doc["cluster_topics"]:
-        if not cluster['num_topics']:
+        if not cluster.get('num_topics',0):
             continue
 
     ret = conn.index(doc=doc, index=CLUSTERS_INDEX, doc_type=TOPICS_DOC_TYPE)

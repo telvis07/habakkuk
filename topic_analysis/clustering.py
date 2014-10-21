@@ -1,17 +1,13 @@
 __author__ = 'telvis'
-import jsonlib2 as json
-from glob import glob
-import gzip
+
 from pandas import DataFrame, Series
 from collections import Counter
 from collections import defaultdict
 from sklearn.cluster import KMeans
 import json
-from datetime import datetime, timedelta
-# from mpltools import style
+from datetime import timedelta
 import numpy
-import re
-import os
+
 
 from web import search
 from django.conf import settings
@@ -22,8 +18,14 @@ hosts = ES_SETTINGS['hosts']
 search_index = ES_SETTINGS['search_index']
 
 
-# get date, counter(bibleverse)
 def print_clusters(df, clusters):
+    """
+    get date, counter(bibleverse)
+
+    :param df:
+    :param clusters:
+    :return:
+    """
     for label in clusters:
         print "Cluster",label, json.dumps(clusters[label])
         print df.ix[clusters[label]][["count_entries", "max"]]
@@ -31,7 +33,7 @@ def print_clusters(df, clusters):
 
 def get_data_from_store(st, et, valid_bv_set=set()):
     """
-    read data JSON data from disk
+    faceted search to get COUNTs for bibleverses by date
     """
 
     _date = st
@@ -42,12 +44,18 @@ def get_data_from_store(st, et, valid_bv_set=set()):
         ret = filter(lambda x: x['bibleverse'] in valid_bv_set, ret)
         by_date_counter = Counter(dict([(x['bibleverse'], x['count']) for x in ret]))
 
-        _date += timedelta(days=1)
         yield (_date, by_date_counter)
+        _date += timedelta(days=1)
 
 
 def get_most_common_df(data, num=3):
-    # create a dictionary[date] = Series(3 top bibleverses per date)
+    """
+    create a dictionary[date] = Series(3 top bibleverses per date)
+
+    :param data:
+    :param num:
+    :return:
+    """
     top_data = {}
     for created_at_date in data:
         _counter = data[created_at_date]
@@ -57,7 +65,6 @@ def get_most_common_df(data, num=3):
 
 def count_valid_entries(frame):
     return frame.count()
-
 
 def get_count_features_df(df):
     # get bv counts and max counts
@@ -69,7 +76,6 @@ def get_count_features_df(df):
     top_df = df[['count_entries', 'max']]
     top_df['count_entries_norm'] = top_df['count_entries']/top_df['count_entries'].max()
     top_df['max_norm'] = top_df['max']/top_df['max'].max()
-    # return top_df[['count_entries_norm', 'max_norm']]
     return top_df
 
 
