@@ -5,15 +5,15 @@ from pyes.query import MatchAllQuery, FilteredQuery, MatchQuery
 from pyes.filters import RangeFilter, TermFilter, TermsFilter, ANDFilter
 from pyes.utils import ESRange
 import re
-import sys
+import logging
+logger = logging.getLogger(__name__)
 
-from sklearn import decomposition
+from sklearn.decomposition import NMF
 from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 from django.conf import settings
 from web.search import get_es_connection
-import jsonlib2 as json
 import copy
 
 ES_SETTINGS = settings.ES_SETTINGS
@@ -47,7 +47,7 @@ def nmf_topic_extraction(corpus, bv_stop_tokens, n_features = 5000, n_top_words 
         tfidf = TfidfTransformer().fit_transform(counts)
         feature_names = vectorizer.get_feature_names()
     except Exception, ex:
-        print "Tfidf analysis failed ex={}, bv={}, data={}, n_topics={}".format(ex, bv_stop_tokens, data, n_topics)
+        logger.exception("Tfidf analysis failed ex={}, bv={}, data={}, n_topics={}".format(ex, bv_stop_tokens, data, n_topics))
         return []
 
     data['num_topic_features'] = len(feature_names)
@@ -56,9 +56,9 @@ def nmf_topic_extraction(corpus, bv_stop_tokens, n_features = 5000, n_top_words 
 
 
     try:
-        nmf = decomposition.NMF(n_components=n_topics, random_state=42).fit(tfidf)
+        nmf = NMF(n_components=n_topics, random_state=42).fit(tfidf)
     except Exception, ex:
-        print "decomposition.NMF failed", ex, bv_stop_tokens, data, "n_topics", n_topics
+        logger.exception("decomposition.NMF failed {} {} {} {} {}".format(ex, bv_stop_tokens, data, "n_topics", n_topics))
         return []
 
     cluster_topics = []
@@ -117,7 +117,6 @@ def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
                 # print "regex",regex
                 ma = re.search(regex, r.text.lower())
                 if not ma:
-                    print "ERROR. Query={}, text={}".format(regex.encode('ascii', 'ignore'), r.text.encode('ascii', 'ignore'))
                     continue
                 # print "topic_term '{}', phrase_match '{}', score: {}".format(topic_term['text'],
                 #                                                              ma.group('phrase'),
@@ -175,4 +174,4 @@ def save_topic_clusters(doc):
             continue
 
     ret = conn.index(doc=doc, index=CLUSTERS_INDEX, doc_type=TOPICS_DOC_TYPE)
-    print ret
+    logger.debug(ret)

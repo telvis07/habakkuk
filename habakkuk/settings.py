@@ -121,6 +121,7 @@ INSTALLED_APPS = (
 
 PROJECT_APPS = (
     'web',
+    'topic_analysis'
 )
 
 ES_SETTINGS = {
@@ -169,6 +170,11 @@ LOGGING = {
             'propagate': True,
         },
         'web': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'topic_analysis': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,

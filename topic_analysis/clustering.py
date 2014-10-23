@@ -8,11 +8,9 @@ import json
 from datetime import timedelta
 import numpy
 
-
 from web import search
 from django.conf import settings
 
-HABAKKUK_DATA_DIR = "/mnt/goflex/habakkuk/habakkuk_data/"
 ES_SETTINGS = settings.ES_SETTINGS
 hosts = ES_SETTINGS['hosts']
 search_index = ES_SETTINGS['search_index']
