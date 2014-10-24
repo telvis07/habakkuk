@@ -1,7 +1,7 @@
 __author__ = 'telvis'
 from django.test import TestCase
 from django.test.utils import override_settings
-from mock import patch, MagicMock, call
+from mock import patch, MagicMock, call, DEFAULT
 import logging
 from web.models import BibleText
 
@@ -45,22 +45,29 @@ class BibleStudyTest(TestCase):
         recommendations = {"bibleverse":"1 John 4:19", "text": "We love because he first loved us.",
                                 "recommendations":["Book 2:1", "Book 2:2", "Book 2:3"]}
 
-        with patch('web.search.bibleverse_facet',return_value=bv) as mock_facet_search:
-         with patch('web.search.bibleverse_text', return_value=text) as mock_text:
-          with patch("web.search.bibleverse_recommendations", return_value=recommendations) as mock_rec:
+        patches = {
+            'bibleverse_facet' : MagicMock(return_value=bv),
+            'bibleverse_text' : MagicMock(return_value=text),
+            'bibleverse_recommendations' : MagicMock(return_value=recommendations)
+        }
+
+        with patch.multiple('web.search', ** patches):
+            mock_facet_search = patches['bibleverse_facet']
+            mock_text = patches['bibleverse_text']
+            mock_rec = patches['bibleverse_recommendations']
             ret = get_scriptures_by_date(size=5)
 
-        self.assertTrue(mock_facet_search.called)
-        mock_facet_search.assert_called_with(host=['nosuchhost:9200'],
-                                             index='nosuch-index-*',
-                                             start=None,
-                                             end=None,
-                                             _date=None,
-                                             size=5,
-                                             search_text=None)
-        mock_text.assert_called_with(bv)
-        mock_rec.assert_called_with(text)
-        self.assertEquals(recommendations, ret)
+            self.assertTrue(mock_facet_search.called)
+            mock_facet_search.assert_called_with(host=['nosuchhost:9200'],
+                                                 index='nosuch-index-*',
+                                                 start=None,
+                                                 end=None,
+                                                 _date=None,
+                                                 size=5,
+                                                 search_text=None)
+            mock_text.assert_called_with(bv)
+            mock_rec.assert_called_with(text)
+            self.assertEquals(recommendations, ret)
 
     @override_settings(ES_SETTINGS=ES_SETTINGS)
     def test_bibleverse_facet(self):

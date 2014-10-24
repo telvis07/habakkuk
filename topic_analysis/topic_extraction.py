@@ -69,7 +69,8 @@ def nmf_topic_extraction(corpus, bv_stop_tokens, n_features = 5000, n_top_words 
     return cluster_topics
 
 
-def get_text_from_es(conn, bibleverse, start, end, ts_field='created_at_date'):
+def get_text_from_es(bibleverse, start, end, ts_field='created_at_date'):
+    conn = get_es_connection(hosts)
     filters = []
     filters.append(
         RangeFilter(qrange=ESRange(field=ts_field,
@@ -107,9 +108,7 @@ def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
             q = MatchQuery('text', topic_term['text'], type='phrase', slop=50)
             q = FilteredQuery(q, ANDFilter(filters))
             q = q.search(size=1)
-            # print json.dumps(q.serialize(), indent=2)
-            resultset = conn.search(indices=["habakkuk-all"], doc_types=["habakkuk"], query=q, size=1)
-            # print json.dumps(resultset[0], indent=2)
+            resultset = conn.search(indices=SEARCH_INDEX, doc_types=["habakkuk"], query=q, size=1)
 
             for r in resultset:
                 terms = topic_term['text'].split()
@@ -118,9 +117,6 @@ def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
                 ma = re.search(regex, r.text.lower())
                 if not ma:
                     continue
-                # print "topic_term '{}', phrase_match '{}', score: {}".format(topic_term['text'],
-                #                                                              ma.group('phrase'),
-                #                                                              r._meta.score)
                 topic_term['es_phrase'] = ma.group('phrase').strip()
                 topic_term['es_score'] = r._meta.score
                 topic_term['final_score'] = topic_term['weight'] * topic_term['es_score']
@@ -129,13 +125,6 @@ def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
                 if not is_spam and has_spam_text(topic_term['es_phrase']):
                     is_spam = True
 
-
-                #
-                # res.append({'topic_term': topic_term['text'],
-                #             'phrase_match':ma.group,
-                #             'es_score' : r._meta.score})
-        # print json.dumps(topic, indent=2)
-
         sorted_topic = sorted(topic,
                               key=lambda x: x.get('final_score', 0.0),
                               reverse=True)
@@ -143,7 +132,6 @@ def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
             for topic_term in topic:
                 topic_term['is_spam'] = True
         sorted_topics.append(copy.deepcopy(sorted_topic))
-        # print json.dumps(sorted_topic, indent=2)
     return sorted_topics
 
 def has_spam_text(text):
@@ -157,12 +145,10 @@ def build_corpus(st, et, bibleverses):
         if ma:
             bv_tokens.append(ma.group('book'))
 
-    conn = get_es_connection(hosts)
     corpus = []
     for bv in bibleverses:
-        ret = get_text_from_es(conn, bv, st, et)
+        ret = get_text_from_es(bv, st, et)
         corpus.append(" ".join(ret))
-        # print len(" ".join(ret))
     return (bv_tokens, corpus)
 
 
