@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block head %}
+    <link href="{{ STATIC_URL }}biblestudy/biblestudy.css" rel="stylesheet">
+    <script src="{{ STATIC_URL }}vendor/angular/angular.min.js"></script>
+
+    <script type="text/javascript">
+        var HK = {}
+        HK.results = {
+            'count': 5,
+            'topics' : [
+                {
+                    "es_phrase": "love your enemies, do good to those who hate you",
+                    "bibleverse": "luke 6:27",
+                    "search_url" : "http://localhost:8000/biblestudy/?search=enemies+good"
+                },
+                {
+                    "es_phrase": "don\u2019t worry about tomorrow",
+                    "bibleverse" : "matthew 6:34",
+                    "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                }
+            ]
+        };
+    </script>
+    <script src="{{ STATIC_URL }}topics/topics.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div ng-app='topicApp'>
+        <div ng-controller="TopicCtrl">
+            {{ block.super }}
+        </div>
+    </div>
+{% endblock content %}
+
+
+{% block help %}
+    <em>Topics!</em>
+{% endblock help %}
+
+
+{%  block body_content %}
+    <!-- body_content -->
+    <ng-include
+            src="'{{ STATIC_URL }}topics/partials/topics-content.html'">
+    </ng-include>
+{%  endblock body_content %}

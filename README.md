@@ -9,7 +9,10 @@ This project requires postgresql
     sudo add-apt-repository ppa:chris-lea/node.js
     sudo apt-get update
     sudo apt-get install nodejs
-    sudo npm install -g karma
+    sudo npm install karma
+
+    coverage run --source='.' manage.py test web topic_analysis
+    coverage report
 
 ## Django
 This project uses [django](https://www.djangoproject.com/) for project organization purposes. Perform the following to set up the virtual environment.

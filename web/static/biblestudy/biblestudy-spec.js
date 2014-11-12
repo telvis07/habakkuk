@@ -73,15 +73,4 @@ describe("Service: HkSearch", function(){
         mockBackend.flush();
         expect(service.search_success).toHaveBeenCalled();
     });
-
-    it('it tests the http recommend query', function(){
-        expect(service).toBeDefined();
-        spyOn(service, 'recommend_success').andCallThrough();
-        var text_search = {text: "galatians 3:28"};
-        mockBackend.expectGET("/biblestudy/?format=json&r=galatians+3:28").
-            respond(expected_response);
-        service.recommend(text_search);
-        mockBackend.flush();
-        expect(service.recommend_success).toHaveBeenCalled();
-    });
 });

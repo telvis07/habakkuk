@@ -1,16 +1,19 @@
 // Karma configuration
-// Generated on Wed Jan 08 2014 06:35:30 GMT-0500 (EST)
+// Generated on Thu Oct 23 2014 22:17:17 GMT-0400 (EDT)
 
 module.exports = function(config) {
   config.set({
 
-    // base path, that will be used to resolve files and exclude
+    // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: './',
 
-
     // frameworks to use
+    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine'],
 
+    plugins: ['karma-jasmine',
+              'karma-phantomjs-launcher',
+              'karma-coverage'],
 
     // list of files / patterns to load in the browser
     files: [
@@ -23,19 +26,30 @@ module.exports = function(config) {
       'web/static/vendor/angular-ui-ng-grid/ng-grid-2.0.7.min.js',
       'web/static/vendor/angular/angular-mocks.js',
       'web/static/biblestudy/biblestudy.js',
-      'web/static/*/*[Ss]pec.js',
+      'web/static/topics/topics.js',
+      'web/static/*/*[Ss]pec.js'
     ],
 
+    // test results reporter to use
+    // possible values: 'dots', 'progress'
+    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+    reporters: ['progress', 'coverage'],
 
     // list of files to exclude
     exclude: [
-
     ],
 
+    // preprocess matching files before serving them to the browser
+    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+    preprocessors: {
+      'web/static/biblestudy/biblestudy.js':'coverage',
+      'web/static/topics/topics.js':'coverage'
+    },
 
-    // test results reporter to use
-    // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress'],
+    coverageReporter : {
+        type : 'text',
+        dir : 'reports/'
+    },
 
 
     // web server port
@@ -48,30 +62,20 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_DEBUG,
+    logLevel: config.LOG_INFO,
 
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
 
 
-    // Start these browsers, currently available:
-    // - Chrome
-    // - ChromeCanary
-    // - Firefox
-    // - Opera (has to be installed with `npm install karma-opera-launcher`)
-    // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
-    // - PhantomJS
-    // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
+    // start these browsers
+    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['PhantomJS'],
 
 
-    // If browser does not capture in given timeout [ms], kill it
-    captureTimeout: 60000,
-
-
     // Continuous Integration mode
-    // if true, it capture browsers, run tests and exit
-    singleRun: false
+    // if true, Karma captures browsers, runs the tests and exits
+    singleRun: true
   });
 };

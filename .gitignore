@@ -24,3 +24,15 @@ reports/
 .idea
 
 elasticsearch/twitter_mining.cfg
+
+.coverage
+coverage.xml
+analysis/.ipynb_checkpoints/
+corpus.pkl
+elasticsearch/out.json
+karma.conf.bak.js
+node_modules/
+npm-debug.log
+out.json
+stop_tokens.pkl
+web/static/.DS_Store
