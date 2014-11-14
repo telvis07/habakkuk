@@ -1,7 +1,27 @@
-
-<div class="list-group"  ng-repeat="topic in results.topics">
-  <a href="{{ topic.search_url }}" class="list-group-item active">
-    <h4 class="list-group-item-heading">{{ topic.es_phrase }}</h4>
-    <p class="list-group-item-text">{{ topic.bibleverse }}</p>
-  </a>
+<div class="row">
+    <div class="col-xs-6 col-md-4">
+        <div class="list-group"  ng-repeat="topic in result_columns[0]">
+            <a href="{{ topic.search_url }}" class="list-group-item active">
+                <h4 class="list-group-item-heading">{{ topic.es_phrase }}</h4>
+                <p class="list-group-item-text">{{ topic.bibleverse }}</p>
+            </a>
+        </div>
+    </div>
+    <div class="col-xs-6 col-md-4">
+        <div class="list-group"  ng-repeat="topic in result_columns[1]">
+            <a href="{{ topic.search_url }}" class="list-group-item active">
+                <h4 class="list-group-item-heading">{{ topic.es_phrase }}</h4>
+                <p class="list-group-item-text">{{ topic.bibleverse }}</p>
+            </a>
+        </div>
+    </div>
+    <div class="col-xs-6 col-md-4">
+        <div class="list-group"  ng-repeat="topic in result_columns[2]">
+            <a href="{{ topic.search_url }}" class="list-group-item active">
+                <h4 class="list-group-item-heading">{{ topic.es_phrase }}</h4>
+                <p class="list-group-item-text">{{ topic.bibleverse }}</p>
+            </a>
+        </div>
+    </div>
 </div>
+
