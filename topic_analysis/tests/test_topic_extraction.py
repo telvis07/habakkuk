@@ -5,6 +5,9 @@ from django.test.utils import override_settings
 from mock import DEFAULT, patch, MagicMock
 import numpy as np
 from datetime import date
+from django.conf import settings
+import os
+import jsonlib2 as json
 
 from topic_analysis import topic_extraction
 
@@ -162,3 +165,12 @@ class TopicAnalysisTest(TestCase):
         with patch.multiple('topic_analysis.topic_extraction', **patches) as mocks:
             topic_extraction.save_topic_clusters({'cluster_topics' : {}})
             self.assertTrue(mock_es_conn.index.called)
+
+
+    def test_rank_results(self):
+        cluster_data = open(os.path.join(settings.PROJECT_ROOT,
+                                         'topic_analysis',
+                                         'testdata',
+                                         'out.json')).read()
+        cluster_data = json.loads(cluster_data)
+        topic_extraction.rank_results(cluster_data)

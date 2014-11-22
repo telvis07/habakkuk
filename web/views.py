@@ -8,7 +8,7 @@ import traceback
 import logging
 import sys
 from web.models import ClusterData, make_d3_data
-from web.search import get_scriptures_by_date
+from web.search import get_scriptures_by_date, get_topics
 
 DEFAULT_RANGE=7
 # init logging
@@ -21,7 +21,11 @@ def about(request, template="about.html"):
 
 
 def topics(request, template="topics.html"):
-    return render(request, template, {})
+    context = {
+        "topic_results": get_topics()
+    }
+
+    return render(request, template, context)
 
 
 def biblestudy(request, template="biblestudy.html", live_hack=False):

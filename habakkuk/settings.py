@@ -127,6 +127,8 @@ PROJECT_APPS = (
 ES_SETTINGS = {
     'hosts':['http://162.243.207.220:6778'],
     'search_index' : 'habakkuk-all',
+    'clusters_index' : 'clusters-all',
+    'topics_es_type' : 'topics',
     'basic_auth' : {"username":"habakkuk-all", "password":os.environ.get("ES_PASSWORD")}
 }
 

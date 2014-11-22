@@ -1,6 +1,6 @@
 __author__ = 'telvis'
 from topic_analysis import topic_extraction
-from topic_analysis import clustering
+from topic_analysis import topic_clustering
 import jsonlib2 as json
 from datetime import datetime, timedelta
 # from topic_analysis.topics import *
@@ -20,19 +20,19 @@ def main(_dt, top_n=3, n_clusters=6, num_days=15):
     valid_bv_set = set([line.strip() for line in open(BIBLEVERSE_LIST)])
     # create a dictionary[date] = counter
     data = []
-    for created_at_date, _counter in clustering.get_data_from_store(st=st, et=et, valid_bv_set=valid_bv_set):
+    for created_at_date, _counter in topic_clustering.get_data_from_store(st=st, et=et, valid_bv_set=valid_bv_set):
         data.append((created_at_date, _counter))
     data = dict(data)
 
     # filter for most common bibleverses, returns a DataFrame
-    df = clustering.get_most_common_df(data, num=top_n)
+    df = topic_clustering.get_most_common_df(data, num=top_n)
 
     # get bv counts and max counts
-    top_df = clustering.get_count_features_df(df)
+    top_df = topic_clustering.get_count_features_df(df)
     #print top_df
 
     # perform clustering
-    cluster_data = clustering.build_clusters(top_df, n_clusters=n_clusters)
+    cluster_data = topic_clustering.build_clusters(top_df, n_clusters=n_clusters)
     cluster_data['dates'] = data.keys()
 
     saved_cluster_data = []

@@ -4,23 +4,30 @@ __author__ = 'telvis'
 from pyes.query import MatchAllQuery, FilteredQuery, MatchQuery
 from pyes.filters import RangeFilter, TermFilter, TermsFilter, ANDFilter
 from pyes.utils import ESRange
-import re
+
+import re, sys
 import logging
 logger = logging.getLogger(__name__)
 
 from sklearn.decomposition import NMF
-from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer, CountVectorizer
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+from sklearn.cluster import Ward
+import numpy as np
+from sklearn.metrics import jaccard_similarity_score
+from sklearn.metrics.pairwise import pairwise_distances
+from topic_analysis.phrase_clustering import hac
 
 from django.conf import settings
 from web.search import get_es_connection
 import copy
+import jsonlib2 as json
 
 ES_SETTINGS = settings.ES_SETTINGS
 hosts = ES_SETTINGS['hosts']
 SEARCH_INDEX = ES_SETTINGS['search_index']
-CLUSTERS_INDEX ='clusters-all'
-TOPICS_DOC_TYPE="topics"
+CLUSTERS_INDEX =ES_SETTINGS['clusters_index']
+TOPICS_DOC_TYPE= ES_SETTINGS["topics_es_type"]
 
 def nmf_topic_extraction(corpus, bv_stop_tokens, n_features = 5000, n_top_words = 5, n_topics = 3, data={}):
     n_samples = len(corpus)
@@ -161,3 +168,96 @@ def save_topic_clusters(doc):
 
     ret = conn.index(doc=doc, index=CLUSTERS_INDEX, doc_type=TOPICS_DOC_TYPE)
     logger.debug(ret)
+
+
+# TODO: store the ranked results as another type in clusters-all
+def rank_results(doc):
+    """
+    rank results by cluster size, score and es_score, etc
+    :param doc:
+    :param show_top_n:
+    :return:
+    """
+    ret = []
+
+    for cluster in sorted(doc['cluster_topics'], key=topic_sort_key):
+        for topic in cluster.get('topics', []):
+            phrase_clusters = hac(topic)
+            for cluster in phrase_clusters:
+                phrase = sorted(cluster, key=phrase_sort_key)[0]
+                ret.append({
+                   'es_phrase' : phrase['es_phrase'],
+                   'bibleverse' : 'test 1:1',
+                   "search_url" : "http://localhost:8000/biblestudy/?search=enemies+good"
+                })
+
+    # print json.dumps(ret, indent=2)
+    # TODO: store the sorted topics in ES. include the date in each record
+    print "To save", json.dumps(ret, indent=2)
+
+
+def topic_sort_key(x):
+    return x['num_topics']
+
+def phrase_sort_key(x):
+    x.get('weight', 0)
+
+def calc_similarity(topic):
+    """
+    compute the similarity of the list of phrases in this topic
+    :param topic:
+    :return:
+    """
+    # http://scikit-learn.org/stable/modules/generated/sklearn.metrics.jaccard_similarity_score.html
+    # TODO: Find the max score per topic
+    scores = np.zeros((len(topic), len(topic)))
+    for i in xrange(len(topic)):
+
+        for j in xrange(i+1, len(topic)):
+            if i==j:
+                continue
+            if not topic[i].get('es_phrase') or not topic[j].get('es_phrase'):
+                scores[i][j] = -1
+                continue
+
+            print "'{} {}' '{} {}'".format(i,
+                                           topic[i]['es_phrase'],
+                                            j,
+                                            topic[j]['es_phrase'])
+            vectorizer = CountVectorizer()
+            counts = vectorizer.fit_transform([
+                topic[i]['es_phrase'],
+                topic[j]['es_phrase']
+            ])
+            counts = counts.toarray()
+            print counts[0]
+            print counts[1]
+            score = pairwise_distances(counts[0], counts[1], metric="euclidean")
+            print score
+            scores[i][j] = score
+
+    print scores
+
+
+def calc_similarity_ward(topic):
+    """
+    compute the similarity of the list of phrases in this topic using heirarchical clustering
+    not used but just keeping around as a working example.
+    :param topic:
+    :return:
+    """
+    # http://scikit-learn.org/stable/modules/generated/sklearn.metrics.jaccard_similarity_score.html
+    # TODO: Find the max score per topic
+
+    phrases = [phrase.get('es_phrase') for phrase in topic if phrase.get('es_phrase')]
+    print json.dumps(phrases, indent=2)
+
+    vectorizer = CountVectorizer()
+    X = vectorizer.fit_transform(phrases)
+    X = X.toarray()
+    print X
+    ward = Ward(n_clusters=2).fit(X)
+    print ward.labels_
+    #sys.exit(0)
+
+

@@ -8,7 +8,7 @@ from mock import patch, MagicMock
 from pandas import DataFrame
 import logging
 
-from topic_analysis import clustering
+from topic_analysis import topic_clustering
 
 logger = logging.getLogger(__name__)
 
@@ -35,10 +35,10 @@ class ClusteringTest(TestCase):
         et = datetime(year=2014,month=1,day=8)
         valid_bv_set = set(['genesis 1:1'])
 
-        with patch('topic_analysis.clustering.search.bibleverse_facet') as mock_hk_facet:
+        with patch('topic_analysis.topic_clustering.search.bibleverse_facet') as mock_hk_facet:
             mock_hk_facet.return_value = [{'bibleverse':'genesis 1:1', 'count':1}]
             offset = 0
-            for ret in clustering.get_data_from_store(st,et,valid_bv_set=valid_bv_set):
+            for ret in topic_clustering.get_data_from_store(st,et,valid_bv_set=valid_bv_set):
                 expected = (st+timedelta(days=offset), Counter({'genesis 1:1': 1}))
                 self.assertEquals(expected, ret)
                 offset+=1
@@ -57,7 +57,7 @@ class ClusteringTest(TestCase):
                                   'genesis 1:1':8,
                                   'habakkuk 1:1':7})
         }
-        df = clustering.get_most_common_df(data)
+        df = topic_clustering.get_most_common_df(data)
         self.assertIsInstance(df, DataFrame)
         self.assertEquals((3,1), df.shape)
 
@@ -74,7 +74,7 @@ class ClusteringTest(TestCase):
                            'habakkuk 1:1':7}
         }
         test_input = DataFrame(data)
-        ret = clustering.get_count_features_df(test_input)
+        ret = topic_clustering.get_count_features_df(test_input)
         self.assertEquals(['count_entries', 'max', 'count_entries_norm', 'max_norm'],
                           list(ret.columns.values))
 
@@ -87,10 +87,10 @@ class ClusteringTest(TestCase):
             labels_ = ['1','2','3']
             cluster_centers_ = [(1,1),(2,2),(3,3)]
 
-        with patch('topic_analysis.clustering.KMeans') as mock_kmeans:
+        with patch('topic_analysis.topic_clustering.KMeans') as mock_kmeans:
             mock_kmeans_obj = MagicMock(return_value=mock_kmeans_ret)
             mock_kmeans.return_value = mock_kmeans_obj
-            ret = clustering.build_clusters(MagicMock())
+            ret = topic_clustering.build_clusters(MagicMock())
             self.assertEquals(['clusters', 'labels', 'cluster_centers'],
                               ret.keys())
             self.assertTrue(mock_kmeans_obj.fit_predict.called)

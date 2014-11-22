@@ -138,3 +138,42 @@ def get_scriptures_by_date(_date=None, st=None, et=None, size=10, search_text=No
 
     logger.debug("[get_scriptures_by_date] returns '%s",json.dumps(ret))
     return ret
+
+
+def get_topics():
+    """
+    Fetch topics
+    :return:
+    """
+    ret = []
+    ES_SETTINGS = settings.ES_SETTINGS
+    hosts = ES_SETTINGS['hosts']
+    index =ES_SETTINGS['clusters_index']
+    doctype = ES_SETTINGS["topics_es_type"]
+
+    show_top_n = 3
+
+    conn = get_es_connection(hosts)
+    q = MatchAllQuery()
+    q.search(size=1)
+    resultset = conn.search(indices=index,
+                            doc_types=[doctype],
+                            query=q,
+                            sort={ "date": { "order": "desc" }})
+    ret = []
+    for r in resultset:
+        for clusters in r['cluster_topics']:
+            for topics in clusters.get('topics', []):
+                for topic in topics[:show_top_n]:
+                    if not topic.get('es_phrase'):
+                        continue
+                    ret.append({
+                      'es_phrase' : topic['es_phrase'],
+                      'bibleverse' : 'test 1:1',
+                      "search_url" : "http://localhost:8000/biblestudy/?search=enemies+good"
+                    })
+
+    return {
+        'count' : len(ret),
+        'topics' : ret
+    }
