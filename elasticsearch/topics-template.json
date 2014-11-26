@@ -1,0 +1,130 @@
+{
+    "template": "topics-*",
+    "settings" : {
+        "index" : {
+            "number_of_shards" : 1,
+            "number_of_replicas" : 0,
+            "query" : { "default_field" : "text" },
+            "store" : { "compress" : { "stored" : true, "tv": true } }
+        }
+    },
+    "mappings": {
+        "topic_clusters": {
+            "_all": { "enabled": false },
+            "_source": { "compress": true },
+            "_id" : { "path" : "date"},
+            "dynamic_templates": [
+                {
+                    "string_template" : {
+                        "match" : "*",
+                        "mapping": { "type": "string", "index": "not_analyzed" },
+                        "match_mapping_type" : "string"
+                    }
+                }
+            ],
+            "properties" : {
+                "date": {
+                    "type": "date"
+                },
+                "start_date": {
+                    "type": "date"
+                },
+                "end_date": {
+                    "type": "date"
+                },
+                "num_days": {
+                    "type": "long"
+                },
+                "n_clusters": {
+                    "type": "long"
+                },
+                "top_n": {
+                    "type": "long"
+                },
+                "cluster_topics": {
+                    "properties": {
+                        "num_topic_samples": {
+                            "type": "long"
+                        },
+                        "topics": {
+                            "properties": {
+                                "weight": {
+                                    "type": "double"
+                                },
+                                "final_score": {
+                                    "type": "double"
+                                },
+                                "tweet_text": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                },
+                                "text": {
+                                    "term_vector": "with_positions_offsets",
+                                    "type": "string"
+                                },
+                                "is_spam": {
+                                    "type": "boolean"
+                                },
+                                "es_score": {
+                                    "type": "double"
+                                },
+                                "es_phrase": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "num_topics": {
+                            "type": "long"
+                        },
+                        "label": {
+                            "type": "long"
+                        },
+                        "points": {
+                            "type": "long"
+                        },
+                        "bibleverses": {
+                            "index": "not_analyzed",
+                            "type": "string"
+                        },
+                        "num_topic_features": {
+                            "type": "long"
+                        },
+                        "cluster_size": {
+                            "type": "long"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "ranked_phrases": {
+        "_all": { "enabled": false },
+        "_source": { "compress": true },
+        "_id" : { "path" : "date"},
+        "dynamic_templates": [
+            {
+                "string_template" : {
+                    "match" : "*",
+                    "mapping": { "type": "string", "index": "not_analyzed" },
+                    "match_mapping_type" : "string"
+                }
+            }
+        ],
+        "properties" : {
+            "phrase":{
+                "type":"string",
+                "index":"analyzed",
+                "term_vector":"with_positions_offsets"
+            },
+            "search_text": {
+                "index": "not_analyzed",
+                "type": "string"
+            },
+            "date":{
+                "type" : "date",
+                "index" : "not_analyzed"
+            }
+        }
+    }
+}

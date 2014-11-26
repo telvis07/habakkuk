@@ -114,10 +114,18 @@ class TopicAnalysisTest(TestCase):
             'get_es_connection' : MagicMock(return_value=mock_es_conn)
         }
 
+        my_dict = {'bibleverse' : 'test 1:1'}
+        def getitem(name):
+            return my_dict[name]
+
+        def setitem(name, val):
+            my_dict[name] = val
+
         with patch.multiple('topic_analysis.topic_extraction', **patches) as mocks:
             mock_es_doc = MagicMock()
             mock_es_doc.text = "love and awesome peace on earth! homey!"
             mock_es_doc._meta.score = 99
+            mock_es_doc.__getitem__.side_effect = getitem
             mock_result_set = [
                 mock_es_doc
             ]
@@ -135,6 +143,7 @@ class TopicAnalysisTest(TestCase):
             # phrase ret
             phrase_ret = ret[0]
             expected = {'weight': 1, 'text': 'love peace', 'es_score': 99, 'final_score': 99,
+                        'bibleverse':'test 1:1',
                         'es_phrase': 'love and awesome peace on earth',
                         'tweet_text': 'love and awesome peace on earth! homey!'}
             self.assertEquals(expected, phrase_ret)
