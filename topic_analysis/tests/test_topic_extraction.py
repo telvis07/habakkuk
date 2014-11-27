@@ -10,14 +10,16 @@ import os
 import jsonlib2 as json
 
 from topic_analysis import topic_extraction
-
+ES_SETTINGS = {
+    'hosts':['nosuchhost:9200'],
+    'search_index':'nosuch-index-*',
+    'topics_index' : 'nosuch-index-*',
+    'search_es_type' : 'habakkuk',
+    'clusters_es_type' : 'topic_clusters',
+    'phrases_es_type' : 'ranked_phrases'
+}
 
 class TopicAnalysisTest(TestCase):
-    ES_SETTINGS = {
-        'hosts':['nosuchhost:9200'],
-        'search_index':'nosuch-index-*',
-        'model_index':'nosuch-index-*',
-    }
 
     def setUp(self):
         pass
@@ -175,11 +177,18 @@ class TopicAnalysisTest(TestCase):
             topic_extraction.save_topic_clusters({'cluster_topics' : {}})
             self.assertTrue(mock_es_conn.index.called)
 
-
+    @override_settings(ES_SETTINGS=ES_SETTINGS)
     def test_rank_results(self):
         cluster_data = open(os.path.join(settings.PROJECT_ROOT,
                                          'topic_analysis',
                                          'testdata',
                                          'out.json')).read()
         cluster_data = json.loads(cluster_data)
-        topic_extraction.rank_results(cluster_data)
+        mock_es_conn = MagicMock()
+        patches = {
+            'get_es_connection' : MagicMock(return_value=mock_es_conn)
+        }
+        with patch.multiple('topic_analysis.topic_extraction', **patches) as mocks:
+            topic_extraction.rank_results(cluster_data)
+            self.assertTrue(mock_es_conn.delete_by_query.called)
+            self.assertTrue(mock_es_conn.index.called)

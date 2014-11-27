@@ -1,9 +1,10 @@
 __author__ = 'telvis'
 
 
-from pyes.query import MatchAllQuery, FilteredQuery, MatchQuery
+from pyes.query import MatchAllQuery, FilteredQuery, MatchQuery, TermQuery
 from pyes.filters import RangeFilter, TermFilter, TermsFilter, ANDFilter
 from pyes.utils import ESRange
+from pyes import ES
 
 import re
 import logging
@@ -15,17 +16,34 @@ from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 from topic_analysis.phrase_clustering import hac
 
 from django.conf import settings
-from web.search import get_es_connection
 import copy
 import jsonlib2 as json
 
-ES_SETTINGS = settings.ES_SETTINGS
-hosts = ES_SETTINGS['hosts']
-SEARCH_INDEX = ES_SETTINGS['search_index']
-TOPICS_INDEX = ES_SETTINGS['topics_index']
-SEARCH_ES_TYPE = ES_SETTINGS['search_es_type']
-CLUSTERS_DOC_TYPE = ES_SETTINGS["clusters_es_type"]
-PHRASES_DOC_TYPE= ES_SETTINGS["phrases_es_type"]
+
+
+class ESSettings:
+    """
+    Class to store Elasticsearch settings from django
+    """
+    def __init__(self):
+        ES_SETTINGS = settings.ES_SETTINGS
+
+        self.hosts = ES_SETTINGS['hosts']
+        self.search_index = ES_SETTINGS['search_index']
+        self.topics_index = ES_SETTINGS['topics_index']
+        self.search_es_type = ES_SETTINGS['search_es_type']
+        self.clusters_es_type = ES_SETTINGS['clusters_es_type']
+        self.phrases_es_type = ES_SETTINGS['phrases_es_type']
+        self.basic_auth = ES_SETTINGS.get('basic_auth')
+
+
+def get_es_connection(host=None):
+    es_settings = ESSettings()
+    if not host:
+        host = es_settings.hosts
+
+    logger.debug("Connecting to '%s'"%host )
+    return ES(host, basic_auth=es_settings.basic_auth)
 
 
 def nmf_topic_extraction(corpus, bv_stop_tokens, n_features = 5000, n_top_words = 5, n_topics = 3, data={}):
@@ -76,7 +94,8 @@ def nmf_topic_extraction(corpus, bv_stop_tokens, n_features = 5000, n_top_words 
 
 
 def get_text_from_es(bibleverse, start, end, ts_field='created_at_date'):
-    conn = get_es_connection(hosts)
+    conn = get_es_connection()
+    es_settings = ESSettings()
     filters = []
     filters.append(
         RangeFilter(qrange=ESRange(field=ts_field,
@@ -89,7 +108,10 @@ def get_text_from_es(bibleverse, start, end, ts_field='created_at_date'):
 
 
     q = q.search(size=100)
-    resultset = conn.search(indices=[SEARCH_INDEX], doc_types=[SEARCH_ES_TYPE], query=q, size=200)
+    resultset = conn.search(indices=es_settings.search_index,
+                            doc_types=[es_settings.search_es_type],
+                            query=q,
+                            size=200)
     res = list()
     for r in resultset:
         t = re.sub("[@#]\w+(?:$|\W)","", r['text'])
@@ -98,7 +120,8 @@ def get_text_from_es(bibleverse, start, end, ts_field='created_at_date'):
 
 
 def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
-    conn = get_es_connection(hosts)
+    conn = get_es_connection()
+    es_settings = ESSettings()
     sorted_topics = []
 
     for topic in topics:
@@ -115,7 +138,10 @@ def phrase_search(topics, bibleverses, start, end, ts_field='created_at_date'):
             q = MatchQuery('text', topic_term['text'], type='phrase', slop=50)
             q = FilteredQuery(q, ANDFilter(filters))
             q = q.search(size=1)
-            resultset = conn.search(indices=SEARCH_INDEX, doc_types=[SEARCH_ES_TYPE], query=q, size=1)
+            resultset = conn.search(indices=es_settings.search_index,
+                                    doc_types=[es_settings.search_es_type],
+                                    query=q,
+                                    size=1)
 
             for r in resultset:
                 terms = topic_term['text'].split()
@@ -164,47 +190,75 @@ def build_corpus(st, et, bibleverses):
 
 def save_topic_clusters(doc):
     # get es conn
-    conn = get_es_connection(hosts)
+    conn = get_es_connection()
+    es_settings = ESSettings()
     for cluster in doc["cluster_topics"]:
         if not cluster.get('num_topics',0):
             continue
 
-    ret = conn.index(doc=doc, index=TOPICS_INDEX, doc_type=CLUSTERS_DOC_TYPE)
+    ret = conn.index(doc=doc, index=es_settings.topics_index, doc_type=es_settings.clusters_es_type)
     logger.debug(ret)
 
 
-# TODO: store the ranked results as another type in clusters-all
 def rank_results(doc):
     """
-    rank results by cluster size, score and es_score, etc
+    rank phrases by cluster size, score and es_score, etc
     :param doc:
     :return:
     """
     ret = []
     rank = 1
+    # save the 'date'
+    _date = doc['date']
+
+    # loop over clusters, ranked by the topic_sort_key
     for cluster in sorted(doc['cluster_topics'], key=topic_sort_key):
         for topic in cluster.get('topics', []):
+            # now perform hierarchical clustering to group phrases
+            # similar phrases together.
             phrase_clusters = hac(topic)
             for cluster in phrase_clusters:
+                # now get the first entry from each phrase_cluster
+                # assumes the other entries and similar enough to ignore
                 phrase = sorted(cluster, key=phrase_sort_key)[0]
+
+                # See phrase_search() for is_spam meaning
                 if phrase.get('is_spam'):
                     continue
-                url = "http://localhost:8000/biblestudy/?search={}".format("+".join(phrase['text'].split()))
+
+                # append to the list with its rank
                 ret.append({
-                   'es_phrase' : phrase['es_phrase'],
+                   'phrase' : phrase['es_phrase'],
                    'bibleverse' : phrase['bibleverse'],
-                   "search_url" : url,
-                   "rank" : rank
+                   "search_text" : "+".join(phrase['text'].split()),
+                   "rank" : rank,
+                   "date" : _date
                 })
                 rank += 1
 
-    # print json.dumps(ret, indent=2)
-    # TODO: store the sorted topics in ES. include the date in each record
-    print "To save", json.dumps(ret, indent=2)
+    # Now store the ranked results in ES
+    conn = get_es_connection()
+    es_settings = ESSettings()
 
+
+    q = TermQuery(field='date', value=_date)
+    result = conn.delete_by_query(es_settings.topics_index, [es_settings.phrases_es_type], q)
+    logger.info("[rank_results] : delete complete. index=%s, type=%s, query='%s', failed=%s",
+                es_settings.topics_index,
+                es_settings.phrases_es_type,
+                json.dumps(q.search().serialize()),
+                result['_indices'][es_settings.topics_index]['_shards']['failed'])
+    for phrase_doc in ret:
+        conn.index(doc=phrase_doc, index=es_settings.topics_index, doc_type=es_settings.phrases_es_type)
+    logger.info("Wrote %d docs to index=%s, type=%s, date=%s",
+                len(ret),
+                es_settings.topics_index,
+                es_settings.phrases_es_type,
+                _date)
 
 def topic_sort_key(x):
     return x['num_topics']
+
 
 def phrase_sort_key(x):
     x.get('weight', 0)

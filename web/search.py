@@ -1,5 +1,5 @@
 from pyes import ES
-from pyes.query import MatchAllQuery, FilteredQuery, BoolQuery, MatchQuery, TextQuery
+from pyes.query import MatchAllQuery, FilteredQuery, BoolQuery, MatchQuery
 from pyes.filters import RangeFilter, TermFilter, QueryFilter
 from pyes.utils import ESRange, ESRangeOp
 import jsonlib2 as json
@@ -8,10 +8,30 @@ from django.conf import settings
 from web.models import BibleText
 logger = logging.getLogger(__name__)
 
-def get_es_connection(host):
-    ES_SETTINGS = settings.ES_SETTINGS
+
+class ESSettings:
+    """
+    Class to store Elasticsearch settings from django
+    """
+    def __init__(self):
+        ES_SETTINGS = settings.ES_SETTINGS
+
+        self.hosts = ES_SETTINGS['hosts']
+        self.search_index = ES_SETTINGS['search_index']
+        self.topics_index = ES_SETTINGS['topics_index']
+        self.search_es_type = ES_SETTINGS['search_es_type']
+        self.clusters_es_type = ES_SETTINGS['clusters_es_type']
+        self.phrases_es_type = ES_SETTINGS['phrases_es_type']
+        self.basic_auth = ES_SETTINGS.get('basic_auth')
+
+
+def get_es_connection(host=None):
+    es_settings = ESSettings()
+    if not host:
+        host = es_settings.hosts
+
     logger.debug("Connecting to '%s'"%host )
-    return ES(host, basic_auth=ES_SETTINGS.get('basic_auth'))
+    return ES(host, basic_auth=es_settings.basic_auth)
 
 def bibleverse_facet(host,
                      index='habakkuk-*',
@@ -123,11 +143,9 @@ def bibleverse_recommendations(bibleverses):
 
 def get_scriptures_by_date(_date=None, st=None, et=None, size=10, search_text=None):
     ret = []
-    ES_SETTINGS = settings.ES_SETTINGS
-    hosts = ES_SETTINGS['hosts']
-    search_index = ES_SETTINGS['search_index']
-    ret = bibleverse_facet(host=hosts,
-                           index=search_index,
+    es_settings = ESSettings()
+    ret = bibleverse_facet(host=es_settings.hosts,
+                           index=es_settings.search_index,
                            start=st,
                            end=et,
                            _date=_date,
@@ -140,38 +158,31 @@ def get_scriptures_by_date(_date=None, st=None, et=None, size=10, search_text=No
     return ret
 
 
-def get_topics():
+def get_topics(size=10, offset=0):
     """
-    Fetch topics
+    rank results by cluster size, score and es_score, etc
+    :param doc:
     :return:
     """
     ret = []
-    ES_SETTINGS = settings.ES_SETTINGS
-    hosts = ES_SETTINGS['hosts']
-    index =ES_SETTINGS['clusters_index']
-    doctype = ES_SETTINGS["topics_es_type"]
 
-    show_top_n = 3
-
-    conn = get_es_connection(hosts)
+    conn = get_es_connection()
+    es_settings = ESSettings()
     q = MatchAllQuery()
-    q.search(size=1)
-    resultset = conn.search(indices=index,
-                            doc_types=[doctype],
+    q.search()
+    resultset = conn.search(indices=es_settings.topics_index,
+                            doc_types=[es_settings.phrases_es_type],
                             query=q,
-                            sort={ "date": { "order": "desc" }})
-    ret = []
-    for r in resultset:
-        for clusters in r['cluster_topics']:
-            for topics in clusters.get('topics', []):
-                for topic in topics[:show_top_n]:
-                    if not topic.get('es_phrase'):
-                        continue
-                    ret.append({
-                      'es_phrase' : topic['es_phrase'],
-                      'bibleverse' : 'test 1:1',
-                      "search_url" : "http://localhost:8000/biblestudy/?search=enemies+good"
-                    })
+                            sort={ "date": { "order": "desc" }, "rank" : {"order" : "asc"}},
+                            size=size, start=offset)
+
+    for phrase in resultset:
+        print phrase['date'], phrase['rank']
+        ret.append({
+           'phrase' : phrase['phrase'],
+           'bibleverse' : phrase['bibleverse'],
+           "search_url" : settings.BIBLESTUDY_SEARCH_URL+phrase['search_text']
+        })
 
     return {
         'count' : len(ret),

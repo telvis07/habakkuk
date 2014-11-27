@@ -28,9 +28,8 @@ function TopicCtrl($window, $scope, $log){
     };
 
     $scope.results = $window.HK.results;
-    $scope.result_columns = this.split_results_into_columns($scope.results.topics, 3);
+    $scope.result_columns = this.split_results_into_columns($scope.results.topics, 2);
 };
-
 
 
 var topicModule = angular.module("topicApp", []);

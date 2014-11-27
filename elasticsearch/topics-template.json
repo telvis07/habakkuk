@@ -121,9 +121,16 @@
                 "index": "not_analyzed",
                 "type": "string"
             },
+            "bibleverse": {
+                "index": "not_analyzed",
+                "type": "string"
+            },
             "date":{
                 "type" : "date",
                 "index" : "not_analyzed"
+            },
+            "rank":{
+                "type" : "long"
             }
         }
     }

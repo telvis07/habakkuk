@@ -12,7 +12,10 @@ class BibleStudyTest(TestCase):
     ES_SETTINGS = {
         'hosts':['nosuchhost:9200'],
         'search_index':'nosuch-index-*',
-        'model_index':'nosuch-index-*',
+        'topics_index' : 'nosuch-index-*',
+        'search_es_type' : 'habakkuk',
+        'clusters_es_type' : 'topic_clusters',
+        'phrases_es_type' : 'ranked_phrases'
     }
 
     def setUp(self):

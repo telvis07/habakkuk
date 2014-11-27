@@ -124,11 +124,14 @@ PROJECT_APPS = (
     'topic_analysis'
 )
 
+BIBLESTUDY_SEARCH_URL = "http://www.bakkify.com/biblestudy/?search="
 ES_SETTINGS = {
     'hosts':['http://162.243.207.220:6778'],
     'search_index' : 'habakkuk-all',
-    'clusters_index' : 'clusters-all',
-    'topics_es_type' : 'topics',
+    'topics_index' : 'topics-all',
+    'search_es_type' : 'habakkuk',
+    'clusters_es_type' : 'topic_clusters',
+    'phrases_es_type' : 'ranked_phrases',
     'basic_auth' : {"username":"habakkuk-all", "password":os.environ.get("ES_PASSWORD")}
 }
 
