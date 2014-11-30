@@ -42,4 +42,11 @@ def hac(topic):
     # Cluster the data according to a distance threshold
     clusters = hc.getlevel(DISTANCE_THRESHOLD)
     # print "[hac]",len(clusters), json.dumps(clusters, indent=2)
+
+    # sometimes the clustering api returns a list of dicts instead
+    # of a list of lists. This causes an error in topic_extraction
+    # as we are looping over the phrases
+    if len(clusters) == 1 and isinstance(clusters[0], dict):
+        clusters = [clusters]
+
     return clusters

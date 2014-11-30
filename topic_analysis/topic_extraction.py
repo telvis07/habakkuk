@@ -200,7 +200,7 @@ def save_topic_clusters(doc):
     logger.debug(ret)
 
 
-def rank_results(doc):
+def rank_phrases_and_store(doc):
     """
     rank phrases by cluster size, score and es_score, etc
     :param doc:
@@ -210,6 +210,7 @@ def rank_results(doc):
     rank = 1
     # save the 'date'
     _date = doc['date']
+    import sys
 
     # loop over clusters, ranked by the topic_sort_key
     for cluster in sorted(doc['cluster_topics'], key=topic_sort_key):
@@ -217,6 +218,8 @@ def rank_results(doc):
             # now perform hierarchical clustering to group phrases
             # similar phrases together.
             phrase_clusters = hac(topic)
+            # print json.dumps(phrase_clusters, indent=2)
+
             for cluster in phrase_clusters:
                 # now get the first entry from each phrase_cluster
                 # assumes the other entries and similar enough to ignore

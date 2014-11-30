@@ -8,8 +8,10 @@ from datetime import date
 from django.conf import settings
 import os
 import jsonlib2 as json
+from datetime import datetime
 
 from topic_analysis import topic_extraction
+from topic_analysis.main import main
 ES_SETTINGS = {
     'hosts':['nosuchhost:9200'],
     'search_index':'nosuch-index-*',
@@ -181,14 +183,36 @@ class TopicAnalysisTest(TestCase):
     def test_rank_results(self):
         cluster_data = open(os.path.join(settings.PROJECT_ROOT,
                                          'topic_analysis',
-                                         'testdata',
-                                         'out.json')).read()
+                                         'data',
+                                         'test_cluster_data.json')).read()
         cluster_data = json.loads(cluster_data)
         mock_es_conn = MagicMock()
         patches = {
             'get_es_connection' : MagicMock(return_value=mock_es_conn)
         }
         with patch.multiple('topic_analysis.topic_extraction', **patches) as mocks:
-            topic_extraction.rank_results(cluster_data)
+            topic_extraction.rank_phrases_and_store(cluster_data)
             self.assertTrue(mock_es_conn.delete_by_query.called)
             self.assertTrue(mock_es_conn.index.called)
+
+    @override_settings(ES_SETTINGS=ES_SETTINGS)
+    def test_main(self):
+        _dt = datetime(2014, 01, 01)
+        patches = {
+            'topic_extraction' : DEFAULT,
+            'topic_clustering' : DEFAULT
+        }
+
+        expected = {
+            'end_date': '2014-01-02',
+            'n_clusters': 6,
+            'top_n': 3,
+            'cluster_topics': [],
+            'date': '2014-01-01',
+            'start_date': '2013-12-18',
+            'num_days': 15
+        }
+
+        with patch.multiple('topic_analysis.main', **patches) as mocks:
+            ret = main(_dt)
+            self.assertEquals(expected, ret)

@@ -1,0 +1,588 @@
+{
+  "end_date": "2014-05-27",
+  "n_clusters": 6,
+  "top_n": 3,
+  "cluster_topics": [
+    {
+      "num_topics": 3,
+      "topics": [
+        [
+          {
+            "weight": 0.51958344476706997,
+            "text": "lips endure",
+            "es_score": 3.2344537,
+            "final_score": 1.6805685953855951,
+            "es_phrase": "truthful lips endure forever",
+            "tweet_text": "Proverbs 12:19 \n19 Truthful lips endure forever,\nbut a lying tongue is but for a moment.",
+            "bibleverse": "proverbs 12:19"
+          },
+          {
+            "weight": 0.51958344476706997,
+            "text": "lying tongue",
+            "es_score": 3.198184,
+            "final_score": 1.6617234597189268,
+            "es_phrase": "but a lying tongue is but for a moment",
+            "tweet_text": "Proverbs 12:19 \n19 Truthful lips endure forever,\nbut a lying tongue is but for a moment.",
+            "bibleverse": "proverbs 12:19"
+          },
+          {
+            "weight": 0.51958344476706997,
+            "text": "endure forever",
+            "es_score": 2.995823,
+            "final_score": 1.5565800342524179,
+            "es_phrase": "truthful lips endure forever",
+            "tweet_text": "Proverbs 12:19 \n19 Truthful lips endure forever,\nbut a lying tongue is but for a moment.",
+            "bibleverse": "proverbs 12:19"
+          },
+          {
+            "weight": 0.34638896317804657,
+            "text": "tongue moment",
+            "es_score": 1.6210899,
+            "final_score": 0.56152764967940327,
+            "es_phrase": "but a lying tongue lasts only a moment",
+            "tweet_text": "Proverbs 12:19 ()  \n\n19Truthful lips endure forever,    but a lying tongue lasts only a moment. #Bible http:\/\/t.co\/378nydVYjB",
+            "bibleverse": "proverbs 12:19"
+          },
+          {
+            "text": "forever lying",
+            "weight": 0.51958344476706997
+          }
+        ],
+        [
+          {
+            "weight": 0.55778064347822853,
+            "text": "blessing today",
+            "es_score": 1.7710786,
+            "final_score": 0.9878733611585202,
+            "es_phrase": "be a blessing to someone today",
+            "tweet_text": "RT @GODs_Graces: Be a blessing to someone today - Prov 11:25",
+            "bibleverse": "proverbs 11:25"
+          },
+          {
+            "weight": 0.2668879518374434,
+            "text": "let praise",
+            "es_score": 1.7797716,
+            "final_score": 0.47499959706244954,
+            "es_phrase": "don't brag about yourself let others praise you",
+            "tweet_text": "RT @LovLikeJesus: Don't brag about yourself let others praise you. -Proverbs 27:2",
+            "bibleverse": "proverbs 27:2"
+          },
+          {
+            "weight": 0.2668879518374434,
+            "text": "brag let",
+            "es_score": 1.6675884,
+            "final_score": 0.44505925258387935,
+            "es_phrase": "don't brag about yourself let others praise you",
+            "tweet_text": "RT @LovLikeJesus: Don't brag about yourself let others praise you. -Proverbs 27:2",
+            "bibleverse": "proverbs 27:2"
+          },
+          {
+            "text": "today blessing",
+            "weight": 0.35495131857705448
+          },
+          {
+            "text": "don brag",
+            "weight": 0.2668879518374434
+          }
+        ],
+        [
+          {
+            "weight": 0.40584587242076248,
+            "text": "asks receives",
+            "es_score": 3.3641346,
+            "final_score": 1.3653201416778729,
+            "es_phrase": "everyone who asks receives",
+            "tweet_text": "RT @PastorHowardnbc: Everyone who asks receives; whoever seeks finds; and whoever knocks will have it opened - Matthew 7:8",
+            "bibleverse": "matthew 7:8"
+          },
+          {
+            "weight": 0.27056391494717502,
+            "text": "door opened",
+            "es_score": 1.5608506,
+            "final_score": 0.4223098489836471,
+            "es_phrase": "the door will be opened",
+            "tweet_text": "RT @The_Gospels: For everyone who asks receives; those who seek find; and to those who knock, the door will be opened. -Matthew 7:8",
+            "bibleverse": "matthew 7:8"
+          },
+          {
+            "weight": 0.27056391494717502,
+            "text": "receives seek",
+            "es_score": 1.4563243,
+            "final_score": 0.39402880404070417,
+            "es_phrase": "for everyone who asks receives; those who seek find",
+            "tweet_text": "RT @The_Gospels: For everyone who asks receives; those who seek find; and to those who knock, the door will be opened. -Matthew 7:8",
+            "bibleverse": "matthew 7:8"
+          },
+          {
+            "weight": 0.27056391494717502,
+            "text": "seek knock",
+            "es_score": 1.0202684,
+            "final_score": 0.27604781260089034,
+            "es_phrase": "those who seek find; and to those who knock",
+            "tweet_text": "RT @The_Gospels: For everyone who asks receives; those who seek find; and to those who knock, the door will be opened. -Matthew 7:8",
+            "bibleverse": "matthew 7:8"
+          },
+          {
+            "text": "opened asks",
+            "weight": 0.35173308943132753
+          }
+        ]
+      ],
+      "bibleverses": [
+        "hebrews 11:1",
+        "john 3:17",
+        "luke 6:27",
+        "matthew 7:8",
+        "proverbs 11:25",
+        "proverbs 12:19",
+        "proverbs 27:2"
+      ],
+      "num_topic_features": 231,
+      "num_topic_samples": 7,
+      "points": [
+        [
+          1,
+          12.0
+        ],
+        [
+          1,
+          13.0
+        ],
+        [
+          1,
+          12.0
+        ],
+        [
+          1,
+          13.0
+        ],
+        [
+          1,
+          10.0
+        ],
+        [
+          1,
+          13.0
+        ],
+        [
+          1,
+          12.0
+        ]
+      ],
+      "cluster_size": 7,
+      "label": 0
+    },
+    {
+      "num_topics": 1,
+      "topics": [
+        [
+          {
+            "weight": 0.71174609711810155,
+            "text": "pass message",
+            "es_score": 2.3650131,
+            "final_score": 1.6832888435581825,
+            "es_phrase": "rt to pass this message on",
+            "tweet_text": "RT @MikePosts: RT to pass this message on..John 13:7 http:\/\/t.co\/YywzX8DKXw",
+            "bibleverse": "john 13:7",
+            "is_spam": true
+          },
+          {
+            "weight": 0.49687935081829726,
+            "text": "message yywzx8dkxw",
+            "es_score": 1.3672088,
+            "final_score": 0.67933782097706319,
+            "es_phrase": "rt to pass this message on..john 13:7 http:\/\/t.co\/yywzx8dkxw",
+            "tweet_text": "RT @MikePosts: RT to pass this message on..John 13:7 http:\/\/t.co\/YywzX8DKXw",
+            "bibleverse": "john 13:7",
+            "is_spam": true
+          },
+          {
+            "text": "yywzx8dkxw pass",
+            "weight": 0.45659183588708391,
+            "is_spam": true
+          },
+          {
+            "text": "qiybgdc8yh qiybgdc8yh",
+            "weight": 0.14772088808111544,
+            "is_spam": true
+          },
+          {
+            "text": "good jdavgx5wpw",
+            "weight": 0.04028751493121329,
+            "is_spam": true
+          }
+        ]
+      ],
+      "bibleverses": [
+        "john 13:7",
+        "matthew 21:22"
+      ],
+      "num_topic_features": 103,
+      "num_topic_samples": 2,
+      "points": [
+        [
+          3,
+          19.0
+        ],
+        [
+          3,
+          19.0
+        ]
+      ],
+      "cluster_size": 2,
+      "label": 1
+    },
+    {
+      "num_topics": 1,
+      "topics": [
+        [
+          {
+            "weight": 0.53753792814909496,
+            "text": "greater love",
+            "es_score": 2.6311417,
+            "final_score": 1.4143384580846876,
+            "es_phrase": "greater love has no one than this",
+            "tweet_text": "John 15:13  Greater love has no one than this:: \n\nGreater love has no one than this: to lay down ones life f... http:\/\/t.co\/agYA5VPYBK",
+            "bibleverse": "john 15:13"
+          },
+          {
+            "weight": 0.4975085079677794,
+            "text": "life friends",
+            "es_score": 1.354578,
+            "final_score": 0.67391407970597872,
+            "es_phrase": "to lay down one\u2019s life for one\u2019s friends",
+            "tweet_text": "Greater love has no one than this:to lay down ones life for ones friends-John 15:13 #MemorialDay2014 #TrueAmericanHeros #GodBlessOurTroops",
+            "bibleverse": "john 15:13"
+          },
+          {
+            "weight": 0.47463455357845619,
+            "text": "lay life",
+            "es_score": 1.4053826,
+            "final_score": 0.6670431429579301,
+            "es_phrase": "to lay down one\u2019s life for one",
+            "tweet_text": "Greater love has no one than this:to lay down ones life for ones friends-John 15:13 #MemorialDay2014 #TrueAmericanHeros #GodBlessOurTroops",
+            "bibleverse": "john 15:13"
+          },
+          {
+            "weight": 0.37170175882650186,
+            "text": "love lay",
+            "es_score": 1.3042681,
+            "final_score": 0.4847987467512998,
+            "es_phrase": "there is no greater love than to lay down one's life for one's friend",
+            "tweet_text": "RT @mary_beth_b: \"There is no greater love than to lay down one's life for one's friend.\" John 15:13",
+            "bibleverse": "john 15:13"
+          },
+          {
+            "text": "friends greater",
+            "weight": 0.18871012371191631
+          }
+        ]
+      ],
+      "bibleverses": [
+        "john 15:13"
+      ],
+      "num_topic_features": 195,
+      "num_topic_samples": 1,
+      "points": [
+        [
+          1,
+          93.0
+        ]
+      ],
+      "cluster_size": 1,
+      "label": 2
+    },
+    {
+      "num_topics": 1,
+      "topics": [
+        [
+          {
+            "weight": 0.44548262139943856,
+            "text": "way truth",
+            "es_score": 1.4192975,
+            "final_score": 0.63227237084566967,
+            "es_phrase": "i am the way & the truth",
+            "tweet_text": "RT @Godly_Life: Jesus answered, \"I am the way & the truth & the life. No one comes to the Father except through me. -John 14:6",
+            "bibleverse": "john 14:6"
+          },
+          {
+            "weight": 0.44548262139943856,
+            "text": "truth life",
+            "es_score": 1.3088653,
+            "final_score": 0.58307674490276251,
+            "es_phrase": "i am the way and the truth & the life",
+            "tweet_text": "RT @Bible_Time: Jesus answered, \"I am the way and the truth & the life. No one comes to the Father except through me. -John 14:6",
+            "bibleverse": "john 14:6"
+          },
+          {
+            "weight": 0.44548262139943856,
+            "text": "comes father",
+            "es_score": 1.1506894,
+            "final_score": 0.51261213032854713,
+            "es_phrase": "no one comes to the father except through me",
+            "tweet_text": "RT @bible4me: John 14:6 Jesus answered, I am the way and the truth and the life. No one comes to the Father except through me.",
+            "bibleverse": "john 14:6"
+          },
+          {
+            "weight": 0.44548262139943856,
+            "text": "life comes",
+            "es_score": 1.0733702,
+            "final_score": 0.47816777042803965,
+            "es_phrase": "i am the way and the truth and the life. no one comes to the father except through me",
+            "tweet_text": "RT @bible4me: John 14:6 Jesus answered, I am the way and the truth and the life. No one comes to the Father except through me.",
+            "bibleverse": "john 14:6"
+          },
+          {
+            "weight": 0.31278567034428661,
+            "text": "answered way",
+            "es_score": 1.0926958,
+            "final_score": 0.34177958828538652,
+            "es_phrase": "jesus answered, \u201ci am the way and the truth and the life",
+            "tweet_text": "RT @bible4me: John 14:6 Jesus answered, I am the way and the truth and the life. No one comes to the Father except through me.",
+            "bibleverse": "john 14:6"
+          }
+        ]
+      ],
+      "bibleverses": [
+        "john 14:6",
+        "proverbs 3:5"
+      ],
+      "num_topic_features": 61,
+      "num_topic_samples": 2,
+      "points": [
+        [
+          2,
+          15.0
+        ],
+        [
+          2,
+          17.0
+        ]
+      ],
+      "cluster_size": 2,
+      "label": 3
+    },
+    {
+      "num_topics": 3,
+      "topics": [
+        [
+          {
+            "weight": 0.32970218902671655,
+            "text": "wide lips",
+            "es_score": 2.4137833,
+            "final_score": 0.7958296378461317,
+            "es_phrase": "he who opens wide his lips comes to ruin",
+            "tweet_text": "Whoever guards his mouth preserves his life; he who opens wide his lips comes to ruin. (Proverbs 13:3 ESV)",
+            "bibleverse": "proverbs 13:3"
+          },
+          {
+            "weight": 0.21980145935114437,
+            "text": "keepeth mouth",
+            "es_score": 2.6452603,
+            "final_score": 0.58143207430364596,
+            "es_phrase": "he that keepeth his mouth keepeth his life",
+            "tweet_text": "He that keepeth his mouth keepeth his life: but he that openeth wide his lips shall have destruction. (Proverbs 13:3 KJV)",
+            "bibleverse": "proverbs 13:3"
+          },
+          {
+            "weight": 0.25643503590966843,
+            "text": "lips destruction",
+            "es_score": 1.5805054,
+            "final_score": 0.40529695900442486,
+            "es_phrase": "but he that openeth wide his lips shall have destruction",
+            "tweet_text": "He that keepeth his mouth keepeth his life: but he that openeth wide his lips shall have destruction. (Proverbs 13:3 KJV)",
+            "bibleverse": "proverbs 13:3"
+          },
+          {
+            "weight": 0.21980145935114437,
+            "text": "keepeth life",
+            "es_score": 1.7989786,
+            "final_score": 0.3954181216214786,
+            "es_phrase": "he that keepeth his mouth keepeth his life",
+            "tweet_text": "He that keepeth his mouth keepeth his life: but he that openeth wide his lips shall have destruction. (Proverbs 13:3 KJV)",
+            "bibleverse": "proverbs 13:3"
+          },
+          {
+            "weight": 0.21980145935114437,
+            "text": "lives speak",
+            "es_score": 1.3402357,
+            "final_score": 0.29458576273450254,
+            "es_phrase": "those who guard their lips preserve their lives, but those who speak rashly will come to ruin",
+            "tweet_text": "Those who guard their lips preserve their lives, but those who speak rashly will come to ruin. (Proverbs 13:3)",
+            "bibleverse": "proverbs 13:3"
+          }
+        ],
+        [
+          {
+            "weight": 0.61075905862634672,
+            "text": "gives strength",
+            "es_score": 1.9718413,
+            "final_score": 1.2043199361485517,
+            "es_phrase": "i can do all this through him who gives me strength",
+            "tweet_text": "RT @ArmorOGod: I can do all this through him who gives me strength. -Philippians 4:13",
+            "bibleverse": "philippians 4:13"
+          },
+          {
+            "weight": 0.20358635287544893,
+            "text": "tells giving",
+            "es_score": 1.0816942,
+            "final_score": 0.22021817710452646,
+            "es_phrase": "god never tells us to do anything without giving us the ability to do it",
+            "tweet_text": "RT @PrayInFaith: God never tells us to do anything without giving us the ability to do it. (seePhilippians 4:13)",
+            "bibleverse": "philippians 4:13"
+          },
+          {
+            "text": "strengthens strengthens",
+            "weight": 0.37324164693832296
+          },
+          {
+            "text": "strength strengthens",
+            "weight": 0.33931058812574821
+          },
+          {
+            "text": "strengthens gives",
+            "weight": 0.23751741168802371
+          }
+        ],
+        [
+          {
+            "weight": 0.35952191687886259,
+            "text": "replied love",
+            "es_score": 1.9467762,
+            "final_score": 0.69990871115814801,
+            "es_phrase": "jesus replied: love the lord your god with all your heart",
+            "tweet_text": "RT @The_Gospels: Jesus replied: Love the Lord your God with all your heart & with all your soul & with all your mind. -Matthew 22:37",
+            "bibleverse": "matthew 22:37"
+          },
+          {
+            "weight": 0.45331024302117462,
+            "text": "soul mind",
+            "es_score": 1.0462364,
+            "final_score": 0.47426967674159881,
+            "es_phrase": "with all your soul & with all your mind",
+            "tweet_text": "RT @The_Gospels: Jesus replied: Love the Lord your God with all your heart & with all your soul & with all your mind. -Matthew 22:37",
+            "bibleverse": "matthew 22:37"
+          },
+          {
+            "weight": 0.46894163071155975,
+            "text": "heart soul",
+            "es_score": 0.9355117,
+            "final_score": 0.43870038214774343,
+            "es_phrase": "love the lord your god with all your heart & with all your soul",
+            "tweet_text": "RT @The_Gospels: Jesus replied: Love the Lord your God with all your heart & with all your soul & with all your mind. -Matthew 22:37",
+            "bibleverse": "matthew 22:37"
+          },
+          {
+            "weight": 0.46894163071155975,
+            "text": "love heart",
+            "es_score": 0.52539927,
+            "final_score": 0.24638159044846306,
+            "es_phrase": "love the lord your god with all your heart",
+            "tweet_text": "RT @The_Gospels: Jesus replied: Love the Lord your God with all your heart & with all your soul & with all your mind. -Matthew 22:37",
+            "bibleverse": "matthew 22:37"
+          },
+          {
+            "text": "mind replied",
+            "weight": 0.20320803997500933
+          }
+        ]
+      ],
+      "bibleverses": [
+        "hebrews 13:5",
+        "matthew 11:28",
+        "matthew 22:37",
+        "philippians 4:13",
+        "proverbs 13:3"
+      ],
+      "num_topic_features": 329,
+      "num_topic_samples": 5,
+      "points": [
+        [
+          1,
+          16.0
+        ],
+        [
+          1,
+          15.0
+        ],
+        [
+          1,
+          15.0
+        ],
+        [
+          1,
+          18.0
+        ],
+        [
+          1,
+          19.0
+        ]
+      ],
+      "cluster_size": 5,
+      "label": 4
+    },
+    {
+      "num_topics": 1,
+      "topics": [
+        [
+          {
+            "weight": 0.6329788714132798,
+            "text": "blessed nation",
+            "es_score": 1.9371116,
+            "final_score": 1.2261507143695727,
+            "es_phrase": "blessed is the nation whose god is the lord",
+            "tweet_text": "RT @ImEricaCampbell: Blessed is the nation whose God is The Lord. (Psalm 33:12)",
+            "bibleverse": "psalm 33:12"
+          },
+          {
+            "weight": 0.28771766882421812,
+            "text": "happy memorial",
+            "es_score": 3.6613145,
+            "final_score": 1.0534248727723077,
+            "es_phrase": "happy memorial day",
+            "tweet_text": "RT @Calvary__Tweets: \"Blessed is the nation whose God is the LORD\" (Psalm 33:12),  Happy Memorial Day!",
+            "bibleverse": "psalm 33:12"
+          },
+          {
+            "weight": 0.28771766882421812,
+            "text": "memorial day",
+            "es_score": 3.4148233,
+            "final_score": 0.9825049993226237,
+            "es_phrase": "happy memorial day",
+            "tweet_text": "RT @Calvary__Tweets: \"Blessed is the nation whose God is the LORD\" (Psalm 33:12),  Happy Memorial Day!",
+            "bibleverse": "psalm 33:12"
+          },
+          {
+            "weight": 0.25894590194179634,
+            "text": "air morning",
+            "es_score": 2.048067,
+            "final_score": 0.53033855655222906,
+            "es_phrase": "freedom is in the air this morning",
+            "tweet_text": "RT @swalt10: Freedom is in the air this morning. Happy Memorial Day. \"Blessed is the nation whose God is The Lord\" - Psalm 33:12 http:\/\/t.c",
+            "bibleverse": "psalm 33:12"
+          },
+          {
+            "text": "nation blessed",
+            "weight": 0.28771766882421812
+          }
+        ]
+      ],
+      "bibleverses": [
+        "psalm 33:12"
+      ],
+      "num_topic_features": 42,
+      "num_topic_samples": 1,
+      "points": [
+        [
+          1,
+          23.0
+        ]
+      ],
+      "cluster_size": 1,
+      "label": 5
+    }
+  ],
+  "date": "2014-05-26",
+  "start_date": "2014-05-20",
+  "num_days": 7
+}

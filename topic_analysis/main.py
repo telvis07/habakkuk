@@ -1,12 +1,12 @@
 __author__ = 'telvis'
 from topic_analysis import topic_extraction
 from topic_analysis import topic_clustering
+from topic_analysis.bibleverse_list import BIBLEVERSE_LIST
 import jsonlib2 as json
 from datetime import datetime, timedelta
-# from topic_analysis.topics import *
+import logging
 
-BIBLEVERSE_LIST = '/Users/telvis/work/habakkuk/analysis/join_data/bibleverses.txt'
-
+logger = logging.getLogger(__name__)
 
 def main(_dt, top_n=3, n_clusters=6, num_days=15):
 
@@ -16,8 +16,8 @@ def main(_dt, top_n=3, n_clusters=6, num_days=15):
     et = _dt + timedelta(days=1)
     st = et - timedelta(days=num_days)
 
+    valid_bv_set = set(BIBLEVERSE_LIST)
 
-    valid_bv_set = set([line.strip() for line in open(BIBLEVERSE_LIST)])
     # create a dictionary[date] = counter
     data = []
     for created_at_date, _counter in topic_clustering.get_data_from_store(st=st, et=et, valid_bv_set=valid_bv_set):
@@ -71,5 +71,6 @@ def main(_dt, top_n=3, n_clusters=6, num_days=15):
         'cluster_topics' : saved_cluster_data
     }
     topic_extraction.save_topic_clusters(doc)
-    print json.dumps(doc, indent=2)
+    topic_extraction.rank_phrases_and_store(doc)
+    logger.debug("{}".format(json.dumps(doc, indent=2)))
     return doc
