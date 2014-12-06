@@ -2,8 +2,9 @@
 {% load jsonify %}
 {% block head %}
     <link href="{{ STATIC_URL }}biblestudy/biblestudy.css" rel="stylesheet">
-    <script src="{{ STATIC_URL }}vendor/angular/angular.min.js"></script>
-
+    <script type='text/javascript' src="{{ STATIC_URL }}vendor/angular/angular.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}vendor/angular/angular-cookies.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}vendor/ng-infinite-scroll/ng-infinite-scroll.min.js"></script>
     <script type="text/javascript">
         var HK = {};
         HK.results = {{ topic_results | jsonify }};;
@@ -13,6 +14,7 @@
 
 {% block content %}
     <div ng-app='topicApp'>
+        {% csrf_token %}
         <div ng-controller="TopicCtrl">
             {{ block.super }}
         </div>

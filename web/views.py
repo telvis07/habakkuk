@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from datetime import datetime
 from django.db.models import Max
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import ensure_csrf_cookie
 import jsonlib2 as json
 import traceback
 import logging
@@ -26,6 +28,24 @@ def topics(request, template="topics.html"):
     }
 
     return render(request, template, context)
+
+@require_POST
+def topics_api(request):
+    try:
+        params = json.loads(request.body)
+    except:
+        params = {}
+
+    size = params.get('size', 10)
+    offset = params.get("offset", 0)
+
+    context = {
+        "size" : size,
+        "offset" : offset,
+        "topic_results": get_topics(size=size, offset=offset)
+    }
+
+    return HttpResponse(json.dumps(context), mimetype="application/json")
 
 
 def biblestudy(request, template="biblestudy.html", live_hack=False):

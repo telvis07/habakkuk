@@ -48,7 +48,7 @@ function BibleStudyCtrl($window, $scope, $log, $location, HkSearch){
         $log.info("[search_action] running search_action. got text: " + $scope.search_params.text);
         HkSearch.query($scope.search_params).then(function(d){
             $scope.search_results = d;
-            $scope.search_results.text = $scope.search_params.text
+            $scope.search_results.text = $scope.search_params.text;
             $log.info("[search_action] running search_action. returned: " + $scope.search_results.count);
             if ($scope.search_params.text){
                 $location.hash('');

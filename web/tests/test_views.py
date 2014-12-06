@@ -6,6 +6,7 @@ from django.test.utils import override_settings
 import logging
 from mock import patch, MagicMock
 logger = logging.getLogger(__name__)
+import jsonlib2 as json
 
 class ViewsTest(TestCase):
     ES_SETTINGS = {
@@ -77,3 +78,83 @@ class ViewsTest(TestCase):
             self.assertTrue(response.context['topic_results'].get('count'))
             self.assertTrue(response.context['topic_results'].get('topics'))
             self.assertTrue(mock_get_topics.called)
+
+    @override_settings(ES_SETTINGS=ES_SETTINGS)
+    def test_topics_api_view(self):
+        mock_return =  {
+            'count': 5,
+            'topics' : [
+                {
+                    "es_phrase": "love your enemies, do good to those who hate you",
+                    "bibleverse": "luke 6:27",
+                    "search_url" : "http://localhost:8000/biblestudy/?search=enemies+good"
+                },
+                {
+                    "es_phrase": "don\u2019t worry about tomorrow",
+                    "bibleverse" : "matthew 6:34",
+                    "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                },
+                {
+                    "es_phrase": "some more text",
+                    "bibleverse" : "matthew 8:8",
+                    "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                }
+            ]
+        }
+
+        with patch('web.views.get_topics', return_value=mock_return) as mock_get_topics:
+            client = Client()
+            response = client.post('/api/topics/',
+                                   content_type="application/json",
+                                   data=json.dumps({'size':10, 'offset': 99}))
+            try:
+                ret = json.loads(response.content)
+            except:
+                self.fail("Could not parse the response from topics_api \n{}".format(response.content))
+
+            print ret
+            self.assertEquals(200, response.status_code)
+            self.assertTrue(ret["topic_results"])
+            self.assertTrue(ret['topic_results'].get('count'))
+            self.assertTrue(ret['topic_results'].get('topics'))
+            self.assertEquals(99, ret['offset'])
+            self.assertTrue(mock_get_topics.called)
+
+
+    @override_settings(ES_SETTINGS=ES_SETTINGS)
+    def test_topics_api_view_no_data(self):
+        # """
+        # verify we get a 200 OK even if we don't send POST data
+        # :return:
+        # """
+        mock_return =  {
+            'count': 5,
+            'topics' : [
+                {
+                    "es_phrase": "love your enemies, do good to those who hate you",
+                    "bibleverse": "luke 6:27",
+                    "search_url" : "http://localhost:8000/biblestudy/?search=enemies+good"
+                },
+                {
+                    "es_phrase": "don\u2019t worry about tomorrow",
+                    "bibleverse" : "matthew 6:34",
+                    "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                },
+                {
+                    "es_phrase": "some more text",
+                    "bibleverse" : "matthew 8:8",
+                    "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                }
+            ]
+        }
+
+        with patch('web.views.get_topics', return_value=mock_return) as mock_get_topics:
+            client = Client()
+            response = client.post('/api/topics/')
+            try:
+                ret = json.loads(response.content)
+            except:
+                self.fail("Could not parse the response from topics_api \n{}".format(response.content))
+            self.assertEquals(200, response.status_code)
+
+

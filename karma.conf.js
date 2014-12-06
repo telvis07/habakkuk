@@ -18,10 +18,11 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'web/static/vendor/jquery/jquery-1.9.1.min.js',
-      'web/static/vendor/angular/angular.min.js',
+      'web/static/vendor/angular/angular.js',
+      'web/static/vendor/angular/angular.js',
       'web/static/vendor/angular/angular-resource.js',
       'web/static/vendor/underscore/underscore-min.js',
-
+      'web/static/vendor/ng-infinite-scroll/ng-infinite-scroll.min.js',
       'web/static/vendor/bootstrap/js/bootstrap.min.js',
       'web/static/vendor/angular-ui-ng-grid/ng-grid-2.0.7.min.js',
       'web/static/vendor/angular/angular-mocks.js',

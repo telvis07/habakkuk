@@ -1,18 +1,23 @@
 /**
  * Created by telvis on 11/3/14.
  */
-function TopicCtrl($window, $scope, $log){
-    this.split_results_into_columns = function(result_list, num_columns)
+
+function TopicCtrl($window, $scope, $log, $http){
+    $scope.busy = false;
+    $scope.results = [];
+    $scope.offset = 10;
+
+    var split_results_into_columns = function(result_list, num_columns)
     {
         /* Split topics results in to `num_columns` columns*/
-        $log.info("in split_results_into_columns")
+        $log.info("in split_results_into_columns");
 
         var split_results_list = [];
         var idx;
 
         for (i=0; i<num_columns; i++){
             split_results_list.push([]);
-        };
+        }
 
         if (!result_list){
             /* case when result_list is empty */
@@ -22,15 +27,45 @@ function TopicCtrl($window, $scope, $log){
         for (i = 0; i < result_list.length; i++) {
             idx = i % num_columns;
             split_results_list[idx].push(result_list[i]);
-        };
+        }
 
         return split_results_list;
     };
 
+    $scope.scroll_action = function(){
+        if ($scope.busy) return;
+        $scope.busy = true;
+        /* Hit the POST api to get phrases for scrolling */
+        $log.info("[scroll_action] start");
+        var params = {size: 10, offset:$scope.offset};
+        $http.post("/api/topics/", params)
+            .success(function(response){
+                $log.info("[HkTopicScroll.on_success]");
+                var topic_results =response.topic_results;
+                for (i=0; i<topic_results.topics.length; i++){
+                    $scope.results.topics.push(topic_results.topics[i]);
+                }
+
+                $scope.results.count += topic_results.count;
+                $scope.result_columns = split_results_into_columns($scope.results.topics, 2);
+                $scope.offset += 10;
+                $scope.busy = false;
+            }).error(function(response){
+                $log.info("[HkTopicScroll.on_failure]");
+                $scope.offset += 10;
+                $scope.busy = false;
+
+            });
+    };
+
+    this.split_results_into_columns = split_results_into_columns;
     $scope.results = $window.HK.results;
-    $scope.result_columns = this.split_results_into_columns($scope.results.topics, 2);
-};
+    $scope.result_columns = split_results_into_columns($scope.results.topics, 2);
+}
 
+var topicModule = angular.module("topicApp", ['infinite-scroll']).config(function($httpProvider) {
+    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+});
 
-var topicModule = angular.module("topicApp", []);
 topicModule.controller("TopicCtrl", TopicCtrl);
