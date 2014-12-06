@@ -112,7 +112,6 @@ class ViewsTest(TestCase):
             except:
                 self.fail("Could not parse the response from topics_api \n{}".format(response.content))
 
-            print ret
             self.assertEquals(200, response.status_code)
             self.assertTrue(ret["topic_results"])
             self.assertTrue(ret['topic_results'].get('count'))
