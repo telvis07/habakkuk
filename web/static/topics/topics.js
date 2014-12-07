@@ -6,6 +6,7 @@ function TopicCtrl($window, $scope, $log, $http){
     $scope.busy = false;
     $scope.results = [];
     $scope.offset = 10;
+    $scope.topic_name = null;
 
     var split_results_into_columns = function(result_list, num_columns)
     {
@@ -33,12 +34,20 @@ function TopicCtrl($window, $scope, $log, $http){
     };
 
     $scope.scroll_action = function(){
+        /* Call the POST api to fetch more results if the user scrolls */
         if ($scope.busy) return;
         $scope.busy = true;
         /* Hit the POST api to get phrases for scrolling */
         $log.info("[scroll_action] start");
         var params = {size: 10, offset:$scope.offset};
-        $http.post("/api/topics/", params)
+        var url = '/api/topics/';
+
+        // the topic name is the entry in the url path.
+        if ($scope.results.topic_name != null){
+            url = url + $scope.results.topic_name;
+        }
+
+        $http.post(url, params)
             .success(function(response){
                 $log.info("[HkTopicScroll.on_success]");
                 var topic_results =response.topic_results;
@@ -48,7 +57,7 @@ function TopicCtrl($window, $scope, $log, $http){
 
                 $scope.results.count += topic_results.count;
                 $scope.result_columns = split_results_into_columns($scope.results.topics, 2);
-                $scope.offset += 10;
+                $scope.offset += topic_results.count;
                 $scope.busy = false;
             }).error(function(response){
                 $log.info("[HkTopicScroll.on_failure]");

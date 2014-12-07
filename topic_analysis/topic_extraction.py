@@ -218,12 +218,12 @@ def rank_phrases_and_store(doc):
             # now perform hierarchical clustering to group phrases
             # similar phrases together.
             phrase_clusters = hac(topic)
-            # print json.dumps(phrase_clusters, indent=2)
+            print "phrase_clusters",json.dumps(phrase_clusters, indent=2)
 
             for cluster in phrase_clusters:
                 # now get the first entry from each phrase_cluster
                 # assumes the other entries and similar enough to ignore
-                phrase = sorted(cluster, key=phrase_sort_key)[0]
+                phrase = sorted(cluster, key=phrase_sort_key, reverse=True)[0]
 
                 # See phrase_search() for is_spam meaning
                 if phrase.get('is_spam'):
@@ -260,7 +260,7 @@ def rank_phrases_and_store(doc):
                 _date)
 
 def topic_sort_key(x):
-    return x['num_topics']
+    return x.get('num_topics',0)
 
 
 def phrase_sort_key(x):

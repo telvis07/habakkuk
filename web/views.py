@@ -22,15 +22,18 @@ def about(request, template="about.html"):
     return render(request, template, {})
 
 
-def topics(request, template="topics.html"):
+def topics(request, topic_name=None, template="topics.html"):
     context = {
-        "topic_results": get_topics()
+        "topic_results": get_topics(topic_name=topic_name)
     }
+
+    if topic_name:
+        logger.info("topic_name: {}".format(topic_name))
 
     return render(request, template, context)
 
 @require_POST
-def topics_api(request):
+def topics_api(request, topic_name=None):
     try:
         params = json.loads(request.body)
     except:
@@ -42,7 +45,9 @@ def topics_api(request):
     context = {
         "size" : size,
         "offset" : offset,
-        "topic_results": get_topics(size=size, offset=offset)
+        "topic_results": get_topics(size=size,
+                                    offset=offset,
+                                    topic_name=topic_name)
     }
 
     return HttpResponse(json.dumps(context), mimetype="application/json")

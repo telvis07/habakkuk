@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     url(r'clusters/$', 'web.views.clusters'),
     url(r'about/$', 'web.views.about'),
     url(r'^biblestudy/', 'web.views.biblestudy'),
-    url(r'^topics/', 'web.views.topics'),
+    url(r'^topics/(?P<topic_name>[\w\d_]+)?/?$', 'web.views.topics'),
     url(r'^$', RedirectView.as_view(url='/biblestudy/', permanent=True), name='index'),
 )
 

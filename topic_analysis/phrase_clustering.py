@@ -4,7 +4,7 @@ from nltk.metrics.distance import masi_distance, jaccard_distance
 from cluster import HierarchicalClustering
 import jsonlib2 as json
 
-DISTANCE_THRESHOLD = 0.60
+DISTANCE_THRESHOLD = 0.90
 DISTANCE = jaccard_distance
 
 def score(phrase1, phrase2):

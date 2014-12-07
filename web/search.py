@@ -1,6 +1,6 @@
 from pyes import ES
 from pyes.query import MatchAllQuery, FilteredQuery, BoolQuery, MatchQuery
-from pyes.filters import RangeFilter, TermFilter, QueryFilter
+from pyes.filters import RangeFilter, TermFilter, QueryFilter, TermsFilter
 from pyes.utils import ESRange, ESRangeOp
 import jsonlib2 as json
 import logging
@@ -158,26 +158,26 @@ def get_scriptures_by_date(_date=None, st=None, et=None, size=10, search_text=No
     return ret
 
 
-def get_topics(size=10, offset=0):
+def get_topics(size=10, offset=0, topic_name=None):
     """
     rank results by cluster size, score and es_score, etc
     :param doc:
     :return:
     """
+    logger.info("[get_topics] size={}, offset={}".format(size, offset))
+
     ret = []
 
     conn = get_es_connection()
     es_settings = ESSettings()
-    q = MatchAllQuery()
-    q.search()
+    q = build_topic_query(topic_name)
+    q = q.search(sort={ "date": { "order": "desc" }, "rank" : {"order" : "asc"}})
     resultset = conn.search(indices=es_settings.topics_index,
                             doc_types=[es_settings.phrases_es_type],
                             query=q,
-                            sort={ "date": { "order": "desc" }, "rank" : {"order" : "asc"}},
                             size=size, start=offset)
 
     for phrase in resultset:
-        print phrase['date'], phrase['rank']
         ret.append({
            'phrase' : phrase['phrase'],
            'bibleverse' : phrase['bibleverse'],
@@ -186,5 +186,32 @@ def get_topics(size=10, offset=0):
 
     return {
         'count' : len(ret),
-        'topics' : ret
+        'topics' : ret,
+        'topic_name' : topic_name
     }
+
+def build_topic_query(topic_name):
+    if not topic_name:
+        q = MatchAllQuery()
+    elif topic_name.lower() == 'newyears':
+        logger.info("build_topic_query - returning newyear filter")
+        q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
+                                                       values=['2014-01-01']))
+    elif topic_name.lower() == 'memorialday':
+        logger.info("build_topic_query - returning memorialday filter")
+        q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
+                                                       values=['2014-05-26']))
+    elif topic_name.lower() == 'independence':
+        logger.info("build_topic_query - returning memorialday filter")
+        q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
+                                                       values=['2014-07-04']))
+    elif topic_name.lower() == 'valentines':
+        logger.info("build_topic_query - returning valentines filter")
+        q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
+                                                       values=['2014-02-14']))
+    else:
+        logger.warning("[build_topic_query] Did not find a topic for {}".format(topic_name))
+        q = MatchAllQuery()
+
+
+    return q
