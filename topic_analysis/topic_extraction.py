@@ -218,8 +218,6 @@ def rank_phrases_and_store(doc):
             # now perform hierarchical clustering to group phrases
             # similar phrases together.
             phrase_clusters = hac(topic)
-            print "phrase_clusters",json.dumps(phrase_clusters, indent=2)
-
             for cluster in phrase_clusters:
                 # now get the first entry from each phrase_cluster
                 # assumes the other entries and similar enough to ignore

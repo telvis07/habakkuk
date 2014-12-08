@@ -177,15 +177,33 @@ def get_topics(size=10, offset=0, topic_name=None):
                             query=q,
                             size=size, start=offset)
 
+    num_phrases = 0
     for phrase in resultset:
-        ret.append({
-           'phrase' : phrase['phrase'],
-           'bibleverse' : phrase['bibleverse'],
-           "search_url" : settings.BIBLESTUDY_SEARCH_URL+phrase['search_text']
-        })
+        if num_phrases == 0:
+            ret.append({
+                'bibleverse' : phrase['bibleverse'],
+                'phrases' : []
+            })
+
+        num_phrases += 1
+        if phrase['bibleverse'] == ret[-1]['bibleverse']:
+            ret[-1]['phrases'].append({
+               'phrase' : phrase['phrase'],
+               'bibleverse' : phrase['bibleverse'],
+               "search_url" : settings.BIBLESTUDY_SEARCH_URL+phrase['search_text']
+            })
+        else:
+            ret.append({
+                'bibleverse' : phrase['bibleverse'],
+                'phrases' : [{
+                                 'phrase' : phrase['phrase'],
+                                 'bibleverse' : phrase['bibleverse'],
+                                 "search_url" : settings.BIBLESTUDY_SEARCH_URL+phrase['search_text']
+                             }]
+            })
 
     return {
-        'count' : len(ret),
+        'count' : num_phrases,
         'topics' : ret,
         'topic_name' : topic_name
     }

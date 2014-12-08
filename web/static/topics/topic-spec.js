@@ -11,10 +11,12 @@ describe("Controller: TopicCtrl", function(){
             'count' : 10,
             'topics' : [
                 {
-                    'phrase' : "test 1",
-                    'bibleverse' : "test 1:1",
-                    "search_url" : "http://localhost/biblestudy/?search=test"
-
+                    "bibleverse" :"test 1:1",
+                    "phrases" : [{
+                        'phrase' : "test 1",
+                        'bibleverse' : "test 1:1",
+                        "search_url" : "http://localhost/biblestudy/?search=test"
+                    }]
                 }
             ]
         };
@@ -49,10 +51,12 @@ describe("Controller: TopicCtrl", function(){
                 'count' : 10,
                 'topics' : [
                     {
-                        'phrase' : "testing 2",
-                        'bibleverse' : "test 1:2",
-                        "search_url" : "http://localhost/biblestudy/?search=test2"
-
+                        "bibleverse" : "test 1:2",
+                        "phrases" : [{
+                            'phrase' : "testing 2",
+                            'bibleverse' : "test 1:2",
+                            "search_url" : "http://localhost/biblestudy/?search=test2"
+                        }]
                     }
                 ]
             }
@@ -62,16 +66,20 @@ describe("Controller: TopicCtrl", function(){
             'count' : 20,
             'topics' : [
                 {
-                    'phrase' : "test 1",
-                    'bibleverse' : "test 1:1",
-                    "search_url" : "http://localhost/biblestudy/?search=test"
-
+                    "bibleverse" : "test 1:1",
+                    "phrases" : [{
+                        'phrase' : "test 1",
+                        'bibleverse' : "test 1:1",
+                        "search_url" : "http://localhost/biblestudy/?search=test"
+                    }]
                 },
                 {
+                    "bibleverse" : "test 1:2",
+                    "phrases" : [{
                         'phrase' : "testing 2",
                         'bibleverse' : "test 1:2",
                         "search_url" : "http://localhost/biblestudy/?search=test2"
-
+                    }]
                 }
             ]
         };

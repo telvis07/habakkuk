@@ -53,19 +53,33 @@ class ViewsTest(TestCase):
             'count': 5,
             'topics' : [
                 {
-                    "es_phrase": "love your enemies, do good to those who hate you",
-                    "bibleverse": "luke 6:27",
-                    "search_url" : "http://localhost:8000/biblestudy/?search=enemies+good"
+                    "bibleverse" : "luke 6:27",
+                    "phrases" : [
+                        {
+                            "es_phrase": "love your enemies, do good to those who hate you",
+                            "bibleverse": "luke 6:27",
+                            "search_url" : "http://localhost:8000/biblestudy/?search=enemies+good"
+                        }
+                    ]
                 },
                 {
-                    "es_phrase": "don\u2019t worry about tomorrow",
-                    "bibleverse" : "matthew 6:34",
-                    "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                    "bibleverse": "matthew 6:34",
+                    "phrases" : [
+                        {
+                            "es_phrase": "don\u2019t worry about tomorrow",
+                            "bibleverse" : "matthew 6:34",
+                            "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                        }
+                    ]
                 },
                 {
-                    "es_phrase": "some more text",
                     "bibleverse" : "matthew 8:8",
-                    "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                    "phrases" : [{
+                        "es_phrase": "some more text",
+                        "bibleverse" : "matthew 8:8",
+                        "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                    }],
+
                 }
             ]
         }
@@ -85,19 +99,33 @@ class ViewsTest(TestCase):
             'count': 5,
             'topics' : [
                 {
-                    "es_phrase": "love your enemies, do good to those who hate you",
-                    "bibleverse": "luke 6:27",
-                    "search_url" : "http://localhost:8000/biblestudy/?search=enemies+good"
+                    "bibleverse" : "luke 6:27",
+                    "phrases" : [
+                        {
+                            "es_phrase": "love your enemies, do good to those who hate you",
+                            "bibleverse": "luke 6:27",
+                            "search_url" : "http://localhost:8000/biblestudy/?search=enemies+good"
+                        }
+                    ]
                 },
                 {
-                    "es_phrase": "don\u2019t worry about tomorrow",
-                    "bibleverse" : "matthew 6:34",
-                    "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                    "bibleverse": "matthew 6:34",
+                    "phrases" : [
+                        {
+                            "es_phrase": "don\u2019t worry about tomorrow",
+                            "bibleverse" : "matthew 6:34",
+                            "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                        }
+                    ]
                 },
                 {
-                    "es_phrase": "some more text",
                     "bibleverse" : "matthew 8:8",
-                    "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                    "phrases" : [{
+                        "es_phrase": "some more text",
+                        "bibleverse" : "matthew 8:8",
+                        "search_url" : "http://localhost:8000/biblestudy/?search=worry+tomorrow"
+                    }],
+
                 }
             ]
         }
