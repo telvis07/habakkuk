@@ -212,24 +212,25 @@ def build_topic_query(topic_name):
     if not topic_name:
         q = MatchAllQuery()
     elif topic_name.lower() == 'newyears':
-        logger.info("build_topic_query - returning newyear filter")
         q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
                                                        values=['2014-01-01']))
     elif topic_name.lower() == 'memorialday':
-        logger.info("build_topic_query - returning memorialday filter")
         q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
                                                        values=['2014-05-26']))
     elif topic_name.lower() == 'independence':
-        logger.info("build_topic_query - returning memorialday filter")
         q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
                                                        values=['2014-07-04']))
     elif topic_name.lower() == 'valentines':
-        logger.info("build_topic_query - returning valentines filter")
         q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
                                                        values=['2014-02-14']))
+    elif topic_name.lower() == 'thanksgiving':
+        q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
+                                                       values=['2014-11-27']))
+    elif topic_name.lower() == 'christmas':
+        q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
+                                                       values=['2013-12-25']))
     else:
         logger.warning("[build_topic_query] Did not find a topic for {}".format(topic_name))
         q = MatchAllQuery()
-
 
     return q
