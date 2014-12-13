@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# set -e
+TODAY=`date +"%F"`
+source /home/telvis/.bashrc
+source /home/telvis/.bash_profile
+cd /home/telvis/habakkuk/
+/home/telvis/habakkuk/env/bin/fab sync_es:$TODAY,es-1,/home/telvis/habakkuk/ > /var/log/cronlogs/habakkuk-sync_to_production.cron 2>&1
+/home/telvis/habakkuk/env/bin/fab sync_topics:es-1,/home/telvis/habakkuk/ >> /var/log/cronlogs/habakkuk-sync_to_production.cron 2>&1
+/home/telvis/habakkuk/env/bin/fab send_email_file:/var/log/cronlogs/habakkuk-sync_to_production.cron

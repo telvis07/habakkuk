@@ -124,7 +124,8 @@ PROJECT_APPS = (
     'topic_analysis'
 )
 
-BIBLESTUDY_SEARCH_URL = "http://www.bakkify.com/biblestudy/?search="
+
+BIBLESTUDY_SEARCH_URL="/biblestudy/?search="
 ES_SETTINGS = {
     'hosts':['http://162.243.207.220:6778'],
     'search_index' : 'habakkuk-all',

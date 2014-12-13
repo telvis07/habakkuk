@@ -4,7 +4,6 @@ from django.http import HttpResponse
 from datetime import datetime
 from django.db.models import Max
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import ensure_csrf_cookie
 import jsonlib2 as json
 import traceback
 import logging

@@ -25,7 +25,17 @@ def main(fn, args):
     try:
         for line in fp:
             doc = json.loads(line.strip())
-            conn.index(doc=doc, index=args.index, doc_type=args.doctype, bulk=True)
+            if doc.get("_id"):
+                _id = doc["_id"]
+                del doc["_id"]
+            else:
+                _id = None
+
+            conn.index(doc=doc,
+                       index=args.index,
+                       doc_type=args.doctype,
+                       id=_id,
+                       bulk=True)
             count+=1
             total+=1
             if count % args.bulksize == 0:

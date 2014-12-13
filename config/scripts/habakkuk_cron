@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# set -e
+YEST=`date +"%F" --date "yesterday"`
+
+source /home/telvis/.bashrc
+source /home/telvis/.bash_profile
+cd /home/telvis/habakkuk/
+/home/telvis/habakkuk/env/bin/fab dump_data:$YEST,/home/telvis/habakkuk/ > /var/log/cronlogs/habakkuk.cron 2>&1
+/home/telvis/habakkuk/env/bin/fab dump_topics:/home/telvis/habakkuk/ > /var/log/cronlogs/habakkuk.cron 2>&1
+
+/home/telvis/habakkuk/env/bin/fab send_email_file:/var/log/cronlogs/habakkuk.cron
+#/home/telvis/habakkuk/env/bin/fab run_clustering:$YEST,1 > /var/log/cronlogs/habakkuk-clustering.cron 2>&1
+#/home/telvis/habakkuk/env/bin/fab run_clustering:$YEST,7 >> /var/log/cronlogs/habakkuk-clustering.cron 2>&1
