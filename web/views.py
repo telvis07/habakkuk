@@ -1,14 +1,8 @@
-# from django.conf import settings
 from django.shortcuts import render
-from django.http import HttpResponse
-from datetime import datetime
-from django.db.models import Max
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST
 import jsonlib2 as json
-import traceback
 import logging
-import sys
-from web.models import ClusterData, make_d3_data
 from web.search import get_scriptures_by_date, get_topics
 
 DEFAULT_RANGE=7
@@ -49,7 +43,7 @@ def topics_api(request, topic_name=None):
                                     topic_name=topic_name)
     }
 
-    return HttpResponse(json.dumps(context), mimetype="application/json")
+    return JsonResponse(context)
 
 
 def biblestudy(request, template="biblestudy.html", live_hack=False):
@@ -125,62 +119,3 @@ def fake_recommendations():
             "text": "For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord.",
             "translation": "KJV", "bibleverse_human": "romans 6:23", "bibleverse": "romans 6:23"}]
 
-
-def clusters(request, template='clustering.html'):
-    context = {}
-    ret = _get_newest_or_for_date(None, None)
-
-    if ret:
-        ret = ret[0]
-        cluster = make_d3_data(ret)
-        print cluster
-        context['clusters'] = cluster
-        context['facets'] = cluster.get('facets', [])
-    else:
-        context['clusters'] = []
-        context['facets'] = []
-
-    return render(request, template, context)
-
-def clusters_data(request, datestr=None, range=None):
-    response = {}
-    try:
-        ret = _get_newest_or_for_date(datestr, range)
-        if ret:
-            ret = ret[0]
-            response = {
-                'clusters':json.loads(ret.d3_dendogram_json),
-                'num_clusters':ret.num_clusters,
-            }
-        else:
-            response = {
-                'clusters':'{}',
-                'num_clusters':0,
-            }
-    except Exception, ex:
-        msg = " ".join(traceback.format_exception(*sys.exc_info()))
-        response = {
-            'exception':ex,
-            'trace':msg,
-        }
-        logger.error("query error|%s|%s|%s|%s"%(ex, request.user.id, request.body, msg))
-
-    query_logger.info("query|%s|%s"%(request.user.id, request.path))
-    return HttpResponse(json.dumps(response), content_type="application/json")
-
-def _get_newest_or_for_date(datestr=None, range=None):
-    if datestr:
-        logger.debug("got a datestr "+datestr)
-        dt = datetime.strptime(datestr, "%Y%m%d")
-    else:
-        logger.debug("using today")
-        # dt = now().date()
-        dt = ClusterData.objects.all().aggregate(Max('date'))['date__max']
-
-    if not range:
-        range=DEFAULT_RANGE
-    else:
-        range=int(range)
-
-    logger.info("Looking for clusters dt=%s, range=%d"%(dt, range))
-    return ClusterData.objects.filter(date=dt, range=range)

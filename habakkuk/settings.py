@@ -8,11 +8,13 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+TEST_RUNNER='django.test.simple.DjangoTestSuiteRunner'
 
 import sys
 import dj_database_url
 
 if 'test' in sys.argv or 'jenkins' in sys.argv:
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -112,7 +114,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'south',
+    #'south',
     'bible_verse_matching',
     'web',
     'topic_analysis',

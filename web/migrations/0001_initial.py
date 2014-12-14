@@ -1,71 +1,74 @@
 # -*- coding: utf-8 -*-
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+import logging
+
+from django.db import models, migrations
+import xml.etree.ElementTree as ET
+from django.conf import settings
+import os
+
+from bible_verse_matching.normalize_bible_verses import normalize_book_name
+logger = logging.getLogger(__name__)
+
+def load_bibletext_from_xml(apps, schema_editor):
+    """
+    Read bibleverses from the xml file and create BibleText models
+    """
+    infile = os.path.join(settings.PROJECT_ROOT, 'bible_verse_matching/data/kjv.xml')
+    translation='KJV'
+    BibleText = apps.get_model("web", 'BibleText')
+
+    logger.info("loading file='%s' translation='%s'"%(infile, translation))
+    root = ET.parse(infile).getroot()
+    books = root.getiterator('book')
+    verse_id = 0
+    entries = []
+    BibleText.objects.filter(translation=translation).delete()
+
+    for book_element in books:
+        book = book_element.attrib['name'].strip().lower()
+        book = normalize_book_name(book)
+        for chapter_element in book_element.getiterator('chapter'):
+            chapnum = chapter_element.attrib['name']
+            for verse_element in chapter_element.getiterator('verse'):
+                vernum = verse_element.attrib['name']
+                _verse = "%s:%s"%(chapnum,vernum)
+                bibleverse =  " ".join([book,_verse])
+                entries.append(BibleText(verse_id=verse_id,
+                                         translation=translation,
+                                         bibleverse=bibleverse,
+                                         bibleverse_human = bibleverse,
+                                         text = verse_element.text,
+                                         ))
+                verse_id+=1
+                if (verse_id % 1000) == 0:
+                    BibleText.objects.bulk_create(entries)
+                    del entries[0:len(entries)]
+
+    if len(entries):
+        BibleText.objects.bulk_create(entries)
+    logger.info("finished loading file='%s' translation='%s'"%(infile, translation))
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'ClusterData'
-        db.create_table(u'web_clusterdata', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('date', self.gf('django.db.models.fields.DateField')()),
-            ('range', self.gf('django.db.models.fields.PositiveIntegerField')()),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')()),
-            ('ml_json', self.gf('django.db.models.fields.TextField')()),
-            ('d3_dendogram_json', self.gf('django.db.models.fields.TextField')()),
-            ('num_clusters', self.gf('django.db.models.fields.PositiveIntegerField')()),
-        ))
-        db.send_create_signal(u'web', ['ClusterData'])
+    dependencies = [
+    ]
 
-        # Adding unique constraint on 'ClusterData', fields ['date', 'range']
-        db.create_unique(u'web_clusterdata', ['date', 'range'])
-
-        # Adding model 'BibleText'
-        db.create_table(u'web_bibletext', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('translation', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('bibleverse', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('bibleverse_human', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('verse_id', self.gf('django.db.models.fields.PositiveIntegerField')()),
-            ('text', self.gf('django.db.models.fields.TextField')()),
-        ))
-        db.send_create_signal(u'web', ['BibleText'])
-
-
-    def backwards(self, orm):
-        # Removing unique constraint on 'ClusterData', fields ['date', 'range']
-        db.delete_unique(u'web_clusterdata', ['date', 'range'])
-
-        # Deleting model 'ClusterData'
-        db.delete_table(u'web_clusterdata')
-
-        # Deleting model 'BibleText'
-        db.delete_table(u'web_bibletext')
-
-
-    models = {
-        u'web.bibletext': {
-            'Meta': {'object_name': 'BibleText'},
-            'bibleverse': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-            'bibleverse_human': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'text': ('django.db.models.fields.TextField', [], {}),
-            'translation': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-            'verse_id': ('django.db.models.fields.PositiveIntegerField', [], {})
-        },
-        u'web.clusterdata': {
-            'Meta': {'unique_together': "(('date', 'range'),)", 'object_name': 'ClusterData'},
-            'created_at': ('django.db.models.fields.DateTimeField', [], {}),
-            'd3_dendogram_json': ('django.db.models.fields.TextField', [], {}),
-            'date': ('django.db.models.fields.DateField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'ml_json': ('django.db.models.fields.TextField', [], {}),
-            'num_clusters': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'range': ('django.db.models.fields.PositiveIntegerField', [], {})
-        }
-    }
-
-    complete_apps = ['web']
+    operations = [
+        migrations.CreateModel(
+            name='BibleText',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('translation', models.CharField(max_length=64)),
+                ('bibleverse', models.CharField(max_length=64)),
+                ('bibleverse_human', models.CharField(max_length=64)),
+                ('verse_id', models.PositiveIntegerField()),
+                ('text', models.TextField()),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.RunPython(load_bibletext_from_xml)
+    ]
