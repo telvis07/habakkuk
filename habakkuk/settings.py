@@ -8,7 +8,8 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-TEST_RUNNER='django.test.simple.DjangoTestSuiteRunner'
+# TEST_RUNNER='django.test.simple.DjangoTestSuiteRunner'
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 import sys
 import dj_database_url
