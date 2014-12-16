@@ -176,6 +176,7 @@ def get_topics(size=10, offset=0, topic_name=None):
                             doc_types=[es_settings.phrases_es_type],
                             query=q,
                             size=size, start=offset)
+    resultset = [r for r in resultset]
 
     num_phrases = 0
     for phrase in resultset:
