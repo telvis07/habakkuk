@@ -164,7 +164,7 @@ def get_topics(size=10, offset=0, topic_name=None):
     :param doc:
     :return:
     """
-    logger.info("[get_topics] size={}, offset={}".format(size, offset))
+    logger.debug("[get_topics] size={}, offset={}".format(size, offset))
 
     ret = []
 

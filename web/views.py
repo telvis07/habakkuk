@@ -82,7 +82,7 @@ def biblestudy(request, template="biblestudy.html", live_hack=False):
     context["recommend"] = recommend
 
     if return_json:
-        return HttpResponse(json.dumps(context), mimetype="application/json")
+        return JsonResponse(context)
     else:
         return render(request, template, context)
 

@@ -9,6 +9,7 @@ analysis/verse_vectors
 *.swp
 env/
 /static/
+.vagrant
 
 # apache pig logs
 pig_*.log

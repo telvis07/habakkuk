@@ -180,7 +180,7 @@ LOGGING = {
         },
         'web': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
         },
         'topic_analysis': {
