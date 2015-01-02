@@ -4,7 +4,7 @@
     <form handle-phone-submit ng-submit="search_action()"  class="navbar-form navbar-left" role="search">
     <div class="input-group">
       <span class="input-group-btn">
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <button class="btn btn-info" type="submit">Submit</button>
       </span>
       <input name="search_text" type="text" class="form-control" placeholder="{{ search_params.placeholder }}" ng-model="search_params.text">
     </div>
@@ -35,7 +35,7 @@
 
 <!-- search results -->
 
-<div class="panel panel-primary" ng-repeat="result in search_results.results">
+<div class="panel panel-default" ng-repeat="result in search_results.results">
     <div class="panel-heading">
         <h3 class="panel-title">{{ result.bibleverse }}</h3>
     </div>
