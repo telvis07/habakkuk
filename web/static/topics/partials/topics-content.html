@@ -21,14 +21,14 @@
     </script>
 
     <!-- phrases -->
-    <div infinite-scroll='scroll_action()' infinite-scroll-disabled='busy' infinite-scroll-distance='1'>
+    <div infinite-scroll='scroll_action()' infinite-scroll-disabled='scroll_disabled' infinite-scroll-distance='1'>
         <div class="col-xs-12 col-md-6">
             <div class="panel panel-primary"  ng-repeat="topic in result_columns[0]">
                 <div class="panel-heading">{{ topic.bibleverse }}</div>
                 <div class="list-group"  ng-repeat="phrase in result_columns[0][$index].phrases">
                     <a href="{{ phrase.search_url }}" class="list-group-item">
                         <h4 class="list-group-item-heading">{{ phrase.phrase }}</h4>
-                        <p class="list-group-item-text">{{ phrase.bibleverse }}</p>
+                        <!-- <p class="list-group-item-text">{{ phrase.bibleverse }}</p> -->
                     </a>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                 <div class="list-group"  ng-repeat="phrase in result_columns[1][$index].phrases">
                     <a href="{{ phrase.search_url }}" class="list-group-item">
                         <h4 class="list-group-item-heading">{{ phrase.phrase }}</h4>
-                        <p class="list-group-item-text">{{ phrase.bibleverse }}</p>
+                       <!--  <p class="list-group-item-text">{{ phrase.bibleverse }}</p> -->
                     </a>
                 </div>
             </div>

@@ -244,11 +244,10 @@ def rank_phrases_and_store(doc):
 
     q = TermQuery(field='date', value=_date)
     result = conn.delete_by_query(es_settings.topics_index, [es_settings.phrases_es_type], q)
-    logger.info("[rank_results] : delete complete. index=%s, type=%s, query='%s', failed=%s",
+    logger.info("[rank_results] : delete complete. index=%s, type=%s, query='%s'",
                 es_settings.topics_index,
                 es_settings.phrases_es_type,
-                json.dumps(q.search().serialize()),
-                result['_indices'][es_settings.topics_index]['_shards']['failed'])
+                json.dumps(q.search().serialize()))
     for phrase_doc in ret:
         conn.index(doc=phrase_doc, index=es_settings.topics_index, doc_type=es_settings.phrases_es_type)
     logger.info("Wrote %d docs to index=%s, type=%s, date=%s",

@@ -3,7 +3,7 @@
  */
 
 function TopicCtrl($window, $scope, $log, $http){
-    $scope.busy = false;
+    $scope.scroll_disabled = false;
     $scope.results = [];
     $scope.offset = 10;
     $scope.topic_name = null;
@@ -35,8 +35,8 @@ function TopicCtrl($window, $scope, $log, $http){
 
     $scope.scroll_action = function(){
         /* Call the POST api to fetch more results if the user scrolls */
-        if ($scope.busy) return;
-        $scope.busy = true;
+        if ($scope.scroll_disabled) return;
+        $scope.scroll_disabled = true;
         /* Hit the POST api to get phrases for scrolling */
         $log.info("[scroll_action] start");
         var params = {size: 10, offset:$scope.offset};
@@ -58,11 +58,11 @@ function TopicCtrl($window, $scope, $log, $http){
                 $scope.results.count += topic_results.count;
                 $scope.result_columns = split_results_into_columns($scope.results.topics, 2);
                 $scope.offset += topic_results.count;
-                $scope.busy = false;
+                $scope.scroll_disabled = !topic_results.more_results;
             }).error(function(response){
                 $log.info("[HkTopicScroll.on_failure]");
                 $scope.offset += 10;
-                $scope.busy = false;
+                $scope.scroll_disabled = false;
 
             });
     };

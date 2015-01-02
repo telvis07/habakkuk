@@ -206,7 +206,8 @@ def get_topics(size=10, offset=0, topic_name=None):
     return {
         'count' : num_phrases,
         'topics' : ret,
-        'topic_name' : topic_name
+        'topic_name' : topic_name,
+        'more_results' : True if len(resultset) else False
     }
 
 def build_topic_query(topic_name):
@@ -214,7 +215,7 @@ def build_topic_query(topic_name):
         q = MatchAllQuery()
     elif topic_name.lower() == 'newyears':
         q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
-                                                       values=['2014-01-01']))
+                                                       values=['2015-01-01']))
     elif topic_name.lower() == 'memorialday':
         q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
                                                        values=['2014-05-26']))
@@ -229,7 +230,7 @@ def build_topic_query(topic_name):
                                                        values=['2014-11-27']))
     elif topic_name.lower() == 'christmas':
         q = FilteredQuery(MatchAllQuery(), TermsFilter(field='date',
-                                                       values=['2013-12-25']))
+                                                       values=['2014-12-25']))
     else:
         logger.warning("[build_topic_query] Did not find a topic for {}".format(topic_name))
         q = MatchAllQuery()
