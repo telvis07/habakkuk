@@ -4,4 +4,5 @@ Disallow: /admin/
 Disallow: /clusters/
 Disallow: /biblestudy/
 Disallow: /topics/
+Disallow: /static/
 
