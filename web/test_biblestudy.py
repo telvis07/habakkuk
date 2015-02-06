@@ -19,25 +19,34 @@ class BibleStudyTest(TestCase):
     }
 
     def setUp(self):
-        self.bt_entries = [{'bibleverse':'the-verse 1:1',
-                            'bibleverse_human':'The Verse 1:1',
+        self.bt_objs = []
+        self.bt_entries = [{'bibleverse':'verse 1:1',
+                            'bibleverse_human':'Verse 1:1',
+                            'bible_com_url': 'https://www.bible.com/bible/1/verse.1.1.kjv',
                             'text':"text 1:1",
                             'translation': 'KJV'},
-                           {'bibleverse':'the-verse 1:2',
-                            'bibleverse_human':'The Verse 1:2',
+                           {'bibleverse':'verse 1:2',
+                            'bible_com_url': 'https://www.bible.com/bible/1/verse.1.2.kjv',
+                            'bibleverse_human':'Verse 1:2',
                             'text':"text 1:2",
+                            'translation': 'KJV'},
+                           {'bibleverse':'i_verse 1:1',
+                            'bible_com_url': 'https://www.bible.com/bible/1/1verse.1.1.kjv',
+                            'bibleverse_human':'i_Verse 1:1',
+                            'text':"i_text 1:1",
                             'translation': 'KJV'}]
         translation = 'KJV'
         for i, bv in enumerate(self.bt_entries):
             bibleverse = bv['bibleverse']
             text = bv['text']
-            BibleText.objects.get_or_create(verse_id=i, translation=translation,
+            (bv, created) = BibleText.objects.get_or_create(verse_id=i, translation=translation,
                                             bibleverse_human=bv['bibleverse_human'],
                                             defaults={'bibleverse':bibleverse,
                                                       'text':text})
+            self.bt_objs.append(bv)
 
     def tearDown(self):
-        for bt in BibleText.objects.all():
+        for bt in self.bt_objs:
             bt.delete()
 
     @override_settings(ES_SETTINGS=ES_SETTINGS)
@@ -158,8 +167,9 @@ class BibleStudyTest(TestCase):
         """
 
         no_such_verse = 'no-such-verse 1:1'
-        entries = [{'bibleverse':'the-verse 1:1'},
-                   {'bibleverse':'the-verse 1:2'},
+        entries = [{'bibleverse':'verse 1:1'},
+                   {'bibleverse':'verse 1:2'},
+                   {'bibleverse':'i_verse 1:1'},
                    {'bibleverse':no_such_verse}]
         ret = bibleverse_text(entries)
 

@@ -129,6 +129,7 @@ def bibleverse_text(bibleverses, translation="KJV"):
             bt = BibleText.objects.get(bibleverse=bv['bibleverse'], translation=bv['translation'])
             bv['text'] = bt.text
             bv['bibleverse_human'] = bt.bibleverse_human
+            bv['bible_com_url'] = make_bible_com_url(bt.bibleverse_human)
         except BibleText.DoesNotExist:
             # This verse doesn't exist. probably a matching error.
             # set the text to 'None' so it get filtered before returning
@@ -137,6 +138,22 @@ def bibleverse_text(bibleverses, translation="KJV"):
 
     # remove entries where text == None
     return filter(lambda x: x['text'], bibleverses)
+
+def make_bible_com_url(bibleverse):
+    replacements = [(":",'.'),(' ','.'),('_',''), (' ','')]
+    bibleverse = bibleverse.lower()
+
+    if bibleverse.startswith('i_'):
+        bibleverse = bibleverse.replace('i_', '1')
+    elif bibleverse.startswith('ii_'):
+        bibleverse = bibleverse.replace('ii_','2')
+    elif bibleverse.startswith('iii_'):
+        bibleverse = bibleverse.replace('iii_','3')
+
+    for find, replace in replacements:
+        bibleverse = bibleverse.replace(find, replace)
+    return "https://www.bible.com/bible/1/{}.kjv".format(bibleverse)
+
 
 def bibleverse_recommendations(bibleverses):
     return bibleverses

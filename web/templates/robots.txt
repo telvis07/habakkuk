@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /api/
+Disallow: /admin/
+Disallow: /clusters/
+Disallow: /biblestudy/
+Disallow: /topics/
+

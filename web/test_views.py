@@ -38,6 +38,13 @@ class ViewsTest(TestCase):
             self.assertEquals([('http://testserver/topics/', 301)], response.redirect_chain)
             self.assertEquals(200, response.status_code)
 
+    def test_robots_view(self):
+        client = Client()
+        for path in ['/robots.txt', '/robots.txt/']:
+            response = client.get(path)
+            self.assertEquals(200, response.status_code)
+            self.assertTrue("User-agent: *" in response.content)
+
     @override_settings(ES_SETTINGS=ES_SETTINGS)
     def test_bible_study_view(self):
         """ test the bible study view """

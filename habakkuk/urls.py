@@ -3,10 +3,12 @@ from django.contrib import admin
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import RedirectView
+from django.views.generic import TemplateView
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^robots\.txt/*$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     url(r'^api/', include('web.api_urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'clusters/$', 'web.views.clusters'),
