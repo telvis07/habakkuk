@@ -35,7 +35,7 @@ class ViewsTest(TestCase):
 
             # verify I still get data after the redirect
             response = client.get("/", follow=True)
-            self.assertEquals([('http://testserver/topics/', 301)], response.redirect_chain)
+            self.assertEquals([('http://testserver/biblestudy/', 301)], response.redirect_chain)
             self.assertEquals(200, response.status_code)
 
     def test_robots_view(self):
