@@ -130,7 +130,7 @@ PROJECT_APPS = (
 
 BIBLESTUDY_SEARCH_URL="/biblestudy/?search="
 ES_SETTINGS = {
-    'hosts':['http://162.243.207.220:6778'],
+    'hosts':[os.environ.get("ES_HOSTS")],
     'search_index' : 'habakkuk-all',
     'topics_index' : 'topics-all',
     'search_es_type' : 'habakkuk',

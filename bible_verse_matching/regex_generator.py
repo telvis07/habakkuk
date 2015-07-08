@@ -129,6 +129,7 @@ def build_regex(fp,verbose=False):
         regex="(?P<%s>%s\.?)"%(_book,regex)
         regex_map[book]=regex
         regex_items.append((book,regex))
+        print 'val genesis_re = start_pattern.concat("""(gen\w{0,4}\.?)\s+""").concat(verse_pattern).r'%book,regex
         
         #print "%s (%s)"%(regex_map[book],book)
         ma = re.search(regex_map[book], book)
@@ -150,6 +151,50 @@ def build_regex(fp,verbose=False):
             print "build regex failed for %s, '%s'"%(book,regex_map[book])
             # sys.exit(1)
         # print ma.group('book'),ma.group('verse')
+
+
+def build_scala_regex(fp,verbose=False):
+    # For each book in the bible
+    # get name length
+    # map {book_lower_case: book_lower_case{:3}\w{1,namelen-3}}
+    # special case for 1st or 2nd books
+    # check regex against book
+    # build compound regex with all titles
+    regex_map = {}
+    regex_items = []
+    prefixes = find_prefixes(fp)
+
+    for book, prefixlen in prefixes:
+        if verbose: print "book=%s,prefixlen=%d"%(book,prefixlen)
+
+        if re.match("^[123]",book):
+            num, name = book.split(" ")
+            namelen = len(name)
+            regex =  "%s\s*%s\\w{0,%d}\.?"%(num,name[:prefixlen],namelen-prefixlen)
+            regex += "|%s\s+%s\\w{0,%d}"%('i'*int(num),name[:prefixlen],namelen-prefixlen)
+        else:
+            name = book
+            namelen = len(name)
+            num=0
+            if book == "song of solomon":
+                regex = "%s[\\w\\s]{0,%d}"%(name[:prefixlen],namelen-prefixlen)
+            else:
+                regex = "%s\\w{0,%d}"%(name[:prefixlen],namelen-prefixlen)
+
+        # mogrify book name for regular expression group name
+        _book = book
+        if num:
+            _book = "%s %s"%('i'*int(num), name)
+        _book = re.sub("[ ]","_",_book)
+
+        # regex_map[book]=regex
+        # regex="(?P<%s>%s\.?)"%(_book,regex)
+        # regex_map[book]=regex
+        # regex_items.append((book,regex))
+        #print 'val {book}_re =\n  start_pattern.concat("""({regex}\.?)""").concat(verse_pattern).r.unanchored'.format(book=_book,regex=regex)
+        print 'case {_book}_re(ma_text, verse) => \n  Map("book" -> "{_book}", "verse" -> verse.replace(" ",""), "ma_text" -> ma_text)'.format(_book=_book,book=book)
+
+
 
 def test_regex(fp,verbose=True):
     """ Read test lines from file. Should be inputstring,expected regex groupname.
@@ -249,6 +294,8 @@ if __name__=='__main__':
                   help='load data/test_regex.txt and test')
     op.add_option('--build',dest='do_build',action='store_true',default=False,
                   help='load data/bible_book_list.txt and print regex')
+    op.add_option('--scala',dest='do_scala',action='store_true',default=False,
+                  help='load data/bible_book_list.txt and print scala regex and case')
     op.add_option('-f','--file',dest='infile',
                   help='load data/bible_book_list.txt and print regex')
     (options,args) = op.parse_args()
@@ -267,6 +314,8 @@ if __name__=='__main__':
 
     if options.do_build:
         build_regex(fp)
+    elif options.do_scala:
+        build_scala_regex(fp)
     elif options.do_test:
         test_regex(fp)
     else:
