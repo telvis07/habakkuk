@@ -14,20 +14,31 @@ This project requires postgresql
     coverage run --source='.' manage.py test web topic_analysis
     coverage report
 
-## Django
-This project uses [django](https://www.djangoproject.com/) for project organization purposes. Perform the following to set up the virtual environment.
+## Web app
+This is the frontend code for [http://bakkify.com](http://bakkify.com).
+
+### Django
+This project uses [django](https://www.djangoproject.com/). Perform the following to set up the virtual environment.
 
     $ virtualenv .
     $ . ./bin/activate
     $ pip install -r requirements.txt
 
-## Angular
+### Angular
 This project uses [angularJS](http://angularjs.org/) and [karma](https://github.com/vojtajina/karma/) for JS unit testing. To test...
 
     # install dependencies
     karma start
 
-##  Storm
+## Topic Analysis
+
+The topic analysis is based on the [NMF topic extraction example](http://scikit-learn.org/stable/auto_examples/applications/topics_extraction_with_nmf.html). 
+It performs kmeans clustering on velocity features for bibleverses. Then it applies the NMF analysis to extract 
+topics from text for each cluster. Finally, it uses [hierarchical clustering](https://pypi.python.org/pypi/cluster/1.1.0b1)
+to filter (nearly) duplicate topics and rank the topics.
+
+
+## Real-time processing
 This project uses a [storm](http://storm-project.net/) topology to analyze tweets from the [twitter sample stream](https://dev.twitter.com/docs/streaming-apis/streams/public).
 The entry point is a storm spout that uses [twitter4j](http://twitter4j.org/en/index.html) to access the stream with a username and password. 
 Tweets are then passed to a storm shell bolt implemented in Python that applies a regular expression 
@@ -37,14 +48,17 @@ elasticsearch.
 For more information refence the [storm concepts wiki](https://github.com/nathanmarz/storm/wiki/Concepts). 
 I also have a [habakkuk starter page](http://technicalelvis.com/blog/2012/06/21/habakkuk-starter/) that provides some background.
 
-## Elasticsearch
+## Data Stores
+
+### Elasticsearch
 This project uses [ElasticSearch](http://www.elasticsearch.org/) as backend storage. Please reference the site for details.
 
-## Accumulo
+
+### Accumulo
 I experimented with using [Apache Accumulo](http://accumulo.apache.org/). The code has been disabled but the Bolt is
 still there is anyone wants to try it. It works fine but I found Elasticsearch worked better for this project.
 
-## Hadoop
+### Hadoop
 Scripts in analysis/ depend on [Cloudera Hadoop CDH3](https://ccp.cloudera.com/display/CDHDOC/CDH3+Documentation).
 
 # Sub-Directories
@@ -55,3 +69,4 @@ Scripts in analysis/ depend on [Cloudera Hadoop CDH3](https://ccp.cloudera.com/d
 * config - Configuration files for setting up storm with [supervisord](http://supervisord.org/)
 * analysis - pig scripts for data analysis
 * web - web front-end
+* topic_analysis - topic modeling using scikit-learn
